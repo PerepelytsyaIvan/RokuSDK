@@ -112,8 +112,8 @@ sub logObjectWithName(logerName, logObject)
         log += chr(10) + chr(10) + logObject   
         ? log    
     else if IsValid(objectToPrintable(logObject))
-        ? log
-        ? objectToPrintable(logObject)
+            ' ? log
+            ' ? objectToPrintable(logObject)
     else
         ? log
         ? "Cant print this object!!!"
@@ -588,10 +588,4 @@ sub sortedVideoTrending(shows) as object
         end if
     end if
     return []
-end sub
-
-sub getLanguage() as String
-    deviceInfo = CreateObject("roDeviceInfo")
-    locale = deviceInfo.GetCurrentLocale().Split("_")
-    return locale[0]
 end sub
