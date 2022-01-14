@@ -10,7 +10,7 @@ sub init()
     m.buttons = []
 
     m.timerShowPanel = CreateObject("roSGNode", "Timer")
-    m.timerShowPanel.duration = 0.5
+    m.timerShowPanel.duration = 0.1
     m.timerShowPanel.repeat = true
     m.timerShowPanel.observeField("fire", "showPanel")
 end sub
