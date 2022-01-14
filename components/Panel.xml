@@ -2,7 +2,6 @@
     <script type="text/brightscript" uri="./Panel.brs" />
     <script type="text/brightscript" uri="Services/UserService/UserServise.brs" />
     <script type="text/brightscript" uri="NetworkManager/util.brs" />
-    <script type="text/brightscript" uri="Services/UserService/SocketServise/SocketServise.brs" />
 
     <interface>
         <field id="widthPanel" type="float"  alias="backgroundPanel.width" onChange = "layoutSubviews"/>
