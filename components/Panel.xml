@@ -1,0 +1,22 @@
+<component name="Panel" extends="Group" initialFocus = "videoPlayer">
+    <script type="text/brightscript" uri="./Panel.brs" />
+    <script type="text/brightscript" uri="Services/UserService/UserServise.brs" />
+    <script type="text/brightscript" uri="NetworkManager/util.brs" />
+    <script type="text/brightscript" uri="Services/UserService/SocketServise/SocketServise.brs" />
+
+    <interface>
+        <field id="widthPanel" type="float"  alias="backgroundPanel.width" onChange = "layoutSubviews"/>
+        <field id="heightPanel" type="float" alias="backgroundPanel.height" onChange = "layoutSubviews"/>
+        <field id="videoPlayer" type="node" onChange="configurePanel"/>
+        <field id="accountRoute" type="assocarray"/>
+        <field id="runSDK" type="bool" alwaysNotify = "true" onChange="setupSDK"/>
+    </interface>
+
+    <children>
+        <Group id = "panel" visible="false">
+            <Poster id = "backgroundPanel" />
+            <Label id = "questionLabel" wrap = "true" horizAlign = "center" text = "label" vertAlign = "center" color="#ffffff" numLines = "2"/>
+            <LayoutGroup id="panelButtons" layoutDirection="horiz" vertAlignment="center" vertAlign = "center" itemSpacings="[60]"/>                
+        </Group>
+    </children>
+</component>
