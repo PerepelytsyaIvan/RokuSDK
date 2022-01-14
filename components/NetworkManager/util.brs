@@ -51,15 +51,15 @@ function getRuntime(runtime as integer) as string
     return totalRuntime
 end function
 
-function getSecondsFrom(intervalString) 
+function getSecondsFrom(intervalString)
     numberValue = 1
-    r = CreateObject("roRegex", "\d+","")
+    r = CreateObject("roRegex", "\d+", "")
     values = r.Match(intervalString)
-    if values.Count() > 0 
+    if values.Count() > 0
         value = values[0].ToInt()
         if IsInteger(value)
             numberValue = value
-            lastPart =  intervalString.Split(values[0]).Peek()
+            lastPart = intervalString.Split(values[0]).Peek()
             if lastPart = "M"
                 numberValue = numberValue * 60
             else if lastPart = "H"
@@ -67,12 +67,12 @@ function getSecondsFrom(intervalString)
             else if lastPart = "D"
                 numberValue = numberValue * 60 * 60 * 24
             end if
-        end if        
+        end if
     end if
     return numberValue
 end function
 
-function getHeightOfTextWith(width, font, text) 
+function getHeightOfTextWith(width, font, text)
     height = 0
     label = CreateObject("roSGNode", "Label")
     label.font = font
@@ -88,7 +88,7 @@ end function
 ' Logging Helper Functions
 ' ******************************************************
 
-function ConsolLog() as Object
+function ConsolLog() as object
     console = {
         logPOSTRequest: function(url, body, requestHeaders, urlEvent)
             logPOSTRequest(url, body, requestHeaders, urlEvent)
@@ -109,26 +109,26 @@ sub logObjectWithName(logerName, logObject)
         log += ">>> " + logerName + ": "
     end if
     if IsString(logObject)
-        log += chr(10) + chr(10) + logObject   
-        ? log    
+        log += chr(10) + chr(10) + logObject
+        ? log
     else if IsValid(objectToPrintable(logObject))
-            ' ? log
-            ' ? objectToPrintable(logObject)
+        ? log
+        ? objectToPrintable(logObject)
     else
         ? log
         ? "Cant print this object!!!"
-    end if   
+    end if
 end sub
 
 function objectToTheString(obj)
     stringObj = ""
     if IsAssociativeArray(obj)
         return FormatJson(obj)
-    else  if IsArray(obj)
+    else if IsArray(obj)
         for each item in obj
             stringObj += chr(10) + objectToTheString(item) + chr(10)
-        end for                
-    else  if IsSGNode(obj)
+        end for
+    else if IsSGNode(obj)
         fields = obj.getFields()
         return objectToTheString(fields)
     end if
@@ -139,10 +139,10 @@ function objectToPrintable(obj)
     stringObj = ""
     if IsAssociativeArray(obj) or IsArray(obj)
         return obj
-    else  if IsSGNode(obj)
+    else if IsSGNode(obj)
         fields = obj.getFields()
         return fields
-    else 
+    else
         return invalid
     end if
     return stringObj
@@ -157,31 +157,31 @@ function logRequest(url, body, requestHeaders, method, roURLEvent)
         resJson = ParseJson(responseString)
     end if
     h = roURLEvent.GetResponseHeaders()
+    ? ""
+    ? "======================("method")========================== "
+    ? "URL: " url
+    ? ""
+    if method = "POST"
+        ? "BODY: " body
         ? ""
-        ? "======================("method")========================== "
-        ? "URL: " url
-        ? ""
-        if method = "POST"
-            ? "BODY: " body
-            ? ""
-        end if
-        ? "HEADERS: " requestHeaders
-        ? "=================================================== "
-        ? ""
-        ? "RESPONSE CODE: " roURLEvent.GetResponseCode().toStr()
-        ? "=================================================== "        
-        ? ""
-        ? "RESPONSE: " resJson
-        ? "=================================================== "
-        ? ""
+    end if
+    ? "HEADERS: " requestHeaders
+    ? "=================================================== "
+    ? ""
+    ? "RESPONSE CODE: " roURLEvent.GetResponseCode().toStr()
+    ? "=================================================== "
+    ? ""
+    ? "RESPONSE: " resJson
+    ? "=================================================== "
+    ? ""
 end function
 
 function logGetRequest(url, requestHeaders, roURLEvent)
-    logRequest(url, invalid, requestHeaders,  "GET", roURLEvent)       
+    logRequest(url, invalid, requestHeaders, "GET", roURLEvent)
 end function
 
 function logPOSTRequest(url, body, requestHeaders, roURLEvent)
-    logRequest(url, body, requestHeaders, "POST", roURLEvent)       
+    logRequest(url, body, requestHeaders, "POST", roURLEvent)
 end function
 
 ' ******************************************************
@@ -303,13 +303,13 @@ function firstWhere(arr, key, value)
     end if
 end function
 
-function sortArray(list, property, ascending=true) as dynamic
+function sortArray(list, property, ascending = true) as dynamic
     for i = 1 to list.count() - 1
         value = list[i]
         j = i - 1
 
         while j >= 0
-            if (ascending and list[j][property] < value[property]) or (not ascending and list[j][property] > value[property]) then 
+            if (ascending and list[j][property] < value[property]) or (not ascending and list[j][property] > value[property]) then
                 exit while
             end if
 
@@ -417,7 +417,7 @@ function IsArray(value as dynamic) as boolean
 end function
 
 function IsAssociativeArray(value as dynamic) as boolean
-    return IsValid(value) and Type(value) = "roAssociativeArray" 
+    return IsValid(value) and Type(value) = "roAssociativeArray"
 end function
 
 function IsString(value as dynamic) as boolean
@@ -455,31 +455,31 @@ function getDeviceID()
     else
         uuid = di.GetRIDA()
         ConsolLog().logObject(uuid)
-    end if 
+    end if
     return uuid
-end function 
+end function
 
 function getDeviceModel()
-    di = CreateObject("roDeviceInfo")    
+    di = CreateObject("roDeviceInfo")
     return di.getModel()
-end function 
+end function
 
 function getDeviceName()
-    di = CreateObject("roDeviceInfo")    
+    di = CreateObject("roDeviceInfo")
     return di.GetModelDisplayName()
-end function 
+end function
 
 function getUserToken()
     customer = RegRead("customer")
     if isValid(customer)
-        'return customer[EnumsUtil().DTOProperties.CUSTOM_USER_TOKEN]        
+        'return customer[EnumsUtil().DTOProperties.CUSTOM_USER_TOKEN]
     end if
 end function
 
 function getRefreshToken()
     customer = RegRead("customer")
     if isValid(customer)
-        'return customer[EnumsUtil().DTOProperties.CUSTOM_REFRESH_TOKEN]        
+        'return customer[EnumsUtil().DTOProperties.CUSTOM_REFRESH_TOKEN]
     end if
 end function
 
@@ -492,84 +492,84 @@ end function
 
 function getProductCode()
     if isValid(m.global.products)
-        
+
     end if
     return invalid
 end function
 
 function getLocale()
-    di = CreateObject("roDeviceInfo")    
+    di = CreateObject("roDeviceInfo")
     return di.GetCurrentLocale()
 end function
 
-Function GenerateUUID() As String
+function GenerateUUID() as string
     stored = RegRead("UUID")
     if stored <> invalid then return stored
     new = GetRandomHexString(8) + "-" + GetRandomHexString(4) + "-" + GetRandomHexString(4) + "-" + GetRandomHexString(4) + "-" + GetRandomHexString(12)
     valueObject = {
-      "UUID" : new
+        "UUID": new
     }
     RegWriteMulti(valueObject)
     return new
-End Function
+end function
 
-Function GetRandomHexString(length As Integer) As String
+function GetRandomHexString(length as integer) as string
     hexChars = "0123456789ABCDEF"
     hexString = ""
     for i = 1 to length
         hexString = hexString + hexChars.Mid(Rnd(16) - 1, 1)
     next
     return hexString
-End Function
+end function
 
-Function toBase64String(object) As String
+function toBase64String(object) as string
     json = FormatJson(object)
     byteArray = CreateObject("roByteArray")
     byteArray.FromAsciiString(json)
     return byteArray.ToBase64String()
-End Function
+end function
 
-Function fromBase64String(base64String as String) As Object
+function fromBase64String(base64String as string) as object
     byteArray = CreateObject("roByteArray")
     byteArray.FromBase64String(base64String)
     asciString = byteArray.ToAsciiString()
-    json = ParseJson(asciString)    
+    json = ParseJson(asciString)
     return json
-End Function
+end function
 
-Function dateFromISOString(dateString)
+function dateFromISOString(dateString)
     dateTime = CreateObject("roDateTime")
     dateTime.FromISO8601String(dateString)
     return dateTime
-End Function
+end function
 
-Function getSizeMaskGroupWith(size) as object
+function getSizeMaskGroupWith(size) as object
     deviceInfo = CreateObject("roDeviceInfo")
     resolution = deviceInfo.GetUIResolution()
     if resolution.name = "HD"
-        size[0] = size[0] * 2/3
-        size[1] = size[1] * 2/3
+        size[0] = size[0] * 2 / 3
+        size[1] = size[1] * 2 / 3
         return size
     end if
     return size
-End Function
+end function
 
-Function localize(key)
+function localize(key)
     if IsValid(m.global.Custom_Application_LocalizationUrl)
         localizedString = firstWhere(m.global.Custom_Application_LocalizationUrl.Properties, "Name", key)
         if IsValid(localizedString)
             return localizedString.Value.Replace("%@", "")
-        else 
+        else
             return key
         end if
     else
         return key
     end if
-End Function
+end function
 
 function isAddWatchlist(clean_title) as object
     for each item in m.global.watchlist
-        if item.clean_title = clean_title 
+        if item.clean_title = clean_title
             return true
         end if
     end for
