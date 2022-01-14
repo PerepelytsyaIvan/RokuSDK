@@ -12,7 +12,6 @@ sub init()
     m.timerShowPanel = CreateObject("roSGNode", "Timer")
     m.timerShowPanel.duration = 0.5
     m.timerShowPanel.observeField("fire", "showPanel")
-    configurePanel()
 end sub
 
 ''''''''''''''''''''''''''''''''''''''''''''''''
@@ -63,9 +62,6 @@ sub setupPanelButton()
     m.panel.visible = true
 end sub
 
-sub configurePanel()
-    m.top.videoPlayer.observeField("state", "onChangeStateVideoPlayer")
-end sub
 
 sub layoutSubviews()
     m.panel.translation = [850, 580]
@@ -83,6 +79,7 @@ sub setupSDK()
         m.userServise.accountRoute = m.top.accountRoute
         m.userServise.observeField("response", "responseUserData")
         m.userServise.control = "RUN"
+        m.top.videoPlayer.observeField("state", "onChangeStateVideoPlayer")
     end if
 end sub
 
