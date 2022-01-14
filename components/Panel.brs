@@ -22,7 +22,9 @@ end sub
 sub showPanel()
     ? "clockTime" m.clock.time 
     ? "m.top.videoPlayer.position" m.top.videoPlayer.position
-    if m.top.videoPlayer.position = m.clock.time 
+    startClock = m.clock.time + 1
+    finishClock = m.clock.time - 1
+    if m.top.videoPlayer.position > startClock and m.top.videoPlayer.position < finishClock
         for each item in m.item.answers
             m.buttonsTitle.push(item.answer)
         end for
