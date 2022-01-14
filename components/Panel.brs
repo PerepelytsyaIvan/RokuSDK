@@ -8,7 +8,7 @@ sub init()
     m.panelButtons = m.top.findNode("panelButtons")
     m.focusKey = 0
     m.buttons = []
-
+    m.buttonsTitle = []
     m.timerShowPanel = CreateObject("roSGNode", "Timer")
     m.timerShowPanel.duration = 0.1
     m.timerShowPanel.repeat = true
