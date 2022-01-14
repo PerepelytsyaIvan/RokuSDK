@@ -143,7 +143,7 @@ function postRequest(url, body, headers = invalid)
                     error : true
                 }      
             end if                
-            ' ConsolLog().logPOSTRequest(url, body, h, event)            
+            ConsolLog().logPOSTRequest(url, body, h, event)            
             return resJson
         else if event = invalid then
             http.asynccancel()

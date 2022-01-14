@@ -589,3 +589,9 @@ sub sortedVideoTrending(shows) as object
     end if
     return []
 end sub
+
+sub getLanguage() as String
+    di = CreateObject("roDeviceInfo")
+    locale = di.GetCurrentLocale().split("_")
+    return locale[0]
+end sub
