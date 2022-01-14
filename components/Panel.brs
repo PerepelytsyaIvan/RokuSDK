@@ -8,8 +8,6 @@ sub init()
     m.panelButtons = m.top.findNode("panelButtons")
     m.focusKey = 0
     m.buttons = []
-    m.top.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
-    m.top.runSDK = true
 
     m.timerShowPanel = CreateObject("roSGNode", "Timer")
     m.timerShowPanel.duration = 0.5
