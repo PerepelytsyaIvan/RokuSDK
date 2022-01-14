@@ -20,20 +20,18 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 sub showPanel()
     if m.top.videoPlayer.position > m.clock.time
-        ? "ShowShowShowShowShowShowShowShowShowShowShow"
-        ? m.item
+ 
         for each item in m.item.answers
             ? item
             m.buttonsTitle.push(item.answer)
         end for
 
-        ? m.item.question
 
         m.questionLabel.text = m.item.question
         setupPanelButton()
 
         m.timerHidePanel = CreateObject("roSGNode", "Timer")
-        m.timerHidePanel.duration = m.clock.time
+        m.timerHidePanel.duration = m.clock.timeToStay
         m.timerHidePanel.observeField("fire", "hidePanel")
         m.timerHidePanel.control = "start"
         m.timerShowPanel.control = "stop"
@@ -63,6 +61,7 @@ sub setupPanelButton()
     end for
     updateFocusButton(0)
     m.panel.visible = true
+    m.top.setFocus(true)
 end sub
 
 
