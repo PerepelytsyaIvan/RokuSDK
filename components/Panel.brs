@@ -22,8 +22,9 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 
 sub showPanel()
+    ? "m.top.videoPlayer.position" m.top.videoPlayer.position
     if not isValid(m.top.videoPlayer) or not isValid(m.clock) or not isValid(m.item) then return
-
+    ?  m.top.videoPlayer.position
     if m.top.videoPlayer.position = m.clock.time 
         for each item in m.item.answers
             m.buttonsTitle.push(item.answer)
