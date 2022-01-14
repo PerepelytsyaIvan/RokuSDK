@@ -18,10 +18,10 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''CONFIGURE USER INTERFACE''''''''''''
 ''''''''''''''''''''''''''''''''''''''''''''''''
-
 sub showPanel()
     if m.top.videoPlayer.position > m.clock.time
         ? "ShowShowShowShowShowShowShowShowShowShowShow"
+        ? m.item
         for each item in m.item.answers
             ? item
             m.buttonsTitle.push(item.answer)
@@ -102,7 +102,7 @@ sub responseInfo(event)
             poll = item
         end if
     end for
-    m.item = item
+    m.item = poll
     m.clock = clock
     connectSocket()
     m.timerShowPanel.control = "start"
