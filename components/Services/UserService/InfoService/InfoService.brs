@@ -16,5 +16,5 @@ end function
 
 function responceInfo(event)
     responce = event.getData()
-    m.top.responce = responce
+    m.top.response = responce
 end function

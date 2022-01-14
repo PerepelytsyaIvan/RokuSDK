@@ -41,6 +41,6 @@ end sub
 
 sub responceLoginizationUser(event)
     responce = event.getData()
-    RegWrite("registrationToken", responce.data.token)
+    RegWrite("loginizationToken", responce.data.token)
     m.top.response = responce
 end sub

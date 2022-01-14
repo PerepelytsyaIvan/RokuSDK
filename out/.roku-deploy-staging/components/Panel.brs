@@ -50,19 +50,19 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 sub setupSDK()
     if m.top.runSDK
-        userServise = CreateObject("roSGNode", "UserService")
-        userServise.accountRoute = m.top.accountRoute
-        userServise.observeField("response", "responseUserData")
-        userServise.control = "RUN"
+        m.userServise = CreateObject("roSGNode", "UserService")
+        m.userServise.accountRoute = m.top.accountRoute
+        m.userServise.observeField("response", "responseUserData")
+        m.userServise.control = "RUN"
     end if
 end sub
 
 sub responseUserData(event)
     responce = event.getData()
-    infoService = CreateObject("roSGNode", "InfoService")
-    infoService.accountRoute = m.top.accountRoute
-    infoService.observeField("response", "responseInfo")
-    infoService.control = "RUN"
+    m.infoService = CreateObject("roSGNode", "InfoService")
+    m.infoService.accountRoute = m.top.accountRoute
+    m.infoService.observeField("response", "responseInfo")
+    m.infoService.control = "RUN"
 end sub
 
 sub responseInfo(event)
