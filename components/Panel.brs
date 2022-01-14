@@ -21,7 +21,7 @@ end sub
 
 sub showPanel()
     ? "m.top.videoPlayer.position" m.top.videoPlayer.position
-
+    ? m.clock.time 
     if m.top.videoPlayer.position = m.clock.time 
         for each item in m.item.answers
             m.buttonsTitle.push(item.answer)
