@@ -8,14 +8,42 @@ sub init()
     m.panelButtons = m.top.findNode("panelButtons")
     m.focusKey = 0
     m.buttons = []
-    setupPanelButton()
+    m.top.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
+    m.top.runSDK = true
+
+    m.timerShowPanel = CreateObject("roSGNode", "Timer")
+    m.timerShowPanel.duration = 0.5
+    m.timerShowPanel.observeField("fire", "showPanel")
 end sub
 
 ''''''''''''''''''''''''''''''''''''''''''''''''
 ''''''''''''CONFIGURE USER INTERFACE''''''''''''
 ''''''''''''''''''''''''''''''''''''''''''''''''
+
+sub showPanel()
+    if not isValid(m.top.videoPlayer) or not isValid(m.clock) or not isValid(m.item) then return
+
+    if m.top.videoPlayer.position = m.clock.time 
+        for each item in m.item.answers
+            m.buttonsTitle.push(item.answer)
+        end for
+
+        m.questionLabel.text = m.item.question
+        setupPanelButton()
+
+        m.timerHidePanel = CreateObject("roSGNode", "Timer")
+        m.timerHidePanel.duration = m.clock.time
+        m.timerHidePanel.observeField("fire", "hidePanel")
+        m.timerHidePanel.control = "start"
+    end if
+end sub
+
+sub hidePanel()
+    m.panel.visible = false
+    m.top.setFocus(true)
+end sub
+
 sub setupPanelButton()
-    m.buttonsTitle = ["Yes", "No"]
     for each item in m.buttonsTitle
         button = m.panelButtons.createChild("Rectangle")
         button.width = 140
@@ -32,6 +60,7 @@ sub setupPanelButton()
         m.buttons.push(button)
     end for
     updateFocusButton(0)
+    m.panel.visible = true
 end sub
 
 sub configurePanel()
@@ -73,6 +102,8 @@ sub responseInfo(event)
             poll = item
         end if
     end for
+    m.item = item
+    m.clock = clock
     connectSocket()
 end sub
 
@@ -101,24 +132,10 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 sub onChangeStateVideoPlayer(event)
     state = event.getData()
-    if state = "buffering"
-
+    if state = "paused" or state = "stopped" or state = "finished"
+        m.timerShowPanel.control = "stop"
     else if state = "playing"
-        if m.top.videoPlayer.position < 10
-            m.timer = CreateObject("roSGNode", "Timer")
-            m.timer.observeField("fire", "onChageDuration")
-            m.timer.repeat = true
-            m.timer.duration = 1
-            m.timer.control = "start"
-        end if
-    end if
-end sub
-
-sub onChageDuration()
-    if m.top.videoPlayer.position >= 10
-        m.timer.control = "stop"
-        m.panel.visible = true
-        m.top.setFocus(true)
+        m.timerShowPanel.control = "start"
     end if
 end sub
 
