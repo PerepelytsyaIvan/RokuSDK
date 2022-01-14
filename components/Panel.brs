@@ -23,8 +23,11 @@ sub showPanel()
     if m.top.videoPlayer.position > m.clock.time
         ? "ShowShowShowShowShowShowShowShowShowShowShow"
         for each item in m.item.answers
+            ? item
             m.buttonsTitle.push(item.answer)
         end for
+
+        ? m.item.question
 
         m.questionLabel.text = m.item.question
         setupPanelButton()
