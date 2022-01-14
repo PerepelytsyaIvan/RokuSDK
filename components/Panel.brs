@@ -21,6 +21,7 @@ end sub
 
 sub showPanel()
     if m.top.videoPlayer.position > m.clock.time
+        ? "ShowShowShowShowShowShowShowShowShowShowShow"
         for each item in m.item.answers
             m.buttonsTitle.push(item.answer)
         end for
@@ -30,7 +31,6 @@ sub showPanel()
 
         m.timerHidePanel = CreateObject("roSGNode", "Timer")
         m.timerHidePanel.duration = m.clock.time
-        m.timerHidePanel.repeat = true
         m.timerHidePanel.observeField("fire", "hidePanel")
         m.timerHidePanel.control = "start"
         m.timerShowPanel.control = "stop"
