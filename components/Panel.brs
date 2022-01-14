@@ -20,11 +20,7 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 
 sub showPanel()
-    ? "clockTime" m.clock.time 
-    ? "m.top.videoPlayer.position" m.top.videoPlayer.position
-    startClock = m.clock.time + 1
-    finishClock = m.clock.time - 1
-    if m.top.videoPlayer.position > startClock and m.top.videoPlayer.position < finishClock
+    if m.top.videoPlayer.position > m.clock.time
         for each item in m.item.answers
             m.buttonsTitle.push(item.answer)
         end for
@@ -37,6 +33,7 @@ sub showPanel()
         m.timerHidePanel.repeat = true
         m.timerHidePanel.observeField("fire", "hidePanel")
         m.timerHidePanel.control = "start"
+        m.timerShowPanel.control = "stop"
     end if
 end sub
 
