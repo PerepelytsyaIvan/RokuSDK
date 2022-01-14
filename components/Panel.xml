@@ -1,6 +1,5 @@
 <component name="Panel" extends="Group" initialFocus = "videoPlayer">
     <script type="text/brightscript" uri="./Panel.brs" />
-    <script type="text/brightscript" uri="Services/UserService/UserServise.brs" />
     <script type="text/brightscript" uri="NetworkManager/util.brs" />
 
     <interface>
