@@ -20,8 +20,7 @@ end sub
 
 sub showPanel()
     ? "m.top.videoPlayer.position" m.top.videoPlayer.position
-    if not isValid(m.top.videoPlayer) or not isValid(m.clock) or not isValid(m.item) then return
-    ? m.clock.time 
+
     if m.top.videoPlayer.position = m.clock.time 
         for each item in m.item.answers
             m.buttonsTitle.push(item.answer)
@@ -32,6 +31,7 @@ sub showPanel()
 
         m.timerHidePanel = CreateObject("roSGNode", "Timer")
         m.timerHidePanel.duration = m.clock.time
+        m.timerHidePanel.repeat = true
         m.timerHidePanel.observeField("fire", "hidePanel")
         m.timerHidePanel.control = "start"
     end if
@@ -102,6 +102,7 @@ sub responseInfo(event)
     m.item = item
     m.clock = clock
     connectSocket()
+    m.timerShowPanel.control = "start"
 end sub
 
 ''''''''''''''''''''''''''''''''''''''''''''''''
@@ -129,11 +130,9 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 sub onChangeStateVideoPlayer(event)
     state = event.getData()
-    ? state
     if state = "paused" or state = "stopped" or state = "finished"
         m.timerShowPanel.control = "stop"
     else if state = "playing"
-        m.timerShowPanel.control = "start"
     end if
 end sub
 
