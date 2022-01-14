@@ -129,6 +129,7 @@ end sub
 ''''''''''''''''''''''''''''''''''''''''''''''''
 sub onChangeStateVideoPlayer(event)
     state = event.getData()
+    ? state
     if state = "paused" or state = "stopped" or state = "finished"
         m.timerShowPanel.control = "stop"
     else if state = "playing"
