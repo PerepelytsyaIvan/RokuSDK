@@ -1,0 +1,10 @@
+<component name="InfoService" extends="Task">
+    <script type="text/brightscript" uri="InfoService.brs"/>
+    <script type="text/brightscript" uri="pkg:/components/NetworkManager/cache.brs"/>       
+    <script type="text/brightscript" uri="pkg:/components/NetworkManager/util.brs"/>
+
+    <interface>
+        <field id="response" alwaysNotify = "true" type="node"/>     
+        <field id="accountRoute" type="assocarray"/>
+    </interface>
+</component>
