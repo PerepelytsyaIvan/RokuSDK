@@ -12,7 +12,7 @@ sub getUserData()
 end sub
 
 sub registerUser()
-    request = CreateObject("roSGNode", "URLRequest")
+    request = CreateObject("roSGNode", "URLRequest") 
     request.url = "https://itg-dev4.inthegame.io/userApi/user/register"
     request.method = "POST"
     request.body = {"data": m.top.accountRoute}

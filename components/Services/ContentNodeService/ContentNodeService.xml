@@ -1,0 +1,11 @@
+<component name="ContentNodeService" extends="Node">
+
+    <script type="text/brightscript" uri="./ContentNodeService.brs" />
+    <script type="text/brightscript" uri="../../NetworkManager/util.brs" />
+
+    <interface>
+        <function name = "getAnswersContentWith"/>
+        <function name = "getConfigurationForLeftButton"/>
+        <function name = "getConfigurationForButtons"/>
+    </interface>
+</component>

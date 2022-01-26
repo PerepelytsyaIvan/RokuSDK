@@ -1,0 +1,10 @@
+<component name="AsyncContentNodeService" extends="Task">
+    <script type="text/brightscript" uri="AsyncContentNodeService.brs"/>
+    <script type="text/brightscript" uri="pkg:/components/NetworkManager/cache.brs"/>       
+    <script type="text/brightscript" uri="pkg:/components/NetworkManager/util.brs"/>
+
+    <interface>
+        <field id="content" type="node"/>     
+        <field id="item" type="assocarray"/>     
+    </interface>
+</component>

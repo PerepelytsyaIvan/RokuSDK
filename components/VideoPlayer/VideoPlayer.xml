@@ -7,6 +7,6 @@
 
     <children>
         <Video id="videoPlayer" translation = "[0,0]" width = "1920" height = "1080"/>
-        <Panel id="panel"/>
+        <PanelView id="panel"/>
     </children>
 </component>

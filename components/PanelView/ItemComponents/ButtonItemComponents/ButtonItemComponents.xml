@@ -1,0 +1,20 @@
+<component name="ButtonItemComponents" extends="Group">
+    <script type="text/brightscript" uri="ButtonItemComponents.brs" />
+    <script type="text/brightscript" uri="../../../NetworkManager/util.brs" />
+
+    <interface>
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="itemContent" type="node" onChange="OnItemContentChanged" />
+        <field id="rowIndex" type="integer" />
+        <field id="rowlistHasFocus" type="bool" onChange="itemFocusChanged" />
+        <field id="focusPercent" type="float" onChange="itemFocusChanged"/>
+        <field id="rowHasFocus" type="bool" onChange="itemFocusChanged" />
+    </interface>
+
+    <children>
+        <Group id="itemComponentGroup">
+            <Label id="titleLabel" translation="[5,5]" horizAlign="center" vertAlign="center"/>
+        </Group>
+    </children>
+</component>

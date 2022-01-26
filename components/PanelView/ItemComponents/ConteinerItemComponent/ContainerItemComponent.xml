@@ -1,0 +1,21 @@
+<component name="ContainerItemComponent" extends="Group">
+    <script type="text/brightscript" uri="ContainerItemComponent.brs" />
+    <script type="text/brightscript" uri="../../../NetworkManager/util.brs" />
+
+    
+    <interface>
+        <field id="itemContent" type="node" onChange="OnItemContentChanged"/>
+        <field id="width" type="float" onChange="layoutSubviews"/> 
+        <field id="height" type="float" onchange="layoutSubviews"/>
+        <field id="index" type="integer"/>
+        <field id="rowIndex" type="integer"/>
+        <field id="rowlistHasFocus" type="bool" onChange="itemFocusChanged" />
+        <field id="focusPercent" type="float" onChange="itemFocusChanged"/>
+        <field id="rowFocusPercent" type="float" onChange="itemFocusChanged"/>
+        <field id="rowHasFocus" type="bool" onChange="itemFocusChanged" />
+    </interface>
+
+    <children>        
+        <Group id="container"/>
+    </children>
+</component>

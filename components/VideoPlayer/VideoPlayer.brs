@@ -3,8 +3,6 @@ sub init()
     m.videoPlayer = m.top.findNode("videoPlayer")
     m.panel = m.top.findNode("panel")
     m.questionLabel = m.top.findNode("questionLabel")
-    m.panelButtons = m.top.findNode("panelButtons")
-    m.buttons = []
     configureVideoContentNode()
 end sub
 
@@ -19,11 +17,7 @@ end sub
 
 sub configureSDKPanel()
     m.panel = m.top.findNode("panel")
-    m.panel.translation = [360, 250]
     m.panel.videoPlayer = m.videoPlayer
     m.panel.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
-    m.panel.backgroundUri = "pkg:/images/buttonBackground.png"
-    m.panel.widthPanel = 700
-    m.panel.heightPanel = 250
     m.panel.runSDK = true
 end sub

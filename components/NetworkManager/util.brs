@@ -595,3 +595,56 @@ sub getLanguage() as String
     locale = di.GetCurrentLocale().split("_")
     return locale[0]
 end sub
+
+sub getWidthScreen() as object
+    di = CreateObject("roDeviceInfo")
+    resolution = di.GetUIResolution()
+    return resolution.width
+end sub
+
+sub getHeightScreen() as object
+    di = CreateObject("roDeviceInfo")
+    resolution = di.GetUIResolution()
+    return resolution.height
+end sub
+
+sub getMediumFont(size = 25) as object
+    font  = CreateObject("roSGNode", "Font")
+    font.uri = "pkg:/components/fonts/Medium.otf"
+    font.size = size
+    return font
+end sub
+
+sub getBoldFont(size = 25) as object
+    font  = CreateObject("roSGNode", "Font")
+    font.uri = "pkg:/components/fonts/Bold.otf"
+    font.size = size
+    return font
+end sub
+
+sub getRegularFont(size = 25) as object
+    font  = CreateObject("roSGNode", "Font")
+    font.uri = "pkg:/components/fonts/Regular.otf"
+    font.size = size
+    return font
+end sub
+
+sub getPercent(percent) as object
+    strPercent = percent.toStr().split(".")
+    if strPercent.count() > 1
+        return strPercent[0] + "." + strPercent[1].left(2) + "%"
+    else
+        return strPercent[0] + "%"
+    end if
+end sub
+
+sub getImageWithName(name) as object
+    return "https://media2.inthegame.io" + name
+end sub
+
+sub configureTimer(duration, repeat) as object
+    timer = CreateObject("roSGNode", "Timer")
+    timer.duration = duration
+    timer.repeat = repeat
+    return timer
+end sub
