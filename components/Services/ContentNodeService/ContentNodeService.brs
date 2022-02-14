@@ -9,7 +9,7 @@ function getAnswersContentWith(item, list, boundingLabel)
 
         maxWidthPercent = 0
         maxWidthTitle = 0
-        
+
         for each answ in item.answers
             width = getWidthForText(answ.answer, getBoldFont(25))
             percentWidth = getWidthForText(getPercent(answ.percent), getBoldFont(25))
@@ -21,13 +21,13 @@ function getAnswersContentWith(item, list, boundingLabel)
                 maxWidthPercent = percentWidth
             end if
         end for
-    
+
         if maxWidthPercent > maxWidthTitle
             list.rowItemSize = [maxWidthPercent + 15, 70]
         else
             list.rowItemSize = [maxWidthTitle + 15, 70]
         end if
-        
+
         congigureSizesList(list, boundingLabel, item.answers.count())
     end if
 end function
@@ -63,7 +63,7 @@ function getConfigurationForButtons(items, list, boundingLabel)
             itemNode.addFields({ itemComponentName: "ButtonItemComponents" })
             itemNode.title = item.answer
             if item.image <> ""
-                itemNode.addFields({ iconUri: getImageWithName(item.image)})
+                itemNode.addFields({ iconUri: getImageWithName(item.image) })
                 widthLabels.push(getWidthForText(item.answer, getBoldFont(25)) + 65)
             else
                 widthLabels.push(getWidthForText(item.answer, getBoldFont(25)) + 10)
@@ -71,10 +71,10 @@ function getConfigurationForButtons(items, list, boundingLabel)
         end for
 
         widthLabels.sort("r")
-       
+
         list.rowItemSize = [[widthLabels[0], 35]]
         congigureSizesList(list, boundingLabel, items.answers.count())
-        list.focusBitmapUri="pkg:/images/focusButton.9.png" 
+        list.focusBitmapUri = "pkg:/images/focusButton.9.png"
         list.content = contentNode
     end if
 end function
@@ -96,14 +96,14 @@ function getConfigurationPrediction(items, list, boundingLabel)
                 widthLabels.push(getWidthForText(item.answer, getBoldFont(25)) + 70)
             end if
 
-            itemNode.addFields({ reward: item.reward})
-            itemNode.addFields({ iconUri: "pkg:/images/predictionIcon.png"})
+            itemNode.addFields({ reward: item.reward })
+            itemNode.addFields({ iconUri: "pkg:/images/predictionIcon.png" })
         end for
 
         widthLabels.sort("r")
         list.rowItemSize = [[widthLabels[0], 60]]
         congigureSizesList(list, boundingLabel, items.answers.count())
-        list.focusBitmapUri="nil" 
+        list.focusBitmapUri = "nil"
         list.content = contentNode
     end if
 end function
@@ -143,10 +143,10 @@ function getConfigurationRatingsAnswer(items, layoutGroup, boundingLabel)
         element = layoutGroup.createChild("RatingAnswerItemComponents")
 
         if count = 4
-            element.title = items.averageRate.toStr()
+            element.title = items.averageRate.toStr().Mid(0, 4)
         end if
 
-        if items.averageRate <= count 
+        if items.averageRate <= count
             if isSetEpmtyStar
                 element.image = getImageWithName(items.emptyIcon)
             else if type(items.averageRate) = "roFloat"
@@ -160,10 +160,11 @@ function getConfigurationRatingsAnswer(items, layoutGroup, boundingLabel)
             element.image = getImageWithName(items.icon)
         end if
 
-        element.width = 30
-        element.height = 30
-        count ++
+        element.width = 35
+        element.height = 35
+        count++
     end for
+    layoutGroup.itemSpacings = [0]
     congigureSizeLayoutGroup(layoutGroup, boundingLabel)
 end function
 
@@ -201,7 +202,7 @@ end function
 sub congigureSizeLayoutGroup(layoutGroup, boundingLabel)
     boundingRect = layoutGroup.localBoundingRect()
     widthList = boundingRect.width
-    
+
     maxWidth = 1920 - (boundingLabel.x + boundingLabel.width + 460)
 
     if widthList > maxWidth then widthList = maxWidth
@@ -209,7 +210,7 @@ sub congigureSizeLayoutGroup(layoutGroup, boundingLabel)
     translationX = (((maxWidth - widthList)) / 2) + (boundingLabel.x + boundingLabel.width + 60)
 
     layoutGroup.translation = [translationX, 40 + (80 - boundingRect.height) / 2]
-end sub 
+end sub
 
 sub congigureSizesList(list, boundingLabel, countItems)
     widthList = (list.rowItemSize[0][0] * countItems) + (list.rowItemSpacing[0][0] * (countItems - 1))

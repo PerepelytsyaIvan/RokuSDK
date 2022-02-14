@@ -9,17 +9,18 @@ sub OnItemContentChanged()
 
     if m.top.title <> ""
         m.titleLabel.text = m.top.title
-        m.titleLabel.translation = [40, 2]         
+        m.titleLabel.translation = [40, 2]
         if m.top.title = "AVG"
-            m.rating.translation = [40, 0]         
+            m.titleLabel.translation = [10, 5]
+            m.rating.translation = [40, 0]
         end if
     end if
     layoutSubviews()
 end sub
 
 sub layoutSubviews()
-    m.rating.width = m.top.height 
-    m.rating.height = m.top.height 
+    m.rating.width = m.top.height
+    m.rating.height = m.top.height
     m.titleLabel.height = m.top.height
 end sub
 

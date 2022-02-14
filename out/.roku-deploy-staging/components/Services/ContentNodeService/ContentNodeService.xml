@@ -1,0 +1,15 @@
+<component name="ContentNodeService" extends="Node">
+
+    <script type="text/brightscript" uri="./ContentNodeService.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <function name = "getAnswersContentWith"/>
+        <function name = "getConfigurationForLeftButton"/>
+        <function name = "getConfigurationForButtons"/>
+        <function name = "getConfigurationRatingsContent"/>
+        <function name = "getConfigurationRatingsAnswer"/>
+        <function name = "getConfigurationPrediction"/>
+        <function name = "getConfigurationQuizeAnswer"/>
+    </interface>
+</component>

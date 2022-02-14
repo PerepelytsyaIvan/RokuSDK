@@ -1,0 +1,43 @@
+<component name="PredictionItemComponent" extends="Group">
+    <script type="text/brightscript" uri="PredictionItemComponent.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="itemContent" type="node" onChange="OnItemContentChanged" />
+        <field id="focusPercent" type="float" onChange="OnItemFocusChanged" />
+        <field id="rowHasFocus" type="bool" onChange="OnItemFocusChanged" />
+    </interface>
+
+    <children>
+        <Group id="itemComponentGroup">
+            <Poster id="posterUnfocused"
+                 uri="pkg:/images/predicationUnfocus.9.png">
+            </Poster>
+
+            <Poster id="posterFocused"
+                uri="pkg:/images/predicationFocus.9.png"
+                opacity = "0">
+            </Poster>
+
+            <Poster id="posterCell">
+            </Poster>
+
+            <Label id="pointLabel" 
+                horizAlign="center" 
+                vertAlign="top">
+            </Label>
+
+            <Label id="ptsLabel" 
+                horizAlign="center" 
+                vertAlign="top">
+            </Label>
+
+            <Label id="titleLabel" 
+                horizAlign="center" 
+                vertAlign="center">
+            </Label>
+        </Group>
+    </children>
+</component>
