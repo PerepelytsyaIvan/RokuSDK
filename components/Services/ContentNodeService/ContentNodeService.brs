@@ -1,4 +1,3 @@
-
 function getAnswersContentWith(item, list, boundingLabel)
     if IsValid(item) and isValid(list)
         contentNode = CreateObject("roSGNode", "ContentNode")

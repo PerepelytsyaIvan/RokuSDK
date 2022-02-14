@@ -48,7 +48,7 @@ end sub
 sub onItemSelectedLeftButton(event)
     index = m.rowListLeftButton.rowItemSelected[1]    
     title = m.rowListLeftButton.content.GetChild(0).GetChild(index)
-    if title = "Close"
+    if title.TITLE = "Close"
         m.top.videoPlayer.setFocus(true)
         showPanel(false)
     end if
@@ -109,7 +109,9 @@ end sub
 
 function showAnswers(eventModel)
     if eventModel.questionType = "injectRating"
-        m.contentNodeService.callFunc("getConfigurationRatingsAnswer", eventModel, m.quizGruop, m.questionLabel.boundingRect())
+        m.contentNodeService.callFunc("getConfigurationRatingsAnswer", eventModel, m.layoutGroup, m.questionLabel.boundingRect())
+        m.rowList.visible = false
+        m.layoutGroup.visible = true
     else if eventModel.questionType = "injectQuiz"
         m.contentNodeService.callFunc("getConfigurationQuizeAnswer", eventModel, m.layoutGroup, m.questionLabel.boundingRect())
         m.rowList.visible = false
