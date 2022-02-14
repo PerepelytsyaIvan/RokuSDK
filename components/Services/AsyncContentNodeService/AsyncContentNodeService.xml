@@ -1,7 +1,6 @@
 <component name="AsyncContentNodeService" extends="Task">
     <script type="text/brightscript" uri="AsyncContentNodeService.brs"/>
-    <script type="text/brightscript" uri="pkg:/components/NetworkManager/cache.brs"/>       
-    <script type="text/brightscript" uri="pkg:/components/NetworkManager/util.brs"/>
+    <script type="text/brightscript" uri="../../Helpers/util.brs"/>
 
     <interface>
         <field id="content" type="node"/>     

@@ -7,6 +7,6 @@
 
     <children>
         <Video id="videoPlayer" translation = "[0,0]" width = "1920" height = "1080"/>
-        <PanelView id="panel"/>
+        <OverlayViewController id="overlayViewController"/>
     </children>
 </component>

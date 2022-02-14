@@ -1,7 +1,6 @@
 sub init()
     m.top.setFocus(true)
     m.videoPlayer = m.top.findNode("videoPlayer")
-    m.panel = m.top.findNode("panel")
     m.questionLabel = m.top.findNode("questionLabel")
     configureVideoContentNode()
 end sub
@@ -16,8 +15,12 @@ sub configureVideoContentNode()
 end sub
 
 sub configureSDKPanel()
-    m.panel = m.top.findNode("panel")
-    m.panel.videoPlayer = m.videoPlayer
-    m.panel.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
-    m.panel.runSDK = true
+    m.overlayViewController = m.top.findNode("overlayViewController")
+    m.overlayViewController.videoPlayer = m.videoPlayer
+    m.overlayViewController.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
+
+    ' m.panel = m.top.findNode("panel")
+    ' m.panel.videoPlayer = m.videoPlayer
+    ' m.panel.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
+    ' m.panel.runSDK = true
 end sub

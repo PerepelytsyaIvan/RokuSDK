@@ -1,0 +1,16 @@
+<component name="RatingAnswerItemComponents" extends="Group">
+    <script type="text/brightscript" uri="RatingAnswerItemComponents.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="image" type="string" onChange="OnItemContentChanged"/>
+        <field id="title" type="string"/>
+    </interface>
+
+    <children>
+        <Poster id = "rating"/>
+        <Label id="titleLabel" translation = "[0, 2]" horizAlign="left" vertAlign="center"/>
+    </children>
+</component>
