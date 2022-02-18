@@ -1,0 +1,12 @@
+<component name="VideoPlayer" extends="Scene" initialFocus = "videoPlayer">
+    <script type="text/brightscript" uri="./VideoPlayer.brs" />
+
+    <interface>
+       
+    </interface>
+
+    <children>
+        <Video id="videoPlayer" translation = "[0,0]" width = "1920" height = "1080"/>
+        <OverlayViewController id="overlayViewController"/>
+    </children>
+</component>

@@ -1,0 +1,27 @@
+<component name="SomeRatingStarItemComponent" extends="Group">
+    <script type="text/brightscript" uri="SomeRatingStarItemComponent.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
+    </interface>
+
+
+    <children>
+        <Group id="itemComponentGroup">
+            <Poster id = "ratingPoster"
+                width = "40"
+                height = "40">
+            </Poster>
+
+            <Label id="titleLabel"
+                translation="[0, 2.5]" 
+                horizAlign="center" 
+                vertAlign="center">
+            </Label>
+        </Group>
+    </children>
+</component>
