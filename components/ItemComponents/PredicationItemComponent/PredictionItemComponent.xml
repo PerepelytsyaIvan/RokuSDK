@@ -3,24 +3,14 @@
     <script type="text/brightscript" uri="../../Helpers/util.brs" />
 
     <interface>
-        <field id="height" type="float" onChange="layoutSubviews" />
-        <field id="width" type="float" onChange="layoutSubviews" />
-        <field id="itemContent" type="node" onChange="OnItemContentChanged" />
-        <field id="focusPercent" type="float" onChange="OnItemFocusChanged" />
-        <field id="rowHasFocus" type="bool" onChange="OnItemFocusChanged" />
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
     </interface>
 
     <children>
         <Group id="itemComponentGroup">
-            <Poster id="posterUnfocused"
-                 uri="pkg:/images/predicationUnfocus.9.png">
-            </Poster>
-
-            <Poster id="posterFocused"
-                uri="pkg:/images/predicationFocus.9.png"
-                opacity = "0">
-            </Poster>
-
             <Poster id="posterCell">
             </Poster>
 

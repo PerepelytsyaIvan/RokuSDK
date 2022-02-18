@@ -24,12 +24,22 @@ end sub
 
 sub onSelectAnswer(event)
     m.answer = event.getData() 
-    m.networkLayerManager.callFunc("sendAnswer", getSendAnswerUrl(m.eventModel.questiontype, m.eventModel.idEvent), m.top.accountRoute, m.answer.answer)
+    answer = m.answer.answer
+    wager = invalid
+    if isInvalid(answer) then answer = m.answer.title
+    if IsValid(m.answer.wager) then wager = m.answer.wager
+    m.networkLayerManager.callFunc("sendAnswer", getSendAnswerUrl(m.eventModel.questiontype, m.eventModel.idEvent), m.top.accountRoute, answer, wager)
 end sub
 
 sub onResponceAnswer(event)
     responce = event.getData()
-    eventModel = m.modelOverlay.callFunc("getAnswers", m.answer, m.eventModel, responce)
+    if m.eventModel.questionType = "injectRating"
+        eventModel = m.modelOverlay.callFunc("getAnswerModelForRatings", m.eventModel, responce)
+    else if m.eventModel.questionType = "predictionWager"
+        eventModel = m.modelOverlay.callFunc("getAnswerWagerPrediction", m.eventModel, responce)
+    else
+        eventModel = m.modelOverlay.callFunc("getAnswers", m.answer, m.eventModel, responce)
+    end if
     RegWrite(eventModel.idevent, FormatJson(eventModel))
     m.overlayView.callFunc("showAnswers", eventModel)
     m.timerHidePanel.control = "start"
@@ -37,7 +47,7 @@ end sub
 
 sub onResponceQuizEvent(event)
     quizEvent = event.getData()
-    m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", quizEvent, "injectQuiz")
+    m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", quizEvent, "injectQuiz", m.timeToStay)
     m.timeForHidingOverlay = m.eventModel.timeForHiding
     m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
     m.type = m.eventModel.questionType
@@ -63,9 +73,11 @@ sub on_message(event)
         json = ParseJson(parseMessage.data)
         if parseMessage.event <> "pusher_internal:subscription_succeeded" and parseMessage.event <> "pusher:connection_established" and json.messageType <> "streamerInfo"
             if json.messageType = "injectQuiz"
+                m.timeToStay = json.timeToStay
                 m.networkLayerManager.callFunc("getQuizEvent", getQuizUrl(json.id))
             else
                 m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", json)
+                if isInvalid(m.eventModel.questionType) then return
                 m.timeForHidingOverlay = m.eventModel.timeForHiding
                 m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
                 m.type = m.eventModel.questionType
@@ -96,6 +108,7 @@ end sub
 sub infoApplication(event)
     infoApp = event.getData()
     desingModel = m.modelOverlay.callFunc("getDesignModel", infoApp)
+    saveInGlobal("design", desingModel)
     m.eventModel = m.modelOverlay.callFunc("getEventInfo", infoApp)
     m.overlayView.designModel = desingModel
 

@@ -48,13 +48,17 @@ sub responceInfo(event)
     m.top.infoResponce = info.data
 end sub
 
-function sendAnswer(url, param, answer)
+function sendAnswer(url, param, answer, wager)
     userToken = RegRead("loginizationToken")
 
     request = CreateObject("roSGNode", "URLRequest")
     request.url = url
     request.method = "POST"
-    request.body = { "data": { "channelId": param.channelId, "userToken": userToken, "broadcasterName": param.broadcasterName, "answer": answer } }
+    if isValid(wager)
+        request.body = { "data": { "channelId": param.channelId, "userToken": userToken, "broadcasterName": param.broadcasterName, "answer": answer,  "wager": wager} }
+    else
+        request.body = { "data": { "channelId": param.channelId, "userToken": userToken, "broadcasterName": param.broadcasterName, "answer": answer } }
+    end if
     networkManager = CreateObject("roSGNode", "NetworkTask")
     networkManager.request = request
     networkManager.observeField("response", "onResponseAnsver")

@@ -3,19 +3,19 @@
     <script type="text/brightscript" uri="../../Helpers/util.brs" />
 
     <interface>
-        <field id="height" type="float" onChange="layoutSubviews" />
-        <field id="width" type="float" onChange="layoutSubviews" />
-        <field id="itemContent" type="node" onChange="OnItemContentChanged" />
-        <field id="rowIndex" type="integer" />
-        <field id="rowlistHasFocus" type="bool" onChange="itemFocusChanged" />
-        <field id="focusPercent" type="float" onChange="itemFocusChanged"/>
-        <field id="rowHasFocus" type="bool" onChange="itemFocusChanged" />
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
     </interface>
 
     <children>
         <Group id="itemComponentGroup">
-            <Rectangle id = "separator" width = "1"  color = "#ffffff"/>
-            <Label id="titleLabel" translation="[0,5]" horizAlign="center" vertAlign="center"/>
+            <LayoutGroup id = "layoutGroup" translation = "[10, 0]" layoutDirection = "horiz" itemSpacings = "[20, 0]">
+                <Label id="titleLabel" horizAlign="left" vertAlign="center"/>
+                <Rectangle id = "separator" width = "1" color = "#ffffff"/>
+                <Rectangle id = "separator" width = "5" color = "#ffffff" visible = "false"/>
+            </LayoutGroup>
         </Group>
     </children>
 </component>

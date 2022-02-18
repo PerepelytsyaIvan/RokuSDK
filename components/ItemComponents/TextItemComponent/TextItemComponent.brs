@@ -1,30 +1,28 @@
 sub init()
-    initView()
-end sub
-
-sub initView()
     m.titleLabel = m.top.findNode("titleLabel")
     m.separator = m.top.findNode("separator")
+    m.itemComponentGroup = m.top.findNode("itemComponentGroup")
+    m.layoutGroup = m.top.findNode("layoutGroup")
 end sub
 
-sub OnItemContentChanged()
-    itemContent = m.top.itemContent
+sub configureDataSource()
+    itemContent = m.top.dataSource
     m.titleLabel.font = getRegularFont(20)
     m.titleLabel.text = itemContent.title
-    m.separator.visible = itemContent.isSelected 
-    if itemContent.title = "Close"
-        m.separator.visible = false
-    end if
-    if not itemContent.isSelected 
-        m.titleLabel.horizAlign="left"
-        m.titleLabel.translation = [0, 5]
-    end if
+    m.titleLabel.color = m.global.design.questionTextColor
+    m.separator.color = m.global.design.questionTextColor
+    m.separator.visible = m.top.dataSource.title = "Account"
     layoutSubviews()
 end sub
 
 sub layoutSubviews()
-    m.titleLabel.width = m.top.width - 10
-    m.titleLabel.height = m.top.height - 10
-    m.separator.height = m.top.height 
-    m.separator.translation = [m.top.width - 1, 0]
+    m.titleLabel.width = m.titleLabel.localBoundingRect().width
+    m.titleLabel.height = 20
+    if m.separator.visible 
+        m.separator.height = 20
+        m.separator.width = 2
+    end if
+    boundingRectLocal = m.layoutGroup.localBoundingRect()
+    m.top.width = boundingRectLocal.width
+    m.top.height = 20
 end sub

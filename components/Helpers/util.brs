@@ -640,6 +640,7 @@ sub getPercent(percent) as object
 end sub
 
 sub getImageWithName(name) as object
+    if IsInvalid(name) then name = ""
     return "https://media2.inthegame.io" + name
 end sub
 

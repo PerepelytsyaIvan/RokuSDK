@@ -1,28 +1,34 @@
 sub init()
-    m.rating = m.top.findNode("rating")
-    m.focusedAnimation = m.top.findNode("focusedAnimation")
-    m.focusedColor = m.top.findNode("focusedColor")
-
-    m.focused = m.top.findNode("focused")
+    m.focusedInterpolator = m.top.findNode("focusedInterpolator")
+    m.itemComponentGroup = m.top.findNode("itemComponentGroup")
+    m.focusPoster = m.top.findNode("focusPoster")
+    m.ratingLayout = m.top.findNode("ratingLayout")
 end sub
 
-sub OnItemContentChanged()
-    m.rating.uri = "pkg:/images/iconStar" + m.top.title + ".png"
-    m.top.observeField("focusedChild", "onFocusedChild")
+sub configureDataSource()
+    countStar = m.top.dataSource.title.toInt()
+
+    for i = 0 to countStar - 1
+        star = m.ratingLayout.createChild("Poster")
+        star.width = 25
+        star.height = 25
+        star.uri = getImageWithName(m.global.design.fullStarIcon)
+    end for
+
     layoutSubviews()
 end sub
 
-sub layoutSubviews()
-    m.rating.width = m.rating.height * m.top.title.toInt()
-    m.focused.width = m.top.width
-    m.focused.height = m.top.height
-    m.rating.translation = [10 ,(m.top.height - m.rating.height) / 2]
+sub onChangePercentFocus(event)
+    percent = event.getData()
+    m.focusedInterpolator.fraction = percent
 end sub
 
-sub setFocusView()
-    if m.top.focused
-        m.focused.uri = "pkg:/images/ratingFocus.png"
-    else
-        m.focused.uri = "pkg:/images/ratingUfocus.png"
-    end if
+sub layoutSubviews()
+    boundingRectLayout = m.ratingLayout.localBoundingRect()
+    m.focusPoster.width = boundingRectLayout.width + 20
+    boundingRectLocal = m.itemComponentGroup.localBoundingRect()
+    m.top.width = boundingRectLocal.width
+    m.top.height = 40
+    m.focusPoster.height = m.top.height
+    m.ratingLayout.translation = [10 , (m.top.height - boundingRectLayout.height) / 2]
 end sub

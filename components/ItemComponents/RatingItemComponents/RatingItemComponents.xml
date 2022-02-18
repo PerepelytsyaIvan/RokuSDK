@@ -3,21 +3,25 @@
     <script type="text/brightscript" uri="../../Helpers/util.brs" />
 
     <interface>
-        <field id="height" type="float" onChange="layoutSubviews" />
-        <field id="width" type="float" onChange="layoutSubviews" />
-        <field id="title" type="string" onChange="OnItemContentChanged" />
-        <field id="focused" type = "bool" onChange = "setFocusView"/>
-        <field id="image" type="string"/>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
     </interface>
+
 
     <children>
         <Group id="itemComponentGroup">
-            <Poster id = "focused" uri = "pkg:/images/ratingUfocus.png" />
-            <Poster id = "rating" width = "20" height = "20"/>
+            <Poster id = "focusPoster"
+                uri = "pkg:/images/ratingFocus.9.png">
+            </Poster>
+
+            <LayoutGroup id = "ratingLayout"
+                itemSpacings = "[5]"
+                layoutDirection = "horiz">
+            </LayoutGroup>
         </Group>
 
-        <Animation id="focusedAnimation" duration="0.3" easeFunction="linear">
-            <ColorFieldInterpolator id = "focusedColor" key="[0.0, 1.0]" keyValue="[#f6fe00ff, #FED500ff]" fieldToInterp="focused.blend"/>
-        </Animation>
+        <FloatFieldInterpolator id = "focusedInterpolator" key="[0.0, 1.0]" keyValue="[1.0, 0.6]" fieldToInterp="itemComponentGroup.opacity"/>
     </children>
 </component>
