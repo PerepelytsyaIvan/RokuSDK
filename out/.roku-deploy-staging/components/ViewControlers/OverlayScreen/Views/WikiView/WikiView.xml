@@ -1,0 +1,13 @@
+<component name="WikiView" extends="Group">
+    <script type="text/brightscript" uri="WikiView.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/util.brs" />
+
+    <interface>
+    
+
+    </interface>
+
+    <children>
+
+    </children>
+</component>
