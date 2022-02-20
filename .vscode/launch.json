@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "BrightScript Debug: Launch",
             "stopOnEntry": false,
-            "host": "192.168.88.32",
+            "host": "192.168.0.105",
             "password": "padev",
             "rootDir": "${workspaceFolder}",
             "enableDebuggerAutoRecovery": false,
