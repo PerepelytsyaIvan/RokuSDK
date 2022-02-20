@@ -3,10 +3,10 @@ sub init()
     m.videoPlayer = m.top.findNode("videoPlayer")
     m.questionLabel = m.top.findNode("questionLabel")
     configureVideoContentNode()
+    configureSDKPanel()
 end sub
 
 sub configureVideoContentNode()
-    configureSDKPanel()
     content = CreateObject("roSGNode", "ContentNode")
     content.url = "https://media2.inthegame.io/uploads/20minutes_auto_demo_2.mp4"
     content.streamformat = "mp4"
