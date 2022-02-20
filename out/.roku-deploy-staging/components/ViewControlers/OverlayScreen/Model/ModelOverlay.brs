@@ -137,7 +137,6 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
     if isValid(eventType) then messageType = eventType
     if isInvalid(eventType) then messageType = data.messageType
 
-STOP
     if messageType = "injectPoll"
         if data.poll.questionType = "prediction"
             if data.poll.is_wager
