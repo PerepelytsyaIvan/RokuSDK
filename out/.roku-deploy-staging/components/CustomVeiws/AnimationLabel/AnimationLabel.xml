@@ -1,0 +1,22 @@
+<component name="AnimationLabel" extends="Group">
+    <script type="text/brightscript" uri="AnimationLabel.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <field id="vertAlign" type="string" alias="label.vertAlign" />
+        <field id="horizAlign" type="string" alias="label.horizAlign" />
+        <field id="color" type="string" alias="label.color" />
+        <field id="text" type="string" alias="label.text" />
+
+        <function name = "animate"/>
+    </interface>
+
+    <children>
+        <Label id = "label">
+        </Label>
+
+        <Animation id="LabelAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <FloatFieldInterpolator id="LabelInterpolator" key="[0.0, 1.0]" fieldToInterp = "label.opacity"/>
+        </Animation>
+    </children>
+</component>

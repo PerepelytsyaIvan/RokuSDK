@@ -1,0 +1,29 @@
+<component name="AnswerItemComponent" extends="Group">
+    <script type="text/brightscript" uri="AnswerItemComponent.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <!-- <interface>
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="itemContent" type="node" onChange="OnItemContentChanged" />
+        <field id="rowIndex" type="integer" />
+        <field id="rowlistHasFocus" type="bool" onChange="itemFocusChanged" />
+        <field id="focusPercent" type="float" onChange="itemFocusChanged"/>
+        <field id="rowHasFocus" type="bool" onChange="itemFocusChanged" />
+    </interface> -->
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
+    </interface>
+
+
+    <children>
+        <LayoutGroup id="layoutGroup" translation = "[0,0]" layoutDirection = "vert" itemSpacings = "[2]">
+            <Label id="percentLabelLabel" horizAlign="left" vertAlign="center" color = "#cc0000"/>
+            <Label id="titleLabel" horizAlign="left" vertAlign="center" color = "#cc0000"/>
+        </LayoutGroup>
+    </children>
+</component>

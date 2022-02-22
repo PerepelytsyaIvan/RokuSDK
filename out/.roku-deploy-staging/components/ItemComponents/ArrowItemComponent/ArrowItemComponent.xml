@@ -1,0 +1,23 @@
+<component name="ArrowItemComponent" extends="Group">
+    <script type="text/brightscript" uri="ArrowItemComponent.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
+    </interface>
+
+    <children>
+        <Poster id = "focusCell" 
+            width = "23" 
+            height = "15">
+        </Poster>
+
+        <Poster id = "posterCell" 
+            width = "23" 
+            height = "15">
+        </Poster>
+    </children>
+</component>

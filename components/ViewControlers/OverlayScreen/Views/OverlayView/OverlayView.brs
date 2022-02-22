@@ -286,28 +286,19 @@ sub handleRemoveWikiView(event)
 
     for each wikiView in m.arrayNotificationView
         if wikiView.id.toInt() > oldWikiView.id.toInt()
+            wikiView.id = (wikiView.id.toInt() - 1).toStr()
             translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
             interpolator = getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY])
             m.animation.appendChild(interpolator)
-            ' ?  wikiView.id + "---->" + interpolator.keyValue
-            wikiView.id = (wikiView.id.toInt() - 1).toStr()
+            m.animation.delay = 0.01
         end if
     end for
-    ' for i = oldWikiView.id.toInt() to m.arrayNotificationView.count() - 1
-    '     wikiView = m.arrayNotificationView[i]
-    '     if IsValid(wikiView)
-    '         translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
-    '         m.animation.appendChild(getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY]))
-    '         wikiView.id = (wikiView.id.toInt() - 1).toStr()
-    '     end if
-    ' end for
 
     m.animation.control = "start"
 end sub
 
 sub changeStateAnimationNotify(event)
     state = event.getData()
-
     if state = "stopped"
         m.animation.removeChildrenIndex(0, 100)
     end if
