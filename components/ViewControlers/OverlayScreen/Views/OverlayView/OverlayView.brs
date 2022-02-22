@@ -37,6 +37,8 @@ sub dependencyConnectionViews()
     m.focusable = false
     m.asShowPanel = false
     m.focusKey = 0
+
+    m.arrayNotificationView = []
 end sub
 
 sub configureObservers()
@@ -128,7 +130,6 @@ sub configureDesign(event)
     m.backgroundOverlay.uri = m.global.design.backgrounImage
     m.separator.blendColor = m.global.design.buttonBackgroundColor
 
-    m.wagerLabel.font = getMediumFont(30)
     m.questionLabel.font = getBoldFont(30)
     m.timeLabel.font = getBoldFont(40)
     m.secondsLabel.font = getMediumFont(30)
@@ -141,7 +142,6 @@ function showPanel(asShow, model = invalid)
     m.translationGradientAnimation.control = "finish"
     m.translationAnimation.control = "finish"
     m.playerAnimation.control = "finish"
-
     m.translationGradientAnimation.control = "start"
     m.translationAnimation.control = "start"
     m.playerAnimation.control = "start"
@@ -212,13 +212,19 @@ end sub
 
 sub configureWagerAnswer(eventModel)
     hidePredictionSubmit()
-    boundingLabel = m.questionLabel.boundingRect()
-    maxWidth = 1920 - (boundingLabel.x + boundingLabel.width + 360)
+
     for each answer in eventModel.answers
         if answer.answersending
-            m.wagerLabel.text = answer.text
+            configureWagerLabel(answer.text)
         end if
     end for
+
+end sub
+
+sub configureWagerLabel(text)
+    m.wagerLabel.text = text
+    boundingLabel = m.questionLabel.boundingRect()
+    maxWidth = 1920 - (boundingLabel.x + boundingLabel.width + 360)
     boundingRectLabel = m.wagerLabel.localBoundingRect()
     x = (maxWidth - boundingRectLabel.width) / 2
     m.wagerLabel.width = boundingRectLabel.width
@@ -237,6 +243,85 @@ end sub
 sub configureRowList(model)
     m.wagerLabel.callFunc("animate", false)
     if isInvalid(model) then return
+    m.isWiki = false
+    if model.questionType = "injectWiki"
+        if model.type = "notification"
+            m.isWiki = true
+            wikiView = m.top.createChild("WikiView")
+            wikiView.observeField("removeWikiView", "handleRemoveWikiView")
+            if m.arrayNotificationView.count() > 0
+                oldNotifyView = m.arrayNotificationView[m.arrayNotificationView.count() - 1]
+                bounding = oldNotifyView.boundingRect()
+                wikiView.translation = [0, (oldNotifyView.translation[1] + bounding.height) + 10]
+            end if
+            wikiView.dataSource = model
+            m.arrayNotificationView.push(wikiView)
+            wikiView.id = (m.arrayNotificationView.count() - 1).toStr()
+            return
+        else
+            dataSourceLeftButton = [{ "title": "Close", "itemComponent": "TextItemComponent" }]
+            showCollectionView(false, true)
+            m.collectionViewLeftButton.translation = [1735, 107]
+            m.collectionViewLeftButton.setFocus(true)
+        end if
+    else
+        dataSourceLeftButton = [{ "title": "Account", "itemComponent": "TextItemComponent" }, { "title": "Close", "itemComponent": "TextItemComponent" }]
+        m.collectionViewLeftButton.translation = [1685, 107]
+        configureCollectionView(model)
+    end if
+    m.collectionViewLeftButton.horizontalSpacing = 15.0
+    m.collectionViewLeftButton.dataSource = dataSourceLeftButton
+    m.focusable = true
+    m.layoutGroup.visible = false
+end sub
+
+sub handleRemoveWikiView(event)
+    oldWikiView = event.getData()
+    m.arrayNotificationView.Delete(oldWikiView.id.toInt())
+    m.top.removeChild(oldWikiView)
+    m.animation = m.top.createChild("Animation")
+    m.animation.observeField("state", "changeStateAnimationNotify")
+    m.animation.duration = 0.2
+    m.animation.easeFunction = "linear"
+
+    for each wikiView in m.arrayNotificationView
+        if wikiView.id.toInt() > oldWikiView.id.toInt()
+            translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
+            interpolator = getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY])
+            m.animation.appendChild(interpolator)
+            ' ?  wikiView.id + "---->" + interpolator.keyValue
+            wikiView.id = (wikiView.id.toInt() - 1).toStr()
+        end if
+    end for
+    ' for i = oldWikiView.id.toInt() to m.arrayNotificationView.count() - 1
+    '     wikiView = m.arrayNotificationView[i]
+    '     if IsValid(wikiView)
+    '         translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
+    '         m.animation.appendChild(getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY]))
+    '         wikiView.id = (wikiView.id.toInt() - 1).toStr()
+    '     end if
+    ' end for
+
+    m.animation.control = "start"
+end sub
+
+sub changeStateAnimationNotify(event)
+    state = event.getData()
+
+    if state = "stopped"
+        m.animation.removeChildrenIndex(0, 100)
+    end if
+end sub
+
+sub getInterpolator(fieldToInterp, startValue, endValue) as object
+    interpolator = CreateObject("roSGNode", "Vector2DFieldInterpolator")
+    interpolator.fieldToInterp = fieldToInterp
+    interpolator.key = [0.0, 1.0]
+    interpolator.keyValue = [startValue, endValue]
+    return interpolator
+end sub
+
+sub configureCollectionView(model)
     boundingLabel = m.questionLabel.boundingRect()
     m.collectionView.horizontalSpacing = 40
     m.collectionView.dataSource = model.answers
@@ -245,35 +330,36 @@ sub configureRowList(model)
     m.collectionView.size = [maxWidth, 100]
     m.collectionView.translation = [(boundingLabel.width + boundingLabel.x) + 60, m.logo.translation[1] + ((m.logo.height - collectionViewHeight) / 2)]
     m.collectionView.setFocus(true)
-    dataSourceLeftButton = [{ "title": "Account", "itemComponent": "TextItemComponent" }, { "title": "Close", "itemComponent": "TextItemComponent" }]
-    m.collectionViewLeftButton.horizontalSpacing = 15.0
-    m.collectionViewLeftButton.dataSource = dataSourceLeftButton
-    m.collectionViewLeftButton.translation = [1685, 107]
+
     if model.questionType = "injectRating"
         m.collectionView.focusImage = "nil"
     else
         m.collectionView.focusImage = "pkg:/images/focusSubmit.9.png"
     end if
-    m.focusable = true
-    m.layoutGroup.visible = false
     showCollectionView(true, true)
 end sub
 
 sub configureUI()
     eventInfo = m.top.eventInfo
 
-    m.secondsLabel.text = "sec"
-    m.questionLabel.text = eventInfo.question
+    if eventInfo.type <> "notification"
+        m.secondsLabel.text = "sec"
+        m.questionLabel.text = eventInfo.question
 
-    localBoundingRect = m.questionLabel.localBoundingRect()
-    if localBoundingRect.width > 700
-        m.questionLabel.width = localBoundingRect.width / 2
-    else
-        m.questionLabel.width = localBoundingRect.width
+        localBoundingRect = m.questionLabel.boundingRect()
+        if localBoundingRect.width > 700
+            m.questionLabel.width = localBoundingRect.width / 2
+        else
+            m.questionLabel.width = localBoundingRect.width + 20
+        end if
+
+        m.separator.translation = [m.questionLabel.width + m.questionLabel.translation[0] + 10, m.logo.translation[1] - 10]
     end if
 
-    m.separator.translation = [m.questionLabel.boundingRect().width + m.questionLabel.boundingRect().x + 30, m.logo.translation[1] - 10]
-
+    if eventInfo.questionType = "injectWiki" and eventInfo.type = "notification"
+        configureRowList(eventInfo)
+        return
+    end if
     if eventInfo.showAnswerview
         showAnswers(eventInfo)
         if not m.asShowPanel

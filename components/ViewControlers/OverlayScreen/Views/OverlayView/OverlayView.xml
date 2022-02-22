@@ -23,7 +23,6 @@
 
             <Poster id="backgroundOverlay" 
                 width="1920" 
-                loadHeight="150" 
                 height="150">
             </Poster>
 
@@ -71,10 +70,9 @@
 
         <Group id="quizGruop"></Group>
 
-        <Group id="rowListGroup" translation="[0, 1080]" layoutDirection="horiz">
+        <Group id="rowListGroup" translation="[0, 1080]">
             <LayoutGroup id="layoutGroup"
                 layoutDirection="horiz" 
-                scrollingEnable="false" 
                 itemSpacings="[50]">
             </LayoutGroup>
 

@@ -74,7 +74,7 @@ function Logger() as object
     end function
 
     ' Parse Config
-    config_string = readAsciiFile("pkg:/bright_web_socket.json")
+    config_string = readAsciiFile("pkg:/components/Managers/src/web_socket_client/bright_web_socket.json")
     config = parseJson(config_string)
     if config <> invalid
         if config.log_level <> invalid

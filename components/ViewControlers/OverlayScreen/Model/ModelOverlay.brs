@@ -221,13 +221,14 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         end for
         eventModel.timeForHiding = data.timeToStay
     else if messageType = "injectWiki"
-        storageModel = getStorageAnswer(data)
+        storageModel = getStorageAnswer(data.wiki.id)
         if isValid(storageModel) then return storageModel
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.wiki.id
         eventModel.question = data.wiki.name
         eventModel.questionType = "injectWiki"
+        eventModel.type = data.wiki.type
         eventModel.timeForHiding = data.timeToStay
     end if
 

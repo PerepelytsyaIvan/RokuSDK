@@ -1,4 +1,6 @@
 sub init()
+    m.label = m.top.findNode("label")
+    m.label.font = getMediumFont(30)
     m.LabelAnimation = m.top.findNode("LabelAnimation")
     m.LabelInterpolator = m.top.findNode("LabelInterpolator")
 end sub
