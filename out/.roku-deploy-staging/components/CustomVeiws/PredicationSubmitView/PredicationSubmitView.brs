@@ -13,6 +13,7 @@ sub init()
     m.collectionView.observeField("item", "didSelecetItem")
     m.previusReward = 0
     m.previusPoints = 0
+    m.count = 0
 end sub
 
 sub configureDataSource()
@@ -47,7 +48,8 @@ sub layoutSubwview()
     m.posterCell.translation = [0, boundingRectCollection.x + ((boundingRectCollection.height - m.posterCell.height) / 2)]
     m.titleLabel.translation = [m.posterCell.translation[0] + m.posterCell.width + 20, 0]
     labelBoundingRect = m.titleLabel.boundingRect()
-    m.counterLabel.translation = [m.titleLabel.translation[0] + labelBoundingRect.width + 80, 0]
+    m.counterLabel.translation = [m.titleLabel.translation[0] + labelBoundingRect.width, 0]
+    m.counterLabel.width = 80 + 72
     counterLabelBoundingRect = m.counterLabel.boundingRect()
     m.containerView.translation = [0, (m.separator.height - boundingRectCollection.height) / 2]
     m.collectionView.translation = [m.counterLabel.translation[0] + counterLabelBoundingRect.width + 20, 0]
@@ -77,6 +79,12 @@ sub didSelecetItem(event)
                 m.counterLabel.text = getForrmaterStringWithPoints("down")
             end if
         end if
+        ' if m.counterLabel.boundingRect().width > 72 and m.collectionView.translation[0] < m.counterLabel.translation[0] + m.counterLabel.boundingRect().width
+        '     m.counterLabel.translation = [m.counterLabel.translation[0] - (m.counterLabel.boundingRect().width - 72), m.counterLabel.translation[1]]
+        ' else if m.counterLabel.boundingRect().width < 72
+        '     labelBoundingRect = m.titleLabel.boundingRect()
+        '     m.counterLabel.translation = [m.titleLabel.translation[0] + labelBoundingRect.width + 80, 0]
+        ' end if
     else 
         if item.title = "Back"
             m.top.pressBack = true
@@ -88,17 +96,15 @@ end sub
 
 sub getForrmaterStringWithPoints(direction = "up", start = false) as string
     if direction = "up"
-        points = m.previusPoints + m.top.dataSource.points.toFloat()
-        reward = m.top.dataSource.points.toFloat() + m.previusReward
-        if start
-            reward = m.top.dataSource.reward.toFloat() * m.top.dataSource.points.toFloat()
-        end if
+        m.count++
     else if direction = "down"
-        points = m.previusPoints - m.top.dataSource.points.toFloat()
-        reward = m.previusReward - m.top.dataSource.points.toFloat()
+        m.count--
     end if
-    m.previusReward = reward
-    m.previusPoints = points
-    m.wager = m.previusReward.toStr()
-    return m.previusPoints.toStr() + "/" + m.previusReward.toStr()
+
+    points = (m.top.dataSource.points.toFloat() * m.count)
+    reward = (m.top.dataSource.reward.toFloat() * m.top.dataSource.points.toFloat()) * m.count
+    m.wager = reward.toStr()
+    return points.toStr() + "/" + reward.toStr()
 end sub
+
+

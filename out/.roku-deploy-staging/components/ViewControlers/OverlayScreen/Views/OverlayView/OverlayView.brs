@@ -196,6 +196,7 @@ function showAnswers(eventModel)
         showCollectionView(false, true)
         configureWagerAnswer(eventModel)
     end if
+    getPointsView(eventModel)
     dataSourceLeftButton = [{ "title": "Close", "itemComponent": "TextItemComponent" }]
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
     m.collectionViewLeftButton.translation = [1735, 107]
@@ -312,6 +313,15 @@ sub getInterpolator(fieldToInterp, startValue, endValue) as object
     return interpolator
 end sub
 
+sub getPointsView(dataSource)
+    m.timeLabel.visible = false
+    m.secondsLabel.visible = false
+    m.levelsLabelView = m.panelGroup.createChild("LevelsLabelView")
+    m.levelsLabelView.dataSource = dataSource
+    m.levelsLabelView.callFunc("animate", true)
+    m.levelsLabelView.translation = [1920 - (290 - ((290 - m.levelsLabelView.boundingRect().width) / 2)), m.timeLabel.translation[1]]
+end sub
+
 sub configureCollectionView(model)
     boundingLabel = m.questionLabel.boundingRect()
     m.collectionView.horizontalSpacing = 40
@@ -335,8 +345,11 @@ sub configureUI()
 
     if eventInfo.type <> "notification"
         m.secondsLabel.text = "sec"
-        m.questionLabel.text = eventInfo.question
+        if isValid(m.levelsLabelView) then m.levelsLabelView.callFunc("animate", false)
 
+        m.questionLabel.text = eventInfo.question
+        m.timeLabel.visible = true
+        m.secondsLabel.visible = true
         localBoundingRect = m.questionLabel.boundingRect()
         if localBoundingRect.width > 700
             m.questionLabel.width = localBoundingRect.width / 2

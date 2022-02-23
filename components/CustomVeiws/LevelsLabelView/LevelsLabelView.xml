@@ -1,0 +1,38 @@
+<component name="LevelsLabelView" extends="Group">
+    <script type="text/brightscript" uri="LevelsLabelView.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange = "configureDataSource" />
+
+        <function name = "animate"/>
+    </interface>
+
+    <children>
+        <LayoutGroup id = "levelGroup" layoutDirection="horiz" itemSpacings="[15]">
+            <LayoutGroup layoutDirection="vert" itemSpacings="[5]">
+                <Label id = "levelLabel"
+                    horizAlign = "center">
+                </Label>
+
+                <Label id = "countLevelLabel"
+                    horizAlign = "center">
+                </Label>
+            </LayoutGroup>
+
+            <LayoutGroup layoutDirection="vert" itemSpacings="[5]">
+                <Label id = "pointsLabel"
+                    horizAlign = "center">
+                </Label>
+
+                <Label id = "countPointsLabel"
+                    horizAlign = "center">
+                </Label>
+            </LayoutGroup>
+        </LayoutGroup>
+
+        <Animation id="LabelAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <FloatFieldInterpolator id="LabelInterpolator" key="[0.0, 1.0]" fieldToInterp = "levelGroup.opacity"/>
+        </Animation>
+    </children>
+</component>

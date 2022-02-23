@@ -1,6 +1,6 @@
 <component name="TextItemComponent" extends="Group">
     <script type="text/brightscript" uri="TextItemComponent.brs" />
-    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource" />

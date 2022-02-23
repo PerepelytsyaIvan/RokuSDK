@@ -9,6 +9,7 @@ sub init()
 end sub
 
 sub configureDataSource()
+    m.background.widht = getScreenWidth()
     m.questionLabel.font = getRegularFont(25)
     m.questionLabel.text = m.top.dataSource.question
     
@@ -35,9 +36,9 @@ end sub
 
 sub showNotification(asShow)
     if asShow
-        m.iterpolator.keyValue = [[1920, 50], [(1920 - (m.background.width + 50)), 50]]
+        m.iterpolator.keyValue = [[getScreenWidth(), 50], [(getScreenWidth() - (m.background.width + 50)), 50]]
     else
-        m.iterpolator.keyValue = [m.iterpolator.keyValue[1], [1920, 50]]
+        m.iterpolator.keyValue = [m.iterpolator.keyValue[1], [getScreenWidth(), 50]]
     end if
     m.translationAnimation.control = "start"
 end sub

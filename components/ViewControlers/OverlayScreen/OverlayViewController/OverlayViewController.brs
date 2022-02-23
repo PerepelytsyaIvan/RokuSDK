@@ -5,6 +5,7 @@ sub init()
 
     m.timerHidePanel = configureTimer(1.0, true)
     m.timerShowPanel = configureTimer(1.0, true)
+    m.timerHideNotification = configureTimer(1.0, true)
 
     configureObservers()
 end sub
@@ -18,6 +19,7 @@ sub configureObservers()
 
     m.timerHidePanel.observeField("fire", "hidingOverlay")
     m.timerShowPanel.observeField("fire", "showingOverlayWithInfoUser")
+    m.timerHideNotification.observeField("fire", "hidingNotification")
 
     m.overlayView.observeField("selectedAnswer", "onSelectAnswer")
 end sub
@@ -78,8 +80,12 @@ sub on_message(event)
             else
                 m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", json)
                 if isInvalid(m.eventModel.questionType) then return
-                m.timeForHidingOverlay = m.eventModel.timeForHiding
-                m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
+                if IsValid(m.eventModel.type) and m.eventModel.type = "notification"
+            
+                else
+                    m.timeForHidingOverlay = m.eventModel.timeForHiding
+                    m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
+                end if
                 m.type = m.eventModel.questionType
                 showingOverlay()
             end if
@@ -134,6 +140,12 @@ sub hidingOverlay()
         m.top.setFocus(false)
         m.top.videoPlayer.setFocus(true)
     end if
+end sub
+
+sub hidingNotification()
+    if isInvalid(m.timeForHidingNotification) then return
+    m.timeForHidingNotification = invalid
+    m.timerHideNotification.control = "stop"
 end sub
 
 sub showingOverlayWithInfoUser() 

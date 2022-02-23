@@ -1,6 +1,6 @@
 <component name="OverlayView" extends="Group">
     <script type="text/brightscript" uri="OverlayView.brs" />
-    <script type="text/brightscript" uri="../../../../Helpers/util.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>
         <field id="designModel" type="assocarray" onChange="configureDesign" />

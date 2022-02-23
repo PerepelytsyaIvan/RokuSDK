@@ -1,6 +1,6 @@
 <component name="ModelOverlay" extends="Node">
     <script type="text/brightscript" uri="./ModelOverlay.brs" />
-    <script type="text/brightscript" uri="../../../Helpers/util.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>
         <function name = "getDesignModel"/>

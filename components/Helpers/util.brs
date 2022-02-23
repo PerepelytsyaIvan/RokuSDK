@@ -650,3 +650,15 @@ sub configureTimer(duration, repeat) as object
     timer.repeat = repeat
     return timer
 end sub
+
+sub getScreenWidth() as integer
+    di = CreateObject("roDeviceInfo")
+    displaySize = di.GetDisplaySize()
+    return displaySize.w
+end sub
+
+sub getScreenHeight() as integer
+    di = CreateObject("roDeviceInfo")
+    displaySize = di.GetDisplaySize()
+    return displaySize.h
+end sub

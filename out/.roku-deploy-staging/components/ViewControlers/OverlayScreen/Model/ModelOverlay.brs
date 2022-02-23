@@ -194,8 +194,8 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
             item.itemComponent = "PredictionItemComponent"
         end for
     else if messageType = "injectQuiz"
-        storageModel = getStorageAnswer(data.id)
-        if isValid(storageModel) then return storageModel
+        ' storageModel = getStorageAnswer(data.id)
+        ' if isValid(storageModel) then return storageModel
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.id
@@ -207,8 +207,8 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
             item.itemComponent = "PredictionWagerItemComponent"
         end for
     else if messageType = "predictionWager"
-        storageModel = getStorageAnswer(data.poll.id)
-        if isValid(storageModel) then return storageModel
+        ' storageModel = getStorageAnswer(data.poll.id)
+        ' if isValid(storageModel) then return storageModel
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.poll.id
@@ -252,6 +252,7 @@ function getAnswers(answer, eventModel, responceServer)
         eventModel.answerSending = true
         for each item in eventModel.answers
             item.isCorrectAnswer = responceServer.answer.correctAnswer.answer = item.answer
+            item.answerSending = responceServer.answer.answer = item.answer
         end for
     else
         totals = 0
@@ -276,6 +277,8 @@ function getAnswers(answer, eventModel, responceServer)
         item.itemComponent = "AnswerItemComponent"
     end for
 
+    if IsValid(responceServer.answer.userLevel) then eventModel.level = responceServer.answer.userLevel.level
+    eventModel.expoints = responceServer.answer.expoints_given
     return eventModel
 end function
 
@@ -300,6 +303,8 @@ function getAnswerModelForRatings(model, responce) as object
         starsAnswer -= 1
     end for
     model.answers = answers
+    model.level = responce.answer.userLevel.level
+    model.expoints = responce.answer.expoints_given
     return model
 end function
 
@@ -311,5 +316,7 @@ function getAnswerWagerPrediction(model, responce) as object
         end if
     end for
 
+    model.level = responce.answer.userLevel.level
+    model.expoints = responce.answer.expoints_given
     return model
 end function

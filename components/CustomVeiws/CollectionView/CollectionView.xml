@@ -1,6 +1,6 @@
 <component name="CollectionView" extends="Group">
     <script type="text/brightscript" uri="CollectionView.brs" />
-    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>
         <field id="dataSource" type="array" onChange = "configureDataSource"/>
