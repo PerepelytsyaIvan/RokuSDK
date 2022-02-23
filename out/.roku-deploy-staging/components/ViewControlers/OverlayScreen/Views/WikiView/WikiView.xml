@@ -4,25 +4,15 @@
 
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource" />
-        <field id="removeWikiView" type="node"/>
+        <field id="removeWikiView" type="node" />
     </interface>
 
     <children>
         <Group id="containerView">
-            <Rectangle id = "background" translation = "[1920, 0]" color = "#00000099" width = "275" height = "50">
-                <Label id = "questionLabel"
-                    width = "240"
-                    height = "50"
-                    vertAlign = "center"
-                    horizAlign = "right">
-                </Label>
+            <Rectangle id="background" translation="[1920, 0]" color="#00000099" width="275" height="50">
+                <Label id="questionLabel" height="50" vertAlign="center" horizAlign="right" translation="[10, 0]"></Label>
 
-                <Rectangle id = "progress"
-                    translation = "[1, 49]"
-                    width = "253"
-                    height = "2"
-                    color = "#ffffff">
-                </Rectangle>
+                <Rectangle id="progress" translation="[1, 49]" width="253" height="2" color="#ffffff"></Rectangle>
             </Rectangle>
         </Group>
 
