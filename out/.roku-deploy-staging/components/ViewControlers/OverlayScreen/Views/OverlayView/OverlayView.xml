@@ -1,5 +1,6 @@
 <component name="OverlayView" extends="Group">
     <script type="text/brightscript" uri="OverlayView.brs" />
+    <script type="text/brightscript" uri="OverlayViewHelper.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>

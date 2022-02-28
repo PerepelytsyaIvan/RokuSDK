@@ -1,14 +1,14 @@
 function getDesignModel(data) as object
     designModel = {
-        "backgrounImage" : getImageWithName(data.designs.backgroundImage)
-        "logoImage" : getImageWithName(data.designs.logoImage),
-        "questionTextColor" : data.designs.character.textColor,
-        "buttonBackgroundColor" : data.designs.defaultButton.backgroundColor,
-        "wrongAnswerTextColor" : data.designs.wrongAnswerTextColor,
-        "rightAnswerTextColor" : data.designs.rightAnswerTextColor,
-        "emptyStarIcon" : data.designs.ratingEmptyIcon,
-        "fullStarIcon" : data.designs.ratingFullIcon,
-        "halfStarIcon" : data.designs.ratingHalfIcon,
+        "backgrounImage": getImageWithName(data.designs.backgroundImage)
+        "logoImage": getImageWithName(data.designs.logoImage),
+        "questionTextColor": data.designs.character.textColor,
+        "buttonBackgroundColor": data.designs.defaultButton.backgroundColor,
+        "wrongAnswerTextColor": data.designs.wrongAnswerTextColor,
+        "rightAnswerTextColor": data.designs.rightAnswerTextColor,
+        "emptyStarIcon": data.designs.ratingEmptyIcon,
+        "fullStarIcon": data.designs.ratingFullIcon,
+        "halfStarIcon": data.designs.ratingHalfIcon,
     }
 
     return designModel
@@ -31,7 +31,7 @@ sub configureEventInfoPolls(data) as object
     clockData = data.clocks[0]
 
     eventModel = {
-        isShowView : false
+        isShowView: false
     }
 
     for each item in data.polls
@@ -39,7 +39,6 @@ sub configureEventInfoPolls(data) as object
             storageModel = getStorageAnswer(item.id)
 
             if isValid(storageModel) then return storageModel
-
             eventModel.showAnswerView = false
             eventModel.isShowView = true
             eventModel.idEvent = item.id
@@ -61,7 +60,7 @@ sub getEventInfoTrivias(data) as object
     clockData = data.clocks[0]
 
     eventModel = {
-        isShowView : false
+        isShowView: false
     }
 
     for each item in data.trivias
@@ -69,13 +68,15 @@ sub getEventInfoTrivias(data) as object
             storageModel = getStorageAnswer(item.id)
 
             if isValid(storageModel) then return storageModel
-
             eventModel.showAnswerView = false
             eventModel.isShowView = true
             eventModel.idEvent = item.id
             eventModel.question = item.question
             eventModel.questionType = "injectQuiz"
             eventModel.answers = getAnswerWithTrivias(item)
+            for each item in eventModel.answers
+                item.itemComponent = "PredictionWagerItemComponent"
+            end for
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
         end if
@@ -89,7 +90,7 @@ sub getEventInfoRatings(data) as object
     clockData = data.clocks[0]
 
     eventModel = {
-        isShowView : false
+        isShowView: false
     }
 
     for each item in data.ratings
@@ -105,7 +106,7 @@ sub getEventInfoRatings(data) as object
             answers = []
             count = data.rating.optionsnumber.toInt()
             for i = count to 1 step -1
-                answers.push({title: i.toStr(), itemComponent: "RatingItemComponents"})
+                answers.push({ title: i.toStr(), itemComponent: "RatingItemComponents" })
             end for
             eventModel.answers = answers
             eventModel.averageRate = item.averageRate
@@ -119,10 +120,10 @@ sub getEventInfoRatings(data) as object
 end sub
 
 sub getAnswerWithTrivias(item) as object
-    answers = [{"answerSending": true, "image": item.correctAnswer.image, "answer": item.correctAnswer.answer}]
+    answers = [{ "answerSending": true, "image": item.correctAnswer.image, "answer": item.correctAnswer.answer }]
 
     for each incorrectAnswer in item.incorrectAnswers
-        answer = {"answerSending": false, "image": incorrectAnswer.image, "answer": incorrectAnswer.answer}
+        answer = { "answerSending": false, "image": incorrectAnswer.image, "answer": incorrectAnswer.answer }
         answers.Push(answer)
     end for
 
@@ -131,7 +132,7 @@ end sub
 
 function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as object
     eventModel = {
-        isShowView : true
+        isShowView: true
     }
 
     if isValid(eventType) then messageType = eventType
@@ -147,12 +148,17 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
             return getEventInfoWithSocket(data)
         end if
         storageModel = getStorageAnswer(data.poll.id)
-        if isValid(storageModel) then return storageModel
+        if isValid(storageModel)
+            storageModel.timeForHiding = data.timeToStay
+            return storageModel
+        end if
+
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.poll.id
         eventModel.question = data.poll.question
         eventModel.questionType = data.poll.questionType
+        eventModel.closePostInteraction = data.close_post_interaction
         eventModel.answers = data.poll.answers
         eventModel.timeForHiding = data.timeToStay
         for each item in eventModel.answers
@@ -160,8 +166,10 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         end for
     else if messageType = "injectRating"
         storageModel = getStorageAnswer(data.rating.id)
-        if isValid(storageModel) then return storageModel
-
+        if isValid(storageModel)
+            storageModel.timeForHiding = data.timeToStay
+            return storageModel
+        end if
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.rating.id
@@ -170,23 +178,28 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         answers = []
         count = data.rating.optionsnumber.toInt()
         for i = count to 1 step -1
-            answers.push({title: i.toStr(), itemComponent: "RatingItemComponents"})
+            answers.push({ title: i.toStr(), itemComponent: "RatingItemComponents" })
         end for
 
         eventModel.answers = answers
         eventModel.emptyIcon = data.rating.emptyIcon
         eventModel.halfIcon = data.rating.halfIcon
         eventModel.icon = data.rating.icon
+        eventModel.closePostInteraction = data.close_post_interaction
         eventModel.optionsNumber = data.rating.optionsNumber
         eventModel.averageRate = data.rating.averageRate
         eventModel.timeForHiding = data.timeToStay
     else if messageType = "prediction"
         storageModel = getStorageAnswer(data.poll.id)
-        if isValid(storageModel) then return storageModel
+        if isValid(storageModel)
+            storageModel.timeForHiding = data.timeToStay
+            return storageModel
+        end if
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.poll.id
         eventModel.question = data.poll.question
+        eventModel.closePostInteraction = data.close_post_interaction
         eventModel.questionType = data.poll.questionType
         eventModel.answers = data.poll.answers
         eventModel.timeForHiding = data.timeToStay
@@ -194,12 +207,16 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
             item.itemComponent = "PredictionItemComponent"
         end for
     else if messageType = "injectQuiz"
-        ' storageModel = getStorageAnswer(data.id)
-        ' if isValid(storageModel) then return storageModel
+        storageModel = getStorageAnswer(data.id)
+        if isValid(storageModel)
+            storageModel.timeForHiding = data.timeToStay
+            return storageModel
+        end if
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.id
         eventModel.question = data.question
+        eventModel.closePostInteraction = data.close_post_interaction
         eventModel.questionType = "injectQuiz"
         eventModel.answers = data.answers
         eventModel.timeForHiding = timeToStay
@@ -207,10 +224,14 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
             item.itemComponent = "PredictionWagerItemComponent"
         end for
     else if messageType = "predictionWager"
-        ' storageModel = getStorageAnswer(data.poll.id)
-        ' if isValid(storageModel) then return storageModel
+        storageModel = getStorageAnswer(data.poll.id)
+        if isValid(storageModel)
+            storageModel.timeForHiding = data.timeToStay
+            return storageModel
+        end if
         eventModel.showAnswerView = false
         eventModel.isShowView = true
+        eventModel.closePostInteraction = data.close_post_interaction
         eventModel.idEvent = data.poll.id
         eventModel.question = data.poll.question
         eventModel.questionType = "predictionWager"
@@ -222,10 +243,14 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         eventModel.timeForHiding = data.timeToStay
     else if messageType = "injectWiki"
         storageModel = getStorageAnswer(data.wiki.id)
-        if isValid(storageModel) then return storageModel
+        if isValid(storageModel)
+            storageModel.timeForHiding = data.timeToStay
+            return storageModel
+        end if
         eventModel.showAnswerView = false
         eventModel.isShowView = true
         eventModel.idEvent = data.wiki.id
+        eventModel.closePostInteraction = data.close_post_interaction
         eventModel.question = data.wiki.name
         eventModel.questionType = "injectWiki"
         eventModel.type = data.wiki.type
@@ -262,10 +287,10 @@ function getAnswers(answer, eventModel, responceServer)
                 item.totals += 1
                 item.answerSending = true
             end if
-            
+
             totals += item.totals
         end for
-    
+
         for each answer in eventModel.answers
             if IsValid(answer.totals)
                 answer.percent = getPercent((answer.totals / totals) * 100)
@@ -296,15 +321,18 @@ function getAnswerModelForRatings(model, responce) as object
             answer.image = getImageWithName(m.global.design.fullStarIcon)
         else if starsAnswer > 1 and starsAnswer > 0
             answer.image = getImageWithName(m.global.design.halfStarIcon)
-        else 
+        else
             answer.image = getImageWithName(m.global.design.emptyStarIcon)
         end if
         answers.push(answer)
         starsAnswer -= 1
     end for
+
     model.answers = answers
-    model.level = responce.answer.userLevel.level
-    model.expoints = responce.answer.expoints_given
+    if IsValid(responce.answer.userLevel)
+        model.level = responce.answer.userLevel.level
+        model.expoints = responce.answer.expoints_given
+    end if
     return model
 end function
 
@@ -316,7 +344,9 @@ function getAnswerWagerPrediction(model, responce) as object
         end if
     end for
 
-    model.level = responce.answer.userLevel.level
-    model.expoints = responce.answer.expoints_given
+    if IsValid(responce.answer.userLevel)
+        model.level = responce.answer.userLevel.level
+        model.expoints = responce.answer.expoints_given
+    end if
     return model
 end function

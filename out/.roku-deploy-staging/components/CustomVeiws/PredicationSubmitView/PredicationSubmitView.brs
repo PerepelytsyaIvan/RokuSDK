@@ -9,11 +9,18 @@ sub init()
     m.separator = m.top.findNode("separator")
     m.animationView = m.top.findNode("animationView")
     m.animationInterpolator = m.top.findNode("animationInterpolator")
+    m.top.observeField("focusedChild", "onFocusedChild")
     configureUI()
     m.collectionView.observeField("item", "didSelecetItem")
     m.previusReward = 0
     m.previusPoints = 0
     m.count = 0
+end sub
+
+sub onFocusedChild()
+    if m.top.hasFocus()
+        m.collectionView.setFocus(true)
+    end if
 end sub
 
 sub configureDataSource()
@@ -79,12 +86,6 @@ sub didSelecetItem(event)
                 m.counterLabel.text = getForrmaterStringWithPoints("down")
             end if
         end if
-        ' if m.counterLabel.boundingRect().width > 72 and m.collectionView.translation[0] < m.counterLabel.translation[0] + m.counterLabel.boundingRect().width
-        '     m.counterLabel.translation = [m.counterLabel.translation[0] - (m.counterLabel.boundingRect().width - 72), m.counterLabel.translation[1]]
-        ' else if m.counterLabel.boundingRect().width < 72
-        '     labelBoundingRect = m.titleLabel.boundingRect()
-        '     m.counterLabel.translation = [m.titleLabel.translation[0] + labelBoundingRect.width + 80, 0]
-        ' end if
     else 
         if item.title = "Back"
             m.top.pressBack = true

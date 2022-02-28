@@ -45,10 +45,18 @@ sub onResponceAnswer(event)
     RegWrite(eventModel.idevent, FormatJson(eventModel))
     m.overlayView.callFunc("showAnswers", eventModel)
     m.timerHidePanel.control = "start"
+
+    if isInvalid(eventModel.closePostInteraction) then return
+    if eventModel.closePostInteraction
+        m.timeForHidingOverlay = 6
+    else
+        m.timeForHidingOverlay = 10000000
+    end if 
 end sub
 
 sub onResponceQuizEvent(event)
     quizEvent = event.getData()
+    if IsValid(m.isCloseQuiz) then quizEvent.close_post_interaction = m.isCloseQuiz
     m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", quizEvent, "injectQuiz", m.timeToStay)
     m.timeForHidingOverlay = m.eventModel.timeForHiding
     m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
@@ -74,14 +82,16 @@ sub on_message(event)
     if isValid(parseMessage.data)
         json = ParseJson(parseMessage.data)
         if parseMessage.event <> "pusher_internal:subscription_succeeded" and parseMessage.event <> "pusher:connection_established" and json.messageType <> "streamerInfo"
+            m.isCloseQuiz = invalid
             if json.messageType = "injectQuiz"
                 m.timeToStay = json.timeToStay
                 m.networkLayerManager.callFunc("getQuizEvent", getQuizUrl(json.id))
+                m.isCloseQuiz = json.close_post_interaction
             else
                 m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", json)
                 if isInvalid(m.eventModel.questionType) then return
                 if IsValid(m.eventModel.type) and m.eventModel.type = "notification"
-            
+
                 else
                     m.timeForHidingOverlay = m.eventModel.timeForHiding
                     m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
@@ -122,8 +132,12 @@ sub infoApplication(event)
     if m.eventModel.isShowView
         m.timeForHidingOverlay = m.eventModel.timeForHiding
         m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
-        m.timeForShowingOverlay = m.eventModel.clockData.time
-        m.type = m.eventModel.clockData.module
+        if isValid(m.eventModel.clockData)
+            m.timeForShowingOverlay = m.eventModel.clockData.time
+            m.type = m.eventModel.clockData.module
+        else
+            m.timeForShowingOverlay = 10
+        end if
         m.timerShowPanel.control = "start"
     end if
 end sub

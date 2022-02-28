@@ -1,49 +1,7 @@
 sub init()
-    m.contentNodeService = CreateObject("roSGNode", "ContentNodeService")
+    initView()
     dependencyConnectionViews()
     configureObservers()
-end sub
-
-sub dependencyConnectionViews()
-    m.questionLabel = m.top.findNode("questionLabel")
-    m.timeLabel = m.top.findNode("timeLabel")
-    m.secondsLabel = m.top.findNode("secondsLabel")
-    m.wagerLabel = m.top.findNode("wagerLabel")
-
-    m.logo = m.top.findNode("logo")
-    m.backgroundOverlay = m.top.findNode("backgroundOverlay")
-    m.gradient = m.top.findNode("gradient")
-    m.separator = m.top.findNode("separator")
-
-    m.panelGroup = m.top.findNode("panel")
-    m.rowListGroup = m.top.findNode("rowListGroup")
-
-    m.layoutGroup = m.top.findNode("layoutGroup")
-    m.quizGruop = m.top.findNode("quizGruop")
-    m.collectionView = m.top.findNode("collectionView")
-    m.collectionViewLeftButton = m.top.findNode("collectionViewLeftButton")
-
-    m.translationAnimation = m.top.findNode("translationAnimation")
-    m.translationGradientAnimation = m.top.findNode("translationGradientAnimation")
-    m.panelInterpolator = m.top.findNode("panelInterpolator")
-    m.videoInterpolator = m.top.findNode("videoInterpolator")
-    m.gradientInterpolator = m.top.findNode("gradientInterpolator")
-    m.rowListInterpolator = m.top.findNode("rowListInterpolator")
-    m.listsInterpolator = m.top.findNode("listsInterpolator")
-    m.collectionViewAnimation = m.top.findNode("collectionViewAnimation")
-    m.collectionViewInterpolator = m.top.findNode("collectionViewInterpolator")
-    m.collectionViewAnimation.observeField("state", "changeStateCollectionAnimation")
-
-    m.focusable = false
-    m.asShowPanel = false
-    m.focusKey = 0
-
-    m.arrayNotificationView = []
-end sub
-
-sub configureObservers()
-    m.collectionViewLeftButton.observeField("item", "onItemSelectedLeftButton")
-    m.collectionView.observeField("item", "didSelectItem")
 end sub
 
 sub onItemSelectedLeftButton(event)
@@ -184,6 +142,7 @@ function showAnswers(eventModel)
             m.focusable = true
             m.collectionView.translation = [((boundingLabel.width + boundingLabel.x) + 60), m.logo.translation[1] + ((m.logo.height - m.collectionView.elements[0].height) / 2)]
         end if
+        showCollectionView(true, true)
     end if
 
     if eventModel.questionType = "injectRating"
@@ -196,6 +155,7 @@ function showAnswers(eventModel)
         showCollectionView(false, true)
         configureWagerAnswer(eventModel)
     end if
+
     getPointsView(eventModel)
     dataSourceLeftButton = [{ "title": "Close", "itemComponent": "TextItemComponent" }]
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
@@ -243,6 +203,7 @@ end sub
 
 sub configureRowList(model)
     m.wagerLabel.callFunc("animate", false)
+    hidePredictionSubmit()
     if isInvalid(model) then return
     m.isWiki = false
     if model.questionType = "injectWiki"
@@ -354,16 +315,17 @@ sub configureUI()
         if localBoundingRect.width > 700
             m.questionLabel.width = localBoundingRect.width / 2
         else
-            m.questionLabel.width = localBoundingRect.width + 20
+            m.questionLabel.width = localBoundingRect.width 
         end if
 
-        m.separator.translation = [m.questionLabel.width + m.questionLabel.translation[0] + 10, m.logo.translation[1] - 10]
+        m.separator.translation = [m.questionLabel.width + m.questionLabel.translation[0] + 30, m.logo.translation[1] - 10]
     end if
 
     if eventInfo.questionType = "injectWiki" and eventInfo.type = "notification"
         configureRowList(eventInfo)
         return
     end if
+
     if eventInfo.showAnswerview
         showAnswers(eventInfo)
         if not m.asShowPanel
@@ -423,34 +385,3 @@ sub configurePlayerAnimation()
     m.playerInterpolatorHeight.fieldToInterp = m.top.videoPlayer.id + ".height"
     m.playerInterpolatorHeight.key = [0.0, 1.0]
 end sub
-
-function onKeyEvent(key as string, press as boolean) as boolean
-    result = false
-
-    if not press then return result
-
-    if key = "left"
-        if m.collectionView.visible and m.collectionViewLeftButton.hasFocus() and m.focusable
-            m.collectionView.setFocus(true)
-            result = true
-        else if m.layoutGroup.visible and m.collectionViewLeftButton.hasFocus() and m.focusable
-            m.layoutGroup.setFocus(true)
-            result = true
-        end if
-    else if key = "right"
-        if m.collectionView.hasFocus()
-            m.collectionViewLeftButton.setFocus(true)
-            result = true
-        else if m.layoutGroup.hasFocus() and m.focusKey < m.layoutGroup.GetChildCount() - 1
-            m.focusKey = min(m.focusKey + 1, m.layoutGroup.GetChildCount() - 1)
-            result = true
-        else
-            m.collectionViewLeftButton.setFocus(true)
-        end if
-    else if key = "OK" and m.layoutGroup.hasFocus()
-        item = m.layoutGroup.GetChild(m.focusKey)
-        m.top.selectedAnswer = { "answer": item.title }
-    end if
-
-    return result
-end function
