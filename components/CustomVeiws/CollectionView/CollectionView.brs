@@ -56,6 +56,7 @@ end sub
 
 sub configureDataSource()
     m.baseGroup.removeChildrenIndex(100, 0)
+    if m.top.dataSource = invalid then return
     dataSource = m.top.dataSource
     elements = []
     collectionElements = []
@@ -64,7 +65,8 @@ sub configureDataSource()
     countRow = 0
     for each item in dataSource
         count++
-        if calculateWidthRow(elements, getNextWidthItem(item))
+        if IsInvalid(item.newSection) then item.newSection = false
+        if calculateWidthRow(elements, getNextWidthItem(item)) or item.newSection
             countRow++
             layoutGroupRow = m.baseGroup.CreateChild("Group")
             layoutGroupRow.id = countRow.toStr()

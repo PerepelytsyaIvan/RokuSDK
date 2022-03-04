@@ -90,6 +90,14 @@
             </CollectionView>
         </Group>
 
+        <LoadingIndicator 
+            id="loadingProgress"
+            visible="false"
+            imageUri="pkg:/images/loader.png"
+            backgroundColor="0x16181A00"
+            imageWidth="50"
+            fadeInterval ="0.2"/> 
+
         <Animation id="translationAnimation" duration="0.4" repeat="false" easeFunction="linear">
             <Vector2DFieldInterpolator id="panelInterpolator" key="[0.0, 1.0]" fieldToInterp="panel.translation" />
             <Vector2DFieldInterpolator id="listsInterpolator" key="[0.0, 1.0]" fieldToInterp="rowListGroup.translation" />

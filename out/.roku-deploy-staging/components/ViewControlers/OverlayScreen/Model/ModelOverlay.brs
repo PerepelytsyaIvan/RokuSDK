@@ -1,3 +1,31 @@
+sub init()
+    m.EventModelProperties = {
+        idEvent: "id"
+        question: ["question", "name"]
+        closePostInteraction: "close_post_interaction"
+        questionType: ["questionType", "messageType"]
+        answers: "answers"
+        timeForHiding: "timeToStay"
+        type: "type"
+        averageRate: "averageRate"
+        optionsNumber: "optionsNumber"
+        icon: "icon"
+        halfIcon: "halfIcon"
+        emptyIcon: "emptyIcon"
+        buttonText: "actionBtnText"
+        categoryId: "categoryId"
+        currency: "currency"
+        description: "description"
+        image: "image"
+        name: "name"
+        price: "price"
+        qrCodeImage: "qrcodeimage"
+        userId: "user_id"
+    }
+
+    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
+end sub
+
 function getDesignModel(data) as object
     designModel = {
         "backgrounImage": getImageWithName(data.designs.backgroundImage)
@@ -10,7 +38,6 @@ function getDesignModel(data) as object
         "fullStarIcon": data.designs.ratingFullIcon,
         "halfStarIcon": data.designs.ratingHalfIcon,
     }
-
     return designModel
 end function
 
@@ -140,125 +167,86 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
 
     if messageType = "injectPoll"
         if data.poll.questionType = "prediction"
+            data.messageType = "prediction"
+            messageType = "prediction"
             if data.poll.is_wager
                 data.messageType = "predictionWager"
-            else
-                data.messageType = "prediction"
+                messageType = "predictionWager"
             end if
-            return getEventInfoWithSocket(data)
         end if
-        storageModel = getStorageAnswer(data.poll.id)
-        if isValid(storageModel)
-            storageModel.timeForHiding = data.timeToStay
-            return storageModel
-        end if
+    end if
 
-        eventModel.showAnswerView = false
-        eventModel.isShowView = true
-        eventModel.idEvent = data.poll.id
-        eventModel.question = data.poll.question
-        eventModel.questionType = data.poll.questionType
-        eventModel.closePostInteraction = data.close_post_interaction
-        eventModel.answers = data.poll.answers
-        eventModel.timeForHiding = data.timeToStay
-        for each item in eventModel.answers
-            item.itemComponent = "PredictionWagerItemComponent"
-        end for
-    else if messageType = "injectRating"
-        storageModel = getStorageAnswer(data.rating.id)
+    if data.DoesExist(m.eventModelKey[messageType])
+        storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
         if isValid(storageModel)
             storageModel.timeForHiding = data.timeToStay
-            return storageModel
+            ' return storageModel
         end if
-        eventModel.showAnswerView = false
-        eventModel.isShowView = true
-        eventModel.idEvent = data.rating.id
-        eventModel.question = data.rating.name
-        eventModel.questionType = data.messageType
+    end if
+
+
+    if messageType = "injectPoll"
+        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
+        eventModel.answers = getItemComponentName(eventModel.answers, "PredictionWagerItemComponent")
+    else if messageType = "injectRating"
+        eventModel = getDataForModel(data, "rating", false, true)
         answers = []
         count = data.rating.optionsnumber.toInt()
         for i = count to 1 step -1
             answers.push({ title: i.toStr(), itemComponent: "RatingItemComponents" })
         end for
-
         eventModel.answers = answers
-        eventModel.emptyIcon = data.rating.emptyIcon
-        eventModel.halfIcon = data.rating.halfIcon
-        eventModel.icon = data.rating.icon
-        eventModel.closePostInteraction = data.close_post_interaction
-        eventModel.optionsNumber = data.rating.optionsNumber
-        eventModel.averageRate = data.rating.averageRate
-        eventModel.timeForHiding = data.timeToStay
     else if messageType = "prediction"
-        storageModel = getStorageAnswer(data.poll.id)
-        if isValid(storageModel)
-            storageModel.timeForHiding = data.timeToStay
-            return storageModel
-        end if
-        eventModel.showAnswerView = false
-        eventModel.isShowView = true
-        eventModel.idEvent = data.poll.id
-        eventModel.question = data.poll.question
-        eventModel.closePostInteraction = data.close_post_interaction
-        eventModel.questionType = data.poll.questionType
-        eventModel.answers = data.poll.answers
-        eventModel.timeForHiding = data.timeToStay
-        for each item in eventModel.answers
-            item.itemComponent = "PredictionItemComponent"
-        end for
+        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
+        eventModel.answers = getItemComponentName(eventModel.answers, "PredictionItemComponent")
     else if messageType = "injectQuiz"
-        storageModel = getStorageAnswer(data.id)
-        if isValid(storageModel)
-            storageModel.timeForHiding = data.timeToStay
-            return storageModel
-        end if
-        eventModel.showAnswerView = false
-        eventModel.isShowView = true
-        eventModel.idEvent = data.id
-        eventModel.question = data.question
-        eventModel.closePostInteraction = data.close_post_interaction
-        eventModel.questionType = "injectQuiz"
-        eventModel.answers = data.answers
-        eventModel.timeForHiding = timeToStay
-        for each item in eventModel.answers
-            item.itemComponent = "PredictionWagerItemComponent"
-        end for
+        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectQuiz")
+        eventModel.answers = getItemComponentName(eventModel.answers, "PredictionWagerItemComponent")
     else if messageType = "predictionWager"
-        storageModel = getStorageAnswer(data.poll.id)
-        if isValid(storageModel)
-            storageModel.timeForHiding = data.timeToStay
-            return storageModel
-        end if
-        eventModel.showAnswerView = false
-        eventModel.isShowView = true
-        eventModel.closePostInteraction = data.close_post_interaction
-        eventModel.idEvent = data.poll.id
-        eventModel.question = data.poll.question
-        eventModel.questionType = "predictionWager"
-        eventModel.answers = data.poll.answers
+        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "predictionWager")
+
         for each answer in eventModel.answers
             answer.points = data.poll.expoints
             answer.itemComponent = "PredictionWagerItemComponent"
         end for
-        eventModel.timeForHiding = data.timeToStay
     else if messageType = "injectWiki"
-        storageModel = getStorageAnswer(data.wiki.id)
-        if isValid(storageModel)
-            storageModel.timeForHiding = data.timeToStay
-            return storageModel
-        end if
-        eventModel.showAnswerView = false
-        eventModel.isShowView = true
-        eventModel.idEvent = data.wiki.id
-        eventModel.closePostInteraction = data.close_post_interaction
-        eventModel.question = data.wiki.name
-        eventModel.questionType = "injectWiki"
-        eventModel.type = data.wiki.type
-        eventModel.timeForHiding = data.timeToStay
+        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectWiki")
+    else if messageType = "injectProduct"
+        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectProduct")
+        eventModel.itemComponent = "PredictionWagerItemComponent"
     end if
 
     return eventModel
 end function
+
+sub getItemComponentName(answers, name) as object
+    for each item in answers
+        item.itemComponent = name
+    end for
+
+    return answers
+end sub
+
+sub configurationComponentLibrary()
+    m.componentLibrary = CreateObject("roSGNode", "ComponentLibrary") ' - Creating an object for downloading SDK
+    m.componentLibrary.id = "SDKInthegame" ' - SDK id(Static)
+    m.componentLibrary.uri = "https://media2.inthegame.io/roku/roku-deploy.zip" ' - Url to download SDK components
+    m.componentLibrary.observeField("loadStatus", "onLoadStatusLibraryChanged") ' - Observer to obtain the download status of the SDK
+end sub
+
+'Overlay creation and configuration:
+' sub onLoadStatusLibraryChanged(event)
+'     if m.componentLibrary.loadStatus = "ready"
+'         m.overlayViewController = CreateObject("roSGNode", "SDKInthegame:OverlayViewController")
+'         m.overlayViewController.videoPlayer = m.videoPlayer
+'         m.overlayViewController.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
+'     end if
+' end sub
+
+sub onLoadStatusLibraryChanged(event)
+    state = event.getData()
+   
+end sub
 
 sub getStorageAnswer(id) as object
     storageModel = RegRead(id)
@@ -350,3 +338,29 @@ function getAnswerWagerPrediction(model, responce) as object
     end if
     return model
 end function
+
+sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = invalid) as object
+    eventData = {}
+
+    for each item in m.EventModelProperties.Items()
+        if Type(item.Value) = "roArray"
+            for each value in item.Value
+                if data.DoesExist(keyEvent)
+                    if data[keyEvent].DoesExist(value) then eventData[item.key] = data[keyEvent][value]
+                end if
+
+                if data.DoesExist(value) then eventData[item.key] = data[value]
+            end for
+        else
+            if data.DoesExist(keyEvent) then eventData[item.key] = data[keyEvent][item.Value]
+            if data.DoesExist(item.Value) then eventData[item.key] = data[item.Value]
+        end if
+    end for
+
+    eventData["showAnswerView"] = isShowAnswer
+    eventData["isShowView"] = isShowView
+
+    if IsValid(questionType) then eventData.questionType = questionType
+
+    return eventData
+end sub

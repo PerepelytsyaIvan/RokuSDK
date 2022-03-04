@@ -79,6 +79,7 @@ end sub
 sub on_message(event)
     message = event.getData()
     parseMessage = ParseJson(message.message)
+
     if isValid(parseMessage.data)
         json = ParseJson(parseMessage.data)
         if parseMessage.event <> "pusher_internal:subscription_succeeded" and parseMessage.event <> "pusher:connection_established" and json.messageType <> "streamerInfo"
@@ -127,7 +128,7 @@ sub infoApplication(event)
     saveInGlobal("design", desingModel)
     m.eventModel = m.modelOverlay.callFunc("getEventInfo", infoApp)
     m.overlayView.designModel = desingModel
-
+    
     connectSocket()
     if m.eventModel.isShowView
         m.timeForHidingOverlay = m.eventModel.timeForHiding
@@ -173,4 +174,3 @@ sub showingOverlay()
     m.timerShowPanel.control = "stop"
     m.overlayView.eventInfo = m.eventModel 
 end sub
-

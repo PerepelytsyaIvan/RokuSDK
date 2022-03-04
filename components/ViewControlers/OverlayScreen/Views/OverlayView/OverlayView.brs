@@ -15,7 +15,11 @@ end sub
 sub didSelectItem(event)
     item = event.getData()
 
-    if m.top.eventInfo.questiontype <> "predictionWager"
+    if m.top.eventInfo.questionType = "injectProduct"
+        personalArea = m.top.createChild("PersonalArea")
+        personalArea.dataSource = m.top.eventInfo
+    else if m.top.eventInfo.questiontype <> "predictionWager"
+        showLoadingIndicator(true)
         m.top.selectedAnswer = item
     else
         showCollectionView(false, true)
@@ -48,6 +52,7 @@ end sub
 
 sub didSelectButtonSubmit(event)
     infoParam = event.getData()
+    showLoadingIndicator(true)
     m.top.selectedAnswer = infoParam
 end sub
 
@@ -87,7 +92,7 @@ sub configureDesign(event)
     m.logo.uri = m.global.design.logoImage
     m.backgroundOverlay.uri = m.global.design.backgrounImage
     m.separator.blendColor = m.global.design.buttonBackgroundColor
-
+    m.loadingIndicator.loaderColor = m.global.design.buttonBackgroundColor
     m.questionLabel.font = getBoldFont(30)
     m.timeLabel.font = getBoldFont(40)
     m.secondsLabel.font = getMediumFont(30)
@@ -96,6 +101,7 @@ sub configureDesign(event)
 end sub
 
 function showPanel(asShow, model = invalid)
+    if asShow = m.asShowPanel then return invalid
     configureAnimationFor(asShow)
     m.translationGradientAnimation.control = "finish"
     m.translationAnimation.control = "finish"
@@ -127,7 +133,7 @@ end sub
 function showAnswers(eventModel)
     m.layoutGroup.visible = false
     m.wagerLabel.callFunc("animate", false)
-    if eventModel.questionType <> "injectQuiz" and eventModel.questionType <> "predictionWager"
+    if eventModel.questionType <> "injectQuiz" and eventModel.questionType <> "predictionWager" 
         m.focusable = false
         getSpacingsItem(eventModel.questionType)
         boundingLabel = m.questionLabel.boundingRect()
@@ -144,7 +150,7 @@ function showAnswers(eventModel)
         end if
         showCollectionView(true, true)
     end if
-
+  
     if eventModel.questionType = "injectRating"
         showCollectionView(true, true)
     else if eventModel.questionType = "injectQuiz"
@@ -161,6 +167,7 @@ function showAnswers(eventModel)
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
     m.collectionViewLeftButton.translation = [1735, 107]
     m.collectionViewLeftButton.setFocus(true)
+    showLoadingIndicator(false)
 end function
 
 sub getSpacingsItem(typeEvent)
@@ -287,6 +294,7 @@ sub configureCollectionView(model)
     boundingLabel = m.questionLabel.boundingRect()
     m.collectionView.horizontalSpacing = 40
     m.collectionView.dataSource = model.answers
+    if isInvalid(model.answers) m.collectionView.dataSource = [model]
     collectionViewHeight = m.collectionView.elements[0].height
     maxWidth = 1920 - (boundingLabel.x + boundingLabel.width + 360)
     m.collectionView.size = [maxWidth, 100]
@@ -303,7 +311,7 @@ end sub
 
 sub configureUI()
     eventInfo = m.top.eventInfo
-
+    
     if eventInfo.type <> "notification"
         m.secondsLabel.text = "sec"
         if isValid(m.levelsLabelView) then m.levelsLabelView.callFunc("animate", false)
@@ -320,7 +328,7 @@ sub configureUI()
 
         m.separator.translation = [m.questionLabel.width + m.questionLabel.translation[0] + 30, m.logo.translation[1] - 10]
     end if
-
+    
     if eventInfo.questionType = "injectWiki" and eventInfo.type = "notification"
         configureRowList(eventInfo)
         return
@@ -385,3 +393,17 @@ sub configurePlayerAnimation()
     m.playerInterpolatorHeight.fieldToInterp = m.top.videoPlayer.id + ".height"
     m.playerInterpolatorHeight.key = [0.0, 1.0]
 end sub
+
+function showLoadingIndicator(show)
+    boundingLabel = m.questionLabel.boundingRect()
+    translationX = (1920 - ((boundingLabel.width + boundingLabel.x + 60 + 290) - 50)) / 2
+    m.loadingIndicator.translationLoader = [boundingLabel.width + boundingLabel.x + translationX, (m.logo.translation[1] + ((m.logo.height - 50) / 2)) + 415]
+    m.loadingIndicator.visible = show
+    m.loadingIndicator.SetFocus(show)
+    if show
+        m.loadingIndicator.control = "start"
+    else
+        m.loadingIndicator.bEatKeyEvents = false
+        m.loadingIndicator.control = "stop"
+    end if
+end function

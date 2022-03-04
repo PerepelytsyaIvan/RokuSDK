@@ -1,6 +1,8 @@
 sub initView()
     m.contentNodeService = CreateObject("roSGNode", "ContentNodeService")
 
+    m.loadingIndicator = m.top.findNode("loadingProgress")
+
     m.questionLabel = m.top.findNode("questionLabel")
     m.timeLabel = m.top.findNode("timeLabel")
     m.secondsLabel = m.top.findNode("secondsLabel")
@@ -49,14 +51,30 @@ function onKeyEvent(key as string, press as boolean) as boolean
     if not press then return result
 
     if key = "left"
-        if m.collectionView.visible and m.collectionViewLeftButton.hasFocus() and m.focusable and not m.predicationSubmitView.visible
-            m.collectionView.setFocus(true)
+        if m.collectionView.visible and m.collectionViewLeftButton.hasFocus() and m.focusable
+            if IsValid(m.predicationSubmitView)
+                if not m.predicationSubmitView.visible
+                    m.collectionView.setFocus(true)
+                    return true
+                end if
+            end if
             result = true
-        else if m.layoutGroup.visible and m.collectionViewLeftButton.hasFocus() and m.focusable and not m.predicationSubmitView.visible
-            m.layoutGroup.setFocus(true)
-            result = true
-        else if m.predicationSubmitView.visible
+        else if m.layoutGroup.visible and m.collectionViewLeftButton.hasFocus() and m.focusable
+            if IsValid(m.predicationSubmitView)
+                if not m.predicationSubmitView.visible
+                    m.layoutGroup.setFocus(true)
+                    return true
+                end if
+            end if
             m.predicationSubmitView.setFocus(true)
+            result = true
+        else 
+            if IsValid(m.predicationSubmitView)
+                if not m.predicationSubmitView.visible
+                    m.collectionView.setFocus(true)
+                    return true
+                end if
+            end if
         end if
     else if key = "right"
         if m.collectionView.hasFocus()

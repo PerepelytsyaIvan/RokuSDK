@@ -9,6 +9,7 @@ sub configureDataSource()
     m.titleLabel.font = getBoldFont(25)
     m.titleLabel.text = dataSource.answer
     m.titleLabel.color = m.global.design.questionTextColor
+    if isValid(dataSource.buttonText) then m.titleLabel.text = dataSource.buttonText
     if dataSource.image <> ""
         m.posterCell.uri = getImageWithName(dataSource.image)
         m.posterCell.width = 35
