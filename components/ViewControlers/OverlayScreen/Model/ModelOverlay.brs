@@ -23,7 +23,7 @@ sub init()
         userId: "user_id"
     }
 
-    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
+    m.eventModelKey = { "injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product" }
 end sub
 
 function getDesignModel(data) as object
@@ -231,7 +231,7 @@ end sub
 
 sub onLoadStatusLibraryChanged(event)
     state = event.getData()
-   
+
 end sub
 
 sub getStorageAnswer(id) as object
@@ -352,3 +352,14 @@ sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = inv
 
     return eventData
 end sub
+
+sub configureContentNode(data)
+    contentNode = CreateObject("roSGNode", "ContentNode")
+    For Each element in m.EventModelProperties
+        item = contentNode.CreateObject("roSGNode", "ContentActivityModel")
+        item.idEvent = element.id
+    end for
+    return contentNode
+end sub
+
+

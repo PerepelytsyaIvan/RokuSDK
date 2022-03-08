@@ -1,0 +1,25 @@
+<component name="ContentActivityModel" extends="node">
+    <interface>
+        <field id="idEvent" type="string" />
+        <field id="question" type="array" />
+        <field id="closePostInteraction" type="string" />
+        <field id="questionType" type="array" />
+        <field id="answers" type="string" />
+        <field id="timeForHiding" type="string" />
+        <field id="type" type="string" />
+        <field id="averageRate" type="string" />
+        <field id="optionsNumber" type="string" />
+        <field id="icon" type="string" />
+        <field id="halfIcon" type="string" />
+        <field id="emptyIcon" type="string" />
+        <field id="buttonText" type="string" />
+        <field id="categoryId" type="string" />
+        <field id="currency" type="string" />
+        <field id="description" type="string" />
+        <field id="image" type="string" />
+        <field id="name" type="string" />
+        <field id="price" type="string" />
+        <field id="qrCodeImage" type="string" />
+        <field id="userId" type="string" />
+    </interface>
+</component>

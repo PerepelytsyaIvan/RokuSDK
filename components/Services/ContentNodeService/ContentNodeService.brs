@@ -54,3 +54,13 @@ sub congigureSizesList(list, boundingLabel, countItems)
     list.itemSize = [widthList, list.rowItemSize[0][1]]
     list.translation = [translationX, 40 + (80 - list.rowItemSize[0][1]) / 2]
 end sub
+
+function configureContentNodeForTypePoll(markupGrid)
+    ' label = CreateObject("roSGNode", "Label")
+    ' label.height = 40
+    ' for each item in m.EventModelProperties
+    '     label.text = item.text
+    '     labelRect = label.BoundingRect()
+    '     m._additionalBar.columnWidths.push(labelRect.width + 80)
+    ' end for
+end function
