@@ -6,17 +6,11 @@ end sub
 
 sub configureDataSource()
     dataSource = m.top.dataSource
-    m.titleLabel.font = getBoldFont(25)
+    m.titleLabel.font = getBoldFont(getSize(30))
     m.titleLabel.text = dataSource.answer
     m.titleLabel.color = m.global.design.questionTextColor
+    m.posterCell.uri = getImageWithName(dataSource.image)
     if isValid(dataSource.buttonText) then m.titleLabel.text = dataSource.buttonText
-    if dataSource.image <> ""
-        m.posterCell.uri = getImageWithName(dataSource.image)
-        m.posterCell.width = 35
-        m.posterCell.height = 35
-    else
-        m.containerView.translation = [0, m.containerView.translation[1]]
-    end if
     layoutSabvies()
 end sub
 
@@ -25,10 +19,21 @@ sub onChangePercentFocus(event)
 end sub
 
 sub layoutSabvies()
+    m.posterCell.width = getSize(40)
+    m.posterCell.height = getSize(40) 
+    m.posterCell.translation = [0, 0]
+    m.containerView.translation = getSizeMaskGroupWith([15, 30])
+    m.containerView.itemSpacings = [getSize(15)]
+    if m.posterCell.uri = getImageWithName("")
+        m.containerView.translation = getSizeMaskGroupWith([0, 30])
+        m.posterCell.width = 0
+    end if
+    
     containerViewRect = m.containerView.boundingRect()
     boundingRect = m.titleLabel.boundingRect()
-    m.titleLabel.width = boundingRect.width + 15
+    m.titleLabel.width = boundingRect.width + getSize(15)
+    m.titleLabel.height = getSize(60)
     topBoundingRect = m.top.boundingRect()
     m.top.width = topBoundingRect.width + topBoundingRect.x
-    m.top.height = topBoundingRect.height + (topBoundingRect.y * 2)
+    m.top.height = getSize(60)
 end sub

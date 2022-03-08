@@ -66,7 +66,7 @@ sub configureDataSource()
     for each item in dataSource
         count++
         if IsInvalid(item.newSection) then item.newSection = false
-        if calculateWidthRow(elements, getNextWidthItem(item)) or item.newSection
+        if item.newSection or countRow = 0
             countRow++
             layoutGroupRow = m.baseGroup.CreateChild("Group")
             layoutGroupRow.id = countRow.toStr()
@@ -263,9 +263,9 @@ sub configureAnimationRow() as boolean
     element = row.getChild(m.indexPath[1])
     boundingRectRow = row.boundingRect()
 
-    if element.translation[0] > 600
+    if element.translation[0] > m.top.widthLayoutView
         m.moveRowInterpolator.fieldToInterp = row.id + ".translation"
-        differenceTranslation = ((element.focusTranslation[0] - 600) + element.width) + row.translation[0]
+        differenceTranslation = ((element.focusTranslation[0] - m.top.widthLayoutView) + element.width) + row.translation[0]
         newTranslation = [row.translation[0] - differenceTranslation, row.translation[1]]
         m.moveRowInterpolator.keyValue = [row.translation, newTranslation]
         configureFocusElement(newTranslation[0], element, "right")

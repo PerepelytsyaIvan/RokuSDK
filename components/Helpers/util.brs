@@ -555,6 +555,16 @@ function getSizeMaskGroupWith(size) as object
     return size
 end function
 
+function getSize(size) as object
+    deviceInfo = CreateObject("roDeviceInfo")
+    resolution = deviceInfo.GetUIResolution()
+    if resolution.name = "HD"
+        size = size * 2 / 3
+        return size
+    end if
+    return size
+end function 
+
 function localize(key)
     if IsValid(m.global.Custom_Application_LocalizationUrl)
         localizedString = firstWhere(m.global.Custom_Application_LocalizationUrl.Properties, "Name", key)
@@ -661,4 +671,18 @@ sub getScreenHeight() as integer
     di = CreateObject("roDeviceInfo")
     displaySize = di.GetDisplaySize()
     return displaySize.h
+end sub
+
+sub getTime(seconds) as object
+
+    minute = seconds / 60
+    hour = minute / 60  
+
+    if hour > 1 
+        return [hour.toStr().split(".")[0], "h"]
+    else if minute > 1
+        return [minute.toStr().split(".")[0], "m"]
+    else
+        return [seconds.toStr().split(".")[0], "sec"]
+    end if
 end sub

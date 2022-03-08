@@ -4,13 +4,11 @@
 
     <interface>
         <field id="dataSource" type="assocarray" onChange = "configureDataSource" />
-
-        <function name = "animate"/>
     </interface>
 
     <children>
-        <LayoutGroup id = "levelGroup" layoutDirection="horiz" itemSpacings="[15]">
-            <LayoutGroup layoutDirection="vert" itemSpacings="[5]">
+        <LayoutGroup id = "levelGroup" layoutDirection="horiz" itemSpacings="[30]">
+            <LayoutGroup id = "levelLabelGroup" layoutDirection="vert" itemSpacings="[5]">
                 <Label id = "levelLabel"
                     horizAlign = "center">
                 </Label>
@@ -20,7 +18,7 @@
                 </Label>
             </LayoutGroup>
 
-            <LayoutGroup layoutDirection="vert" itemSpacings="[5]">
+            <LayoutGroup id = "pointsLabelGroup"  layoutDirection="vert" itemSpacings="[5]">
                 <Label id = "pointsLabel"
                     horizAlign = "center">
                 </Label>
@@ -30,9 +28,5 @@
                 </Label>
             </LayoutGroup>
         </LayoutGroup>
-
-        <Animation id="LabelAnimation" duration="0.3" repeat="false" easeFunction="linear">
-            <FloatFieldInterpolator id="LabelInterpolator" key="[0.0, 1.0]" fieldToInterp = "levelGroup.opacity"/>
-        </Animation>
     </children>
 </component>

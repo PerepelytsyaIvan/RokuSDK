@@ -6,14 +6,15 @@ sub initView()
     m.titleLabel = m.top.findNode("titleLabel")
     m.percentLabelLabel = m.top.findNode("percentLabelLabel")
     m.layoutGroup = m.top.findNode("layoutGroup")
+    m.imageCell = m.top.findNode("imageCell")
 end sub
 
 sub configureDataSource()
-    m.titleLabel.font = getBoldFont(25)
-    m.percentLabelLabel.font = getBoldFont(25)
+    m.titleLabel.font = getBoldFont(getSize(25))
+    m.percentLabelLabel.font = getBoldFont(getSize(25))
     m.percentLabelLabel.text = m.top.dataSource.percent
     m.titleLabel.text =  m.top.dataSource.answer
-
+    m.imageCell.uri = getImageWithName(m.top.dataSource.image)
     if  m.top.dataSource.answerSending 
         m.titleLabel.color = m.global.design.wrongAnswerTextColor
         m.percentLabelLabel.color = m.global.design.wrongAnswerTextColor
@@ -25,10 +26,17 @@ sub configureDataSource()
 end sub
 
 sub layoutSubviews()
-    ' m.titleLabel.width = m.top.width 
-    ' m.percentLabelLabel.width = m.top.width 
     m.titleLabel.width = m.titleLabel.boundingRect().width
     m.percentLabelLabel.width = m.percentLabelLabel.boundingRect().width
-    m.top.width = m.layoutGroup.localBoundingRect().width
-    m.top.height = m.layoutGroup.localBoundingRect().height
+    m.layoutGroup.itemSpacings = [getSize(2)]
+
+    if m.imageCell.uri <> getImageWithName("")
+        m.imageCell.width = 40
+        m.imageCell.height = 40
+        m.imageCell.translation = [10, (m.top.localBoundingRect().height - m.imageCell.height) / 2]
+        m.layoutGroup.translation = [65, 0]
+    end if
+
+    m.top.width = m.top.localBoundingRect().width
+    m.top.height = m.top.localBoundingRect().height
 end sub

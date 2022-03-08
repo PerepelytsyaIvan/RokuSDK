@@ -7,7 +7,7 @@ end sub
 
 sub configureDataSource()
     itemContent = m.top.dataSource
-    m.titleLabel.font = getRegularFont(20)
+    m.titleLabel.font = getRegularFont(getSize(25))
     m.titleLabel.text = itemContent.title
     m.titleLabel.color = m.global.design.questionTextColor
     m.separator.color = m.global.design.questionTextColor
@@ -17,12 +17,12 @@ end sub
 
 sub layoutSubviews()
     m.titleLabel.width = m.titleLabel.localBoundingRect().width
-    m.titleLabel.height = 20
+    m.titleLabel.height = getSize(30)
     if m.separator.visible 
-        m.separator.height = 20
-        m.separator.width = 2
+        m.separator.height = getSize(30)
+        m.separator.width = getSize(2)
     end if
     boundingRectLocal = m.layoutGroup.localBoundingRect()
-    m.top.width = boundingRectLocal.width
-    m.top.height = 20
+    m.top.width = m.titleLabel.width + 10
+    m.top.height = getSize(30)
 end sub

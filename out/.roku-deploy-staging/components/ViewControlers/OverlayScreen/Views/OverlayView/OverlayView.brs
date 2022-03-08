@@ -311,6 +311,12 @@ end sub
 
 sub configureUI()
     eventInfo = m.top.eventInfo
+
+    if eventInfo.questiontype = "injectProduct"
+        if isInvalid(m.activity) then m.activity = m.top.createChild("ProductActivity")
+        m.activity.dataSource = eventInfo
+        return
+    end if
     
     if eventInfo.type <> "notification"
         m.secondsLabel.text = "sec"

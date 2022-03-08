@@ -1,5 +1,4 @@
 sub init()
-    m.top.opacity = 0
     m.top.id = "PredicationSubmitView"
     m.collectionView = m.top.findNode("collectionView")
     m.containerView = m.top.findNode("containerView")
@@ -7,8 +6,6 @@ sub init()
     m.titleLabel = m.top.findNode("titleLabel")
     m.counterLabel = m.top.findNode("counterLabel")
     m.separator = m.top.findNode("separator")
-    m.animationView = m.top.findNode("animationView")
-    m.animationInterpolator = m.top.findNode("animationInterpolator")
     m.top.observeField("focusedChild", "onFocusedChild")
     configureUI()
     m.collectionView.observeField("item", "didSelecetItem")
@@ -32,7 +29,7 @@ sub configureDataSource()
     m.counterLabel.text = getForrmaterStringWithPoints("up", true)
     dataSource = [{ imageName: "top", itemComponent: "ArrowItemComponent" },
     { title: "SUBMIT", itemComponent: "SubmitTextItemComponent" },
-    { imageName: "down", itemComponent: "ArrowItemComponent" },
+    { imageName: "down", itemComponent: "ArrowItemComponent", "newSection" : true},
     { title: "Back", itemComponent: "SubmitTextItemComponent" }]
     m.collectionView.dataSource = dataSource
     m.collectionView.setFocus(true)
@@ -50,29 +47,19 @@ sub layoutSubwview()
     boundingRectCollection = m.collectionView.boundingRect()
     m.titleLabel.height = boundingRectCollection.height
     m.counterLabel.height = boundingRectCollection.height
-    m.posterCell.width = 60
-    m.posterCell.height = 60
-    m.posterCell.translation = [0, boundingRectCollection.x + ((boundingRectCollection.height - m.posterCell.height) / 2)]
-    m.titleLabel.translation = [m.posterCell.translation[0] + m.posterCell.width + 20, 0]
+    m.posterCell.width = getSize(60)
+    m.posterCell.height = getSize(60)
     labelBoundingRect = m.titleLabel.boundingRect()
-    m.counterLabel.translation = [m.titleLabel.translation[0] + labelBoundingRect.width, 0]
-    m.counterLabel.width = 80 + 72
+    m.counterLabel.width = getSize(80) + getSize(72)
     counterLabelBoundingRect = m.counterLabel.boundingRect()
-    m.containerView.translation = [0, (m.separator.height - boundingRectCollection.height) / 2]
-    m.collectionView.translation = [m.counterLabel.translation[0] + counterLabelBoundingRect.width + 20, 0]
+    m.containerView.translation = [0, m.collectionView.boundingRect().height / 2]
+    m.containerView.itemSpacings = [getSize(15), getSize(40), getSize(20)]
     if IsValid(m.collectionView.elements)
-        m.separator.translation = [m.collectionView.translation[0] + m.collectionView.horizontalSpacing + m.collectionView.elements[0].width - 10, 0]
+        m.separator.translation = [m.containerView.boundingRect().width - m.collectionView.elements[1].width - getSize(30), 0]
     end if
+    m.separator.height = getSize(80)
+    m.separator.width = getSize(1)
 end sub
-
-function showView(isShow)
-    if isShow
-        m.animationInterpolator.keyValue = [0.0, 1.0]
-    else
-        m.animationInterpolator.keyValue = [1.0, 0.0]
-    end if
-    m.animationView.control = "start"
-end function
 
 sub didSelecetItem(event)
     item = event.getData()
@@ -99,7 +86,9 @@ sub getForrmaterStringWithPoints(direction = "up", start = false) as string
     if direction = "up"
         m.count++
     else if direction = "down"
-        m.count--
+        if m.count > 1
+            m.count--
+        end if
     end if
 
     points = (m.top.dataSource.points.toFloat() * m.count)

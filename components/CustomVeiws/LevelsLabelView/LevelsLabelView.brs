@@ -3,17 +3,23 @@ sub init()
     m.countLevelLabel = m.top.findNode("countLevelLabel")
     m.pointsLabel = m.top.findNode("pointsLabel")
     m.countPointsLabel = m.top.findNode("countPointsLabel")
-    m.LabelAnimation = m.top.findNode("LabelAnimation")
-    m.LabelInterpolator = m.top.findNode("LabelInterpolator")
+    m.levelGroup = m.top.findNode("levelGroup")
+    m.levelLabelGroup = m.top.findNode("levelLabelGroup")
+    m.pointsLabelGroup = m.top.findNode("pointsLabelGroup")
 end sub
 
 sub configureDataSource()
     dataSource = m.top.dataSource
 
-    labels = [m.levelLabel, m.countLevelLabel, m.pointsLabel, m.countPointsLabel]
+    labels = [m.levelLabel, m.pointsLabel]
+    labelsNumber = [m.countLevelLabel, m.countPointsLabel]
 
     for each label in labels
         label.font = getMediumFont(25)
+    end for
+
+    for each label in labelsNumber
+        label.font = getBoldFont(30)
     end for
 
     m.levelLabel.text = "Level"
@@ -24,18 +30,6 @@ sub configureDataSource()
     end if
     layoutSubviews()
 end sub
-
-function animate(isShow)
-    if isShow
-        if m.LabelInterpolator.keyValue[0] = 0 then return invalid
-        m.LabelInterpolator.keyValue = [0, 1]
-    else
-        if m.LabelInterpolator.keyValue[1] = 0 then return invalid
-        m.LabelInterpolator.keyValue = [1, 0]
-    end if
-
-    m.LabelAnimation.control = "start"
-end function
 
 sub layoutSubviews()
     boundingPoint = m.pointsLabel.boundingRect()
@@ -49,5 +43,8 @@ sub layoutSubviews()
         m.countPointsLabel.width = boundingCountPoint.width
     end if
 
+    m.levelGroup.itemSpacings = [getSize(50)]
+    m.pointsLabelGroup.itemSpacings = [getSize(5)]
+    m.levelLabelGroup.itemSpacings = [getSize(5)]
     m.countLevelLabel.width = m.levelLabel.boundingRect().width
 end sub

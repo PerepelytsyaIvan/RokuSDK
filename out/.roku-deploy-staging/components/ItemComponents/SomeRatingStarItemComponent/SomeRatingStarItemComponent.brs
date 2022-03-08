@@ -5,7 +5,7 @@ sub init()
 end sub
 
 sub configureDataSource()
-    m.titleLabel.font = getBoldFont(25)
+    m.titleLabel.font = getBoldFont(40)
     m.titleLabel.text = m.top.dataSource.title
     m.ratingPoster.uri = m.top.dataSource.image
     layoutSubviews()

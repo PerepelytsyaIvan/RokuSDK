@@ -15,7 +15,7 @@ sub getInfoAppUrl() as string
 end sub
 
 sub getSendAnswerUrl(typeAnswer, id) as string
-    if typeAnswer = "poll" or typeAnswer = "prediction" or typeAnswer = "predictionWager"
+    if typeAnswer = "poll" or typeAnswer = "prediction" or typeAnswer = "predictionWager" or typeAnswer = "injectPoll"
         return baseUrl() + "userApi/poll/answer_new/" + id
     else if typeAnswer = "injectRating"
         return baseUrl() + "userApi/rating/answer_new/" + id

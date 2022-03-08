@@ -6,6 +6,7 @@
         <field id="dataSource" type="array" onChange = "configureDataSource"/>
         <field id="item" type="assocarray"/>
         <field id="widthLayoutView" type="float"/>
+
         <field id="size" type="array" alias = "maskGroup.maskSize" onChange = "setMaskSize"/>
         <field id="heightLayoutView" type="float"/>
         <field id="widthElement" type="float"/>

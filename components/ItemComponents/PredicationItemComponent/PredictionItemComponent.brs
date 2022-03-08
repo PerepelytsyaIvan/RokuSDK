@@ -3,41 +3,46 @@ sub init()
 end sub
 
 sub initView()
-    m.titleLabel = m.top.findNode("titleLabel")
-    m.posterCell = m.top.findNode("posterCell")
+    m.containerView = m.top.findNode("containerView")
+    m.pointsImage = m.top.findNode("pointsImage")
     m.pointLabel = m.top.findNode("pointLabel")
-    m.ptsLabel = m.top.findNode("ptsLabel")
-    m.itemComponentGroup = m.top.findNode("itemComponentGroup")
+    m.posterCell = m.top.findNode("posterCell")
+    m.titleLabel = m.top.findNode("titleLabel")
 end sub
 
 sub configureDataSource()
-    itemContent = m.top.dataSource
-    m.titleLabel.font = getBoldFont(25)
-    m.pointLabel.font = getRegularFont(15)
-    m.ptsLabel.font = getRegularFont(15)
+    m.titleLabel.font = getBoldFont(getSize(30))
+    m.pointLabel.font = getMediumFont(getSize(20))
+    m.pointLabel.color = m.global.design.questionTextColor
     m.titleLabel.color = m.global.design.questionTextColor
-    m.titleLabel.text = itemContent.answer
-    if isValid(itemContent.image)
-        m.posterCell.uri = "pkg:/images/predictionIcon.png"
-    end if
-    m.pointLabel.text = itemContent.reward
-    m.ptsLabel.text = "pts"
+    m.titleLabel.text = m.top.dataSource.answer
+    m.pointLabel.text = m.top.dataSource.reward
+    m.posterCell.uri = getImageWithName(m.top.dataSource.image)
+    m.pointsImage.uri = "pkg:/images/predictionIcon.png"
     layoutSubviews()
 end sub
 
 sub layoutSubviews()
-    m.titleLabel.width = m.titleLabel.boundingRect().width
-    m.titleLabel.height = 60
-    m.posterCell.translation = [0,0]
-    m.posterCell.width = 60
-    m.posterCell.height = 60
-    m.titleLabel.translation = [m.posterCell.width + 10, 0]
+    m.pointsImage.width = getSize(60)
+    m.pointsImage.height = getSize(60)
+    m.pointLabel.width = getSize(50)
+    m.pointLabel.height = getSize(50)
+    m.pointLabel.translation = [getSize(5), getSize(5)]
 
-    m.pointLabel.width = 60 - 8
-    m.pointLabel.translation = [4, 13]
-    m.ptsLabel.width = 60 - 8
-    m.ptsLabel.translation = [4, m.pointLabel.boundingRect().height + 5]
-    boundingRectLocal = m.itemComponentGroup.localBoundingRect()
-    m.top.width = boundingRectLocal.width
-    m.top.height = boundingRectLocal.height
+    m.containerView.itemSpacings = [getSize(5)]
+
+    if m.posterCell.uri <> getImageWithName("")
+        m.posterCell.width = getSize(30)
+        m.posterCell.height = getSize(30)
+        m.containerView.itemSpacings = [getSize(10)]
+    end if
+
+    m.titleLabel.width = m.titleLabel.boundingRect().width
+    m.titleLabel.height = getSize(80)
+
+    m.containerView.translation = [0, getSize(60) / 2]
+
+    boundingRect = m.containerView.boundingRect()
+    m.top.width = m.containerView.boundingRect().width + getSize(10)
+    m.top.height = getSize(60)
 end sub

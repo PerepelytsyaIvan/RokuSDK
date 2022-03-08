@@ -27,6 +27,6 @@ splash_screen_fhd=pkg:/images/rde_splash_fhd.jpg
 splash_color=#662D91
 splash_min_time=1000
 
-ui_resolutions=fhd
+ui_resolutions=fhd, hd
 bs_const=LOG_REQUEST_ENABLED=false
 

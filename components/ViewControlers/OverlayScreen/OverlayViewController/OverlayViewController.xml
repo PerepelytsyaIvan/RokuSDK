@@ -4,11 +4,10 @@
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>
-        <field id="videoPlayer" type="node" alias="overlayView.videoPlayer"/>
+        <field id="videoPlayer" type="node"/>
         <field id="accountRoute" type="assocarray" onChange = "configurationUser"/>
     </interface>
 
     <children>
-        <OverlayView id = "overlayView"/>
     </children>
 </component>

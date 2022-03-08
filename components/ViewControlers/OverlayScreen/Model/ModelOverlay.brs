@@ -73,7 +73,7 @@ sub configureEventInfoPolls(data) as object
             eventModel.questionType = item.questionType
             eventModel.answers = item.answers
             for each item in eventModel.answers
-                item.itemComponent = "PredictionWagerItemComponent"
+                item.itemComponent = "ActivityButtonWithImage"
             end for
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
@@ -102,7 +102,7 @@ sub getEventInfoTrivias(data) as object
             eventModel.questionType = "injectQuiz"
             eventModel.answers = getAnswerWithTrivias(item)
             for each item in eventModel.answers
-                item.itemComponent = "PredictionWagerItemComponent"
+                item.itemComponent = "ActivityButtonWithImage"
             end for
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
@@ -187,7 +187,7 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
 
     if messageType = "injectPoll"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
-        eventModel.answers = getItemComponentName(eventModel.answers, "PredictionWagerItemComponent")
+        eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
     else if messageType = "injectRating"
         eventModel = getDataForModel(data, "rating", false, true)
         answers = []
@@ -201,20 +201,22 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         eventModel.answers = getItemComponentName(eventModel.answers, "PredictionItemComponent")
     else if messageType = "injectQuiz"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectQuiz")
-        eventModel.answers = getItemComponentName(eventModel.answers, "PredictionWagerItemComponent")
+        eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
     else if messageType = "predictionWager"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "predictionWager")
 
         for each answer in eventModel.answers
             answer.points = data.poll.expoints
-            answer.itemComponent = "PredictionWagerItemComponent"
+            answer.itemComponent = "ActivityButtonWithImage"
         end for
     else if messageType = "injectWiki"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectWiki")
     else if messageType = "injectProduct"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectProduct")
-        eventModel.itemComponent = "PredictionWagerItemComponent"
+        eventModel.itemComponent = "ActivityButton"
     end if
+
+    if isInvalid(eventModel.timeForHiding) then eventModel.timeForHiding = timeToStay
 
     return eventModel
 end function
@@ -226,22 +228,6 @@ sub getItemComponentName(answers, name) as object
 
     return answers
 end sub
-
-sub configurationComponentLibrary()
-    m.componentLibrary = CreateObject("roSGNode", "ComponentLibrary") ' - Creating an object for downloading SDK
-    m.componentLibrary.id = "SDKInthegame" ' - SDK id(Static)
-    m.componentLibrary.uri = "https://media2.inthegame.io/roku/roku-deploy.zip" ' - Url to download SDK components
-    m.componentLibrary.observeField("loadStatus", "onLoadStatusLibraryChanged") ' - Observer to obtain the download status of the SDK
-end sub
-
-'Overlay creation and configuration:
-' sub onLoadStatusLibraryChanged(event)
-'     if m.componentLibrary.loadStatus = "ready"
-'         m.overlayViewController = CreateObject("roSGNode", "SDKInthegame:OverlayViewController")
-'         m.overlayViewController.videoPlayer = m.videoPlayer
-'         m.overlayViewController.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
-'     end if
-' end sub
 
 sub onLoadStatusLibraryChanged(event)
     state = event.getData()
@@ -317,9 +303,11 @@ function getAnswerModelForRatings(model, responce) as object
     end for
 
     model.answers = answers
-    if IsValid(responce.answer.userLevel)
-        model.level = responce.answer.userLevel.level
-        model.expoints = responce.answer.expoints_given
+    if IsValid(responce)
+        if IsValid(responce.answer.userLevel)
+            model.level = responce.answer.userLevel.level
+            model.expoints = responce.answer.expoints_given
+        end if
     end if
     return model
 end function

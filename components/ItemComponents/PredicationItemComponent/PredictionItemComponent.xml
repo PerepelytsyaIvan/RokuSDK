@@ -10,24 +10,18 @@
     </interface>
 
     <children>
-        <Group id="itemComponentGroup">
-            <Poster id="posterCell">
+        <LayoutGroup id = "containerView" itemSpacings = "[10]" vertAlignment = "center" layoutDirection = "horiz">
+            <Poster id="pointsImage">
+                <Label id="pointLabel" 
+                    horizAlign="center" 
+                    vertAlign="center"/>
             </Poster>
 
-            <Label id="pointLabel" 
-                horizAlign="center" 
-                vertAlign="top">
-            </Label>
+            <Poster id="posterCell"/>
 
-            <Label id="ptsLabel" 
-                horizAlign="center" 
-                vertAlign="top">
-            </Label>
-
-            <Label id="titleLabel" 
-                horizAlign="center" 
-                vertAlign="center">
-            </Label>
-        </Group>
+            <Label id="titleLabel"
+                horizAlign="left"
+                vertAlign="center"/>
+        </LayoutGroup>
     </children>
 </component>
