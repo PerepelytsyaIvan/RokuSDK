@@ -1,0 +1,117 @@
+<component name="OverlayView" extends="Group">
+    <script type="text/brightscript" uri="OverlayView.brs" />
+    <script type="text/brightscript" uri="OverlayViewHelper.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="designModel" type="assocarray" onChange="configureDesign" />
+        <field id="eventInfo" type="assocarray" onChange="configureUI" />
+        <field id="videoPlayer" type="node" />
+        <field id="selectedAnswer" type="assocarray" />
+
+        <function name="showPanel" />
+        <function name="showAnswers" />
+        <function name="configureSecondsLabel" />
+    </interface>
+
+    <children>
+        <Group id="panel" translation="[0, 1080]">
+            <Poster id="gradient" 
+                width="1920" 
+                height="200" 
+                uri="pkg:/images/panelGradient.png">
+            </Poster>
+
+            <Poster id="backgroundOverlay" 
+                width="1920" 
+                height="150">
+            </Poster>
+
+            <Poster id="logo" 
+                translation="[60, 40]" 
+                width="80" 
+                height="80">
+            </Poster>
+
+            <Label id="questionLabel" 
+                text="label" 
+                wrap="true" 
+                numLines="2" 
+                lineSpacing="0" 
+                vertAlign="center" 
+                horizAlign="left" 
+                color="#ffffff">
+            </Label>
+
+            <Label id="timeLabel" 
+                translation="[1715, 30]" 
+                text="label" 
+                vertAlign="bottom" 
+                color="#ffffff">
+            </Label>
+
+            <Poster id="separator" 
+                width="2" 
+                height="100" 
+                uri="pkg:/images/separatorGradient.png">
+            </Poster>
+
+            <Label id="secondsLabel" 
+                text="label" 
+                vertAlign="bottom" 
+                color="#ffffff">
+            </Label>
+
+            <AnimationLabel id="wagerLabel" 
+                text="" 
+                vertAlign="center" 
+                color="#ffffff"> 
+            </AnimationLabel>
+        </Group>
+
+        <Group id="quizGruop"></Group>
+
+        <Group id="rowListGroup" translation="[0, 1080]">
+            <LayoutGroup id="layoutGroup"
+                layoutDirection="horiz" 
+                itemSpacings="[50]">
+            </LayoutGroup>
+
+            <CollectionView id="collectionViewLeftButton" 
+                translation="[1685, 107]" 
+                size="[700, 100]" 
+                widthLayoutView="800">
+            </CollectionView>
+
+            <CollectionView id="collectionView" 
+                translation="[500, 0]" 
+                size="[700, 100]" 
+                widthLayoutView="800">
+            </CollectionView>
+        </Group>
+
+        <LoadingIndicator 
+            id="loadingProgress"
+            visible="false"
+            imageUri="pkg:/images/loader.png"
+            backgroundColor="0x16181A00"
+            imageWidth="50"
+            fadeInterval ="0.2"/> 
+
+        <Animation id="translationAnimation" duration="0.4" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="panelInterpolator" key="[0.0, 1.0]" fieldToInterp="panel.translation" />
+            <Vector2DFieldInterpolator id="listsInterpolator" key="[0.0, 1.0]" fieldToInterp="rowListGroup.translation" />
+        </Animation>
+
+        <Animation id="translationGradientAnimation" duration="0.6" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="gradientInterpolator" key="[0.0, 1.0]" fieldToInterp="gradient.translation" />
+        </Animation>
+
+        <Animation id="collectionViewAnimation" duration="0.2" repeat="false" easeFunction="linear">
+            <FloatFieldInterpolator id="collectionViewInterpolator" 
+                key="[0.0, 1.0]" 
+                fieldToInterp="collectionView.opacity" >
+            </FloatFieldInterpolator>
+        </Animation>
+    </children>
+</component>

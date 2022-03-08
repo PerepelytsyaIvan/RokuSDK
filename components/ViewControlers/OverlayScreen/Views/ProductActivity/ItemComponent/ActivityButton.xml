@@ -1,0 +1,18 @@
+<component name="ActivityButton" extends="Group">
+    <script type="text/brightscript" uri="ActivityButton.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
+    </interface>
+
+    <children>
+        <Label id="titleLabel"
+                color="#FF0000" 
+                horizAlign="center"
+                vertAlign="center"/>
+    </children>
+</component>

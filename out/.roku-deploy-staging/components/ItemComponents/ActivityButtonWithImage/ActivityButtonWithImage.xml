@@ -1,0 +1,24 @@
+<component name="ActivityButtonWithImage" extends="Group">
+    <script type="text/brightscript" uri="ActivityButtonWithImage.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
+    </interface>
+
+    <children>
+        <LayoutGroup id = "containerView" translation = "[15, 0]" itemSpacings = "[15]" vertAlignment = "center" layoutDirection = "horiz">
+            <Poster id = "posterCell">
+            </Poster>
+
+            <Label id="titleLabel"
+                color="#FF0000" 
+                horizAlign="left"
+                vertAlign="center">
+            </Label>
+        </LayoutGroup>
+    </children>
+</component>

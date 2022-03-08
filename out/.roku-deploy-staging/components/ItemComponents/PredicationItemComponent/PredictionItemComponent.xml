@@ -1,5 +1,5 @@
-<component name="PredictionWagerItemComponent" extends="Group">
-    <script type="text/brightscript" uri="PredictionWagerItemComponent.brs" />
+<component name="PredictionItemComponent" extends="Group">
+    <script type="text/brightscript" uri="PredictionItemComponent.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
     <interface>
@@ -10,16 +10,18 @@
     </interface>
 
     <children>
-        <LayoutGroup id = "containerView" translation = "[15, 5]" itemSpacings = "[15]" layoutDirection = "horiz">
-            <Poster id = "posterCell">
+        <LayoutGroup id = "containerView" itemSpacings = "[10]" vertAlignment = "center" layoutDirection = "horiz">
+            <Poster id="pointsImage">
+                <Label id="pointLabel" 
+                    horizAlign="center" 
+                    vertAlign="center"/>
             </Poster>
 
+            <Poster id="posterCell"/>
+
             <Label id="titleLabel"
-                height = "35"
-                color="#FF0000" 
                 horizAlign="left"
-                vertAlign="center">
-            </Label>
+                vertAlign="center"/>
         </LayoutGroup>
     </children>
 </component>
