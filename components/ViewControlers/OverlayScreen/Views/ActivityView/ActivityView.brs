@@ -120,7 +120,6 @@ sub configureAnswerDataSource(item = invalid)
 
     configureCollectionAnswerFor(m.top.dataSourceAnswer.questionType)
     m.collectionView.dataSource = m.top.dataSourceAnswer.answers
-    m.collectionViewLeftButton.setFocus(true)
     layoutViewsAnswer()
     showCollectionView()
 end sub
@@ -228,7 +227,6 @@ end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean
     result = false
-    ? "function onKeyEvent("key"), "press") as boolean"
     if not press then return result
 
     if key = "left" and m.collectionViewLeftButton.hasFocus()
