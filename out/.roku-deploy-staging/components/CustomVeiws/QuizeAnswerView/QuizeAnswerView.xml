@@ -1,0 +1,39 @@
+<component name="QuizeAnswerView" extends="Group">
+    <script type="text/brightscript" uri="QuizeAnswerView.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+       <field id="dataSource" type="array" onChange="configureDataSource" alwaysNotify = "true"/>
+    </interface>
+
+    <children>
+        <LayoutGroup id="layoutGroup" layoutDirection = "horiz" vertAlignment = "center">
+
+            <LayoutGroup id="layoutGroupAnswer" itemSpacings = "[10]">
+                <LayoutGroup id="layoutGroupWrongAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+                    <Poster id = "imageCellWrongAnswer" />
+        
+                    <Label id = "wrongAnswerLabel"
+                           vertALign = "center"  
+                           horizAlign = "center"/>
+                </LayoutGroup>
+
+                <LayoutGroup id="layoutGroupRightAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+                    <Poster id = "imageCellRightAnswer" />
+
+                    <Label id = "rightAnswerLabel"
+                           vertALign = "center"  
+                           horizAlign = "center"/>
+                </LayoutGroup>
+            </LayoutGroup>
+
+            <Label id = "infoLabel"
+                   vertALign = "center"  
+                   horizAlign = "left"
+                   wrap = "true"
+                   width = "600"
+                   maxLines = "2"
+                   lineSpacing = "0"/>
+        </LayoutGroup>
+    </children>
+</component>
