@@ -9,6 +9,7 @@ sub init()
     m.infoReciveSms = m.top.findNode("infoReciveSms")
     m.interactiveLabel = m.top.findNode("interactiveLabel")
     m.interactiveLabelBackground = m.top.findNode("interactiveLabelBackground")
+    m.focusElement = m.top.findNode("focusElement")
     m.sendMeSMSLabel = m.top.findNode("sendMeSMSLabel")
     m.toggle = m.top.findNode("toggle")
 
@@ -29,6 +30,7 @@ sub init()
     m.totalPriceLabel = m.top.findNode("totalPriceLabel")
     m.aboutPurchaseLabel = m.top.findNode("aboutPurchaseLabel")
 
+
     configureDesign()
 end sub
 
@@ -38,7 +40,10 @@ sub configureDesign()
     m.centralViewsLayout.translation = [m.separatorPoster.translation[0] + 40, 130]
     m.rightViewsGroup.translation = [m.infoReciveSms.width + m.centralViewsLayout.translation[0] + 50, 0]
     m.rightViewsLayout.translation = [m.rightBackground.width / 2 - 130, 10]
-
+    toggleRect = m.toggle.boundingRect()
+    m.sendMeSMSLabel.translation = [m.interactiveLabelBackground.width + m.interactiveLabelBackground.translation[0] + 30, m.interactiveLabelBackground.height + m.infoReciveSms.height + m.interactiveLabelBackground.translation[1] + 200]
+    m.toggle.translation = [m.sendMeSMSLabel.translation[0], toggleRect.height + m.sendMeSMSLabel.translation[1] + 50]
+    m.saveInfoLabel.translation = [m.toggle.translation[0] + 40, m.toggle.translation[1] + 5]
 
     m.sendMeSMSLabel.font = getBoldFont(30)
     m.interactiveLabel.font = getRegularFont(23)
@@ -51,7 +56,11 @@ sub configureDesign()
     m.discountPercentLabel.font = getBoldFont(20)
     m.totalPriceLabel.font = getBoldFont(23)
     m.aboutPurchaseLabel.font = getRegularFont(16)
-
+    m.toggle.scaleRotateCenter = [m.toggle.boundingRect().width / 2, m.toggle.boundingRect().height / 2]
+    sendMeSMSLabelRect = m.sendMeSMSLabel.boundingRect()
+    m.focusElement.width = sendMeSMSLabelRect.width + 50
+    m.focusElement.height = sendMeSMSLabelRect.height
+    m.focusElement.translation = [(sendMeSMSLabelRect.x + m.focusElement.width) / 2, sendMeSMSLabelRect.y]
 end sub
 
 sub configureDataSource()
@@ -61,7 +70,6 @@ sub configureDataSource()
     m.QRCodePoster.uri = getImageWithName(m.top.dataSource.qrcodeimage)
     m.disableServiceLabel.text = "If you`d like to disable this service, please go to Cellcom settings > Cellcom Play > Disable"
     m.productPoster.uri = getImageWithName(m.top.dataSource.image)
-    ' BUG with text?
     m.productNameLabel.text = m.top.dataSource.name
     m.productDescriptionLabel.text = m.top.dataSource.description
     m.discountLabel.text = "discount of price"
@@ -73,18 +81,27 @@ sub configureDataSource()
 
     m.collectionView.dataSource = getDataForKeyboard()
     m.collectionView.setFocus(true)
+    m.savedNumberForSMS = RegRead("SMS")
+    if m.savedNumberForSMS <> invalid
+        m.interactiveLabel.text = m.savedNumberForSMS
+    else
+        m.interactiveLabel.text = ""
+    end if
 end sub
 
 sub didSelectOnKeyboard(event)
     item = event.getData()
-
     if item.title = "Clear"
         m.interactiveLabel.text = ""
+        RegDelete("SMS")
     else if item.title = ""
         m.interactiveLabel.text = Left(m.interactiveLabel.text, m.interactiveLabel.text.len() - 1)
+        a = Left(m.savedNumberForSMS, m.interactiveLabel.text.len() - 1)
+        RegWrite("SMS", m.interactiveLabel.text)
     else
         if m.interactiveLabel.text.len() < 15
             m.interactiveLabel.text += item.title
+            RegWrite("SMS", m.interactiveLabel.text)
         end if
     end if
 end sub
@@ -112,11 +129,15 @@ function onKeyEvent(key as string, press as boolean) as boolean
     if not press then return true
     if key = "left" and not m.collectionView.hasFocus()
         m.collectionView.setFocus(true)
-        m.toggle.scale = [0.8, 0.8]
-        m.sendMeSMSLabel.scale = [0.8, 0.8]
+        m.toggle.scale = [1.0, 1.0]
+        m.sendMeSMSLabel.scale = [1.0, 1.0]
+        m.focusElement.opacity = 0
     else if key = "right" and not m.sendMeSMSLabel.hasFocus()
         m.sendMeSMSLabel.setFocus(true)
-        m.sendMeSMSLabel.scale = [1.0, 1.0]
+        ' m.sendMeSMSLabel.scale = [1.1, 1.1]
+
+        m.focusElement.opacity = 1
+
     else if key = "OK"
         if m.toggle.hasFocus()
             if m.toggle.isOn = false
@@ -129,15 +150,54 @@ function onKeyEvent(key as string, press as boolean) as boolean
         end if
     else if key = "up" and m.toggle.hasFocus() and not m.collectionView.hasFocus()
         m.sendMeSMSLabel.setFocus(true)
-        m.toggle.scale = [0.8, 0.8]
-        m.sendMeSMSLabel.scale = [1.0, 1.0]
+        m.toggle.scale = [1.0, 1.0]
+        m.saveInfoLabel.scale = [1.0, 1.0]
+        ' m.sendMeSMSLabel.scale = [1.1, 1.1]
+        m.focusElement.opacity = 1
     else if key = "down" and m.sendMeSMSLabel.hasFocus() and not m.collectionView.hasFocus()
         m.toggle.setFocus(true)
-        m.sendMeSMSLabel.scale = [0.8, 0.8]
-        m.toggle.scale = [1.0, 1.0]
+        ' m.sendMeSMSLabel.scale = [1.0, 1.0]
+        ' m.saveInfoLabel.scale = [1.1, 1.1]
+        m.toggle.scale = [1.1, 1.1]
+        m.focusElement.opacity = 0
     else if key = "back"
         m.top.pressBackButton = true
         result = true
     end if
     return result
 end function
+
+
+
+
+sub onChangePercentFocus()
+    if m.top.percentFocus > 0.2
+        m.focusElement.opacity = m.top.percentFocus
+    else
+        m.focusElement.opacity = 0
+    end if
+end sub
+
+sub layoutSubview()
+    m.titleLabel.width = m.top.dataSource.width
+    m.titleLabel.height = m.top.dataSource.height
+    m.iconElement.height = 20
+    m.iconElement.width = 30
+    m.iconElement.translation = [(m.top.dataSource.height - 30) / 2, (m.top.dataSource.height - 20) / 2]
+    topBoundingRect = m.top.boundingRect()
+
+    widthElement = m.top.dataSource.width + topBoundingRect.x
+    heightElement = topBoundingRect.height + (topBoundingRect.y * 2)
+
+    if m.top.dataSource.title = "0"
+        m.focusElement.width = 40
+        m.focusElement.height = 40
+        m.focusElement.translation = [(widthElement - m.focusElement.width) / 2, 0]
+    else
+        m.focusElement.width = widthElement
+        m.focusElement.height = heightElement
+    end if
+
+    m.top.width = widthElement
+    m.top.height = heightElement
+end sub

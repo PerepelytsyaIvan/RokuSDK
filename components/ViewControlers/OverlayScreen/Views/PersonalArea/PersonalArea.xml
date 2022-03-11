@@ -5,12 +5,20 @@
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource" />
         <field id="removeWikiView" type="node" />
-        <field id="pressBackButton" type="bool" alwaysNotify = "true"/>
+        <field id="pressBackButton" type="bool" alwaysNotify="true" />
+
     </interface>
 
     <children>
+
         <Group id="containerView">
             <Rectangle id="background" color="#1E1E1E" width="1200" height="675" />
+            <Poster id="focusElement" uri="pkg:/images/focusSubmit.9.png" opacity="0" />
+            <Label id="sendMeSMSLabel" width="300" height="35" vertAlign="center" horizAlign="left" scale="[1.0, 1.0]" focusable="true" color="#FFFFFF" />
+            <Toggle id="toggle" focusable="true" scale="[1.0, 1.0]" />
+
+            <Label id="saveInfoLabel" width="300" height="20" vertAlign="center" horizAlign="center" scale="[1.0, 1.0]" />
+
             <LayoutGroup id="keyboardLayout" translation="[60, 45]" itemSpacings="[50]">
                 <Poster id="QRCodePoster" width="200" height="200" />
 
@@ -19,18 +27,15 @@
 
             <Poster id="separatorPoster" width="1" height="395" uri="pkg:/images/bigSeparator.png" />
 
-            <LayoutGroup id="centralViewsLayout" itemSpacings="[20, 50]">
+            <LayoutGroup id="centralViewsLayout" itemSpacings="[20, 100]">
                 <Label id="infoReciveSms" width="500" height="60" lineSpacing="0" wrap="true" numLines="2" />
 
                 <Rectangle id="interactiveLabelBackground" width="330" height="40" color="#363636">
                     <Label id="interactiveLabel" translation="[20, 0]" width="300" height="40" vertAlign="center" horizAlign="left" />
                 </Rectangle>
-                <Label id="sendMeSMSLabel" width="300" height="35" vertAlign="center" horizAlign="left" scale="[0.7, 0.7]" focusable="true" color="#FFFFFF" />
-                <LayoutGroup layoutDirection="horiz" itemSpacings="[20]">
-                    <Toggle id="toggle" focusable="true" scale="[0.8, 0.8]" />
 
-                    <Label id="saveInfoLabel" width="300" height="20" vertAlign="center" horizAlign="left" />
-                </LayoutGroup>
+
+                <LayoutGroup layoutDirection="horiz" horizAlignment="center" vertAlignment="center" itemSpacings="[20]"></LayoutGroup>
                 <Label id="disableServiceLabel" width="500" height="60" lineSpacing="0" wrap="true" numLines="2" />
             </LayoutGroup>
 
