@@ -1,4 +1,5 @@
 sub init()
+    m.sideBarView = m.top.findNode("SideBarView")
     m.networkLayerManager = CreateObject("roSGNode", "NetworkLayerManager")
     m.modelOverlay = CreateObject("roSGNode", "ModelOverlay")
 
@@ -143,21 +144,21 @@ end sub
 
 sub infoApplication(event)
     infoApp = event.getData()
+    m.sideBarView.accountRoute = m.top.accountRoute
     desingModel = m.modelOverlay.callFunc("getDesignModel", infoApp)
     saveInGlobal("design", desingModel)
     m.eventModel = m.modelOverlay.callFunc("getEventInfo", infoApp)
     
     connectSocket()
     if m.eventModel.isShowView
-        ' m.timeForHidingOverlay = m.eventModel.timeForHiding
-        ' ' m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
-        ' if isValid(m.eventModel.clockData)
-        '     m.timeForShowingOverlay = m.eventModel.clockData.time
-        '     m.type = m.eventModel.clockData.module
-        ' else
-        '     m.timeForShowingOverlay = 10
-        ' end if
-        ' m.timerShowPanel.control = "start"
+        m.timeForHidingOverlay = m.eventModel.timeForHiding
+        if isValid(m.eventModel.clockData)
+            m.timeForShowingOverlay = m.eventModel.clockData.time
+            m.type = m.eventModel.clockData.module
+        else
+            m.timeForShowingOverlay = 10
+        end if
+        m.timerShowPanel.control = "start"
     end if
 end sub
 
@@ -183,7 +184,8 @@ end sub
 
 sub showingOverlayWithInfoUser() 
     if m.top.videoPlayer.position > m.timeForShowingOverlay
-        showActivitiViewWith(false)
+        m.timerShowPanel.control = "stop"
+        ' showActivitiViewWith(false)
     end if
 end sub
 
@@ -212,6 +214,7 @@ end sub
 sub showingActivityProductTimer()
     m.showActivityProductTimer.control = "stop"
     if isInvalid(m.activityProduct) then m.activityProduct = m.top.createChild("ProductActivity")
+    m.activityProduct.videoPlayer = m.top.videoPlayer
     m.activityProduct.dataSource = m.eventModel
 end sub
 
@@ -259,3 +262,29 @@ sub getInterpolator(fieldToInterp, startValue, endValue) as object
     interpolator.keyValue = [startValue, endValue]
     return interpolator
 end sub
+
+function onKeyEvent(key as string, press as boolean) as boolean
+    result = false
+    ? " Overlay function onKeyEvent("key" as string, "press" as boolean) as boolean"
+    if key = "up" and not m.sideBarView.hasFocus()
+        m.sideBarView.setFocus(true)
+        result = true
+    end if
+    
+    if not press then return result
+
+    if key = "up" and not m.sideBarView.hasFocus()
+        m.sideBarView.setFocus(true)
+        result = true
+    else if key = "down"
+        if isValid(m.activityView)
+            m.activityView.setFocus(m.activityView.hideActivityView)
+        else if isValid(m.activityProduct)
+            m.activityProduct.setFocus(m.activityProduct.hideActivityView)
+        else
+            m.top.videoPlayer.setFocus(true)
+        end if
+        result = true
+    end if
+    return result
+end function

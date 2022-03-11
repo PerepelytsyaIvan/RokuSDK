@@ -54,3 +54,8 @@ sub congigureSizesList(list, boundingLabel, countItems)
     list.itemSize = [widthList, list.rowItemSize[0][1]]
     list.translation = [translationX, 40 + (80 - list.rowItemSize[0][1]) / 2]
 end sub
+
+function configureContentNodeForTypePoll(markupGrid)
+    
+    
+end function

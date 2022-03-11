@@ -1,5 +1,6 @@
 sub init()
     initView()
+    configureObservers()
     configureDesign()
 
     m.hidingTimer = configureTimer(1, true)
@@ -63,6 +64,23 @@ sub changeTime()
         m.hidingTimer.control = "stop"
         hideActivity()
     end if
+end sub
+
+sub didSelectButtonLeft(event)
+    item = event.getData()
+
+    if item.title = "Close"
+        hideActivity()
+    end if
+end sub
+
+sub didSelectButton()
+    createPersonalArea(m.top.dataSource)
+end sub
+
+sub didSelectBackButton()
+    hidingPersonalArea()
+    m.top.videoPlayer.setFocus(true)
 end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean

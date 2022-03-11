@@ -21,6 +21,14 @@ sub initView()
 
     m.translationAnimation = m.top.findNode("translationAnimation")
     m.translationInterpolator = m.top.findNode("translationInterpolator")
+
+    m.hidingAnimation = m.top.findNode("hidingAnimation")
+    m.hidingInterpolator = m.top.findNode("hidingInterpolator")
+end sub
+
+sub configureObservers()
+    m.collectionView.observeField("item", "didSelectButton")
+    m.collectionViewLeftButton.observeField("item", "didSelectButtonLeft")
 end sub
 
 sub layoutViews()
@@ -77,4 +85,22 @@ sub configureLabel(seconds)
     m.timeLabel.text = time[0]
     m.unitTime.text = time[1]
     m.timeGroup.translation = [(getSize(1920) - getSize(260)) + ((getSize(260) - m.timeGroup.localboundingRect().width) / 2), (m.timeGroup.localboundingRect().height - getSize(30)) / 2]
+end sub
+
+sub createPersonalArea(dataSource)
+    hideActivity()
+    if isInvalid(m.personalArea) then m.personalArea = m.top.createChild("PersonalArea")
+    m.personalArea.id = "personalArea"
+    m.personalArea.opacity = 0
+    m.personalArea.dataSource = dataSource
+    m.personalArea.setFocus(true)
+    m.personalArea.observeField("pressBackButton", "didSelectBackButton")
+    m.hidingInterpolator.fieldToInterp = m.personalArea.id + ".opacity"
+    m.hidingInterpolator.keyValue = [0, 1]
+    m.hidingAnimation.control = "start"
+end sub
+
+sub hidingPersonalArea()
+    m.hidingInterpolator.keyValue = [1, 0]
+    m.hidingAnimation.control = "start"
 end sub

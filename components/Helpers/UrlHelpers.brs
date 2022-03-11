@@ -27,3 +27,7 @@ end sub
 sub getQuizUrl(id) as string
     return baseUrl() + "userApi/trivia/getQuestionById/" + id
 end sub
+
+sub getAvatarsUrl() as string
+    return baseUrl() + "userApi/user/getAvailableAvatars/avatar/null"
+end sub

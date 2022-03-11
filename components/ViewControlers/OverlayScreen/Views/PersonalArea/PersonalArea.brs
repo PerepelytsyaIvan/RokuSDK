@@ -107,20 +107,6 @@ sub getDataForKeyboard() as object
     return dataSource
 end sub
 
-' function onKeyEvent(key as string, press as boolean) as boolean
-'     result = true
-'     if not press then return true
-
-'     if key = "left"
-'         m.toggle.isOn = false
-'     else if key = "right"
-'         m.toggle.isOn = true
-'     end if
-'     return result
-' end function
-
-
-
 function onKeyEvent(key as string, press as boolean) as boolean
     result = true
     if not press then return true
@@ -149,6 +135,9 @@ function onKeyEvent(key as string, press as boolean) as boolean
         m.toggle.setFocus(true)
         m.sendMeSMSLabel.scale = [0.8, 0.8]
         m.toggle.scale = [1.0, 1.0]
+    else if key = "back"
+        m.top.pressBackButton = true
+        result = true
     end if
     return result
 end function

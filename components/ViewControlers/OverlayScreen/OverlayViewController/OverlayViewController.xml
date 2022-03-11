@@ -1,5 +1,6 @@
 <component name="OverlayViewController" extends="Group">
     <script type="text/brightscript" uri="./OverlayViewController.brs" />
+    <script type="text/brightscript" uri="./OverlayViewControllerHelper.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/UrlHelpers.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
 
@@ -9,5 +10,6 @@
     </interface>
 
     <children>
+        <SideBarView id = "sideBarView" />
     </children>
 </component>

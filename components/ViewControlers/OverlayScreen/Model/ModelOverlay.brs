@@ -352,3 +352,9 @@ sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = inv
 
     return eventData
 end sub
+
+sub configureContentNode()
+
+    contentNode = CreateObject("roSGNode", "ContentNode")
+    rowContent = CreateObject("roSGNode", "ContentActivityModel")
+end sub

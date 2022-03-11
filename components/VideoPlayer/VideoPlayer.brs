@@ -19,3 +19,13 @@ sub configureSDKPanel()
     m.overlayViewController.videoPlayer = m.videoPlayer
     m.overlayViewController.accountRoute = {"broadcasterName": "leonidtest", "channelId": "leonidpage"}
 end sub
+
+function onKeyEvent(key as string, press as boolean) as boolean
+    result = false
+    if not press then return result
+    if key = "up"
+        m.overlayViewController.setFocus(true)
+        result = false
+    end if
+    return result
+end function

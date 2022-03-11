@@ -8,12 +8,14 @@
         <field id="infoResponce" type="assocarray" />
         <field id="answerResponce" type="assocarray" />
         <field id="quizEventResponce" type="assocarray" />
+        <field id="avatarsResponce" type="array" />
 
         <function name = "registerUser"/>
         <function name = "loginUser"/>
         <function name = "getInfo"/>
         <function name = "sendAnswer"/>
         <function name = "getQuizEvent"/>
+        <function name = "getAllAvatars"/>
     </interface>
 
     <children>

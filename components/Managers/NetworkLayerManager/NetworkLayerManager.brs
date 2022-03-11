@@ -65,6 +65,22 @@ function sendAnswer(url, param, answer, wager)
     networkManager.control = "RUN"
 end function
 
+function getAllAvatars(url, param)
+    request = CreateObject("roSGNode", "URLRequest")
+    request.url = url
+    request.method = "POST"
+    request.body = { "data": { "broadcasterName": param.broadcasterName, "channelId": param.channelId, "server_timestamp": 1640854661, "language": getLanguage() } }
+    networkManager = CreateObject("roSGNode", "NetworkTask")
+    networkManager.request = request
+    networkManager.observeField("response", "onResponseAvatars")
+    networkManager.control = "RUN"
+end function
+
+sub onResponseAvatars(event)
+    data = event.getData()
+    m.top.avatarsResponce = data.arrayData
+end sub
+
 sub onResponseAnsver(event)
     data = event.getData()
     m.top.answerResponce = data.data

@@ -12,8 +12,8 @@ sub configureDataSource()
 end sub
 
 sub onChangePercentFocus()
-    if m.top.percentFocus > 0.5
-        m.focusElement.opacity = 1
+    if m.top.percentFocus > 0.2
+        m.focusElement.opacity = m.top.percentFocus
     else
         m.focusElement.opacity = 0
     end if

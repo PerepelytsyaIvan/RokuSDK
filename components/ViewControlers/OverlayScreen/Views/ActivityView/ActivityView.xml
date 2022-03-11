@@ -6,7 +6,7 @@
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource"/>
         <field id="dataSourceAnswer" type="assocarray" onChange="configureAnswerDataSource"/>
-    
+
         <field id="videoPlayer" type="node" />
         <field id="selectedAnswer" type="assocarray" />
         <field id="hideActivityView" type = "bool" onChange = "hideActivity"/>

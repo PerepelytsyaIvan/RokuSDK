@@ -1,0 +1,20 @@
+<component name="MenuItemComponent" extends="Group">
+    <script type="text/brightscript" uri="MenuItemComponent.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="focusPercent" type="float" onChange="itemFocused"/>
+        <field id="width" type="float" onChange="layoutSubviews"/>
+        <field id="height" type="float" onChange="layoutSubviews"/>
+        <field id="rowListHasFocus" type = "bool" onChange="itemFocused"/>
+    </interface>
+
+    <children>
+        <Poster id = "unfocusedPoster"
+                uri = "pkg:/images/focusMenu.png"/>
+        <Poster id = "focusedPoster"
+                uri = "pkg:/images/unfocusedMenu.png"/>
+        <Poster id = "imageCell"/>   
+    </children>
+</component>

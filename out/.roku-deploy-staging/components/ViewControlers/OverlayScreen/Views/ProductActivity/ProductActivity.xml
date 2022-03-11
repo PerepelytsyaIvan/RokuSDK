@@ -86,5 +86,9 @@
         <Animation id="translationAnimation" duration="0.4" repeat="false" easeFunction="linear">
             <Vector2DFieldInterpolator id="translationInterpolator" key="[0.0, 1.0]" fieldToInterp="activityContainerGroup.translation" />
         </Animation>
+
+        <Animation id="hidingAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <FloatFieldInterpolator id="hidingInterpolator" key="[0.0, 1.0]"  />
+        </Animation>
     </children>
 </component>

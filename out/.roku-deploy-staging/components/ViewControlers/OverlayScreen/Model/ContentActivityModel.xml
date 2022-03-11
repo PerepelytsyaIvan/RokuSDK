@@ -1,0 +1,7 @@
+<component name="ContentActivityModel" extends="ContentNode">
+
+    <interface>
+        <field id="answer" type="string" />
+
+    </interface>
+</component>

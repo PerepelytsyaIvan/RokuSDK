@@ -5,6 +5,7 @@
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource" />
         <field id="removeWikiView" type="node" />
+        <field id="pressBackButton" type="bool" alwaysNotify = "true"/>
     </interface>
 
     <children>
