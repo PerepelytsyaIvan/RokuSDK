@@ -1,4 +1,5 @@
 sub init()
+    m.top.setFocus(true)
     m.top.id = "PredicationSubmitView"
     m.collectionView = m.top.findNode("collectionView")
     m.containerView = m.top.findNode("containerView")
@@ -97,4 +98,13 @@ sub getForrmaterStringWithPoints(direction = "up", start = false) as string
     return points.toStr() + "/" + reward.toStr()
 end sub
 
+function onKeyEvent(key as string, press as boolean) as boolean
+    result = false
 
+    if not press then return result
+
+    if key = "up" 
+        result = true
+    end if
+    return result
+end function

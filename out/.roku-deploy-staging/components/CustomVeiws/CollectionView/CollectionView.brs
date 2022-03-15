@@ -35,6 +35,7 @@ end sub
 
 sub changeFractionFocusOpacity(event)
     fraction = event.getData()
+    if isInvalid(m.currentElement) then return
     if m.top.hasFocus()
         m.currentElement.percentFocus = fraction
     else

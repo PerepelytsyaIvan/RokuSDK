@@ -31,12 +31,12 @@ sub layoutSubviews()
     m.layoutGroup.itemSpacings = [getSize(2)]
 
     if m.imageCell.uri <> getImageWithName("")
-        m.imageCell.width = 40
-        m.imageCell.height = 40
-        m.imageCell.translation = [10, (m.top.localBoundingRect().height - m.imageCell.height) / 2]
-        m.layoutGroup.translation = [65, 0]
+        m.imageCell.width = getSize(40)
+        m.imageCell.height = getSize(40)
+        m.imageCell.translation = [getSize(10), (m.top.localBoundingRect().height - m.imageCell.height) / 2]
+        m.layoutGroup.translation = [getSize(65), 0]
     end if
 
-    m.top.width = m.top.localBoundingRect().width
+    m.top.width = m.top.localBoundingRect().width + getSize(20)
     m.top.height = m.top.localBoundingRect().height
 end sub

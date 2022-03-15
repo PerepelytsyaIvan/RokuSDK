@@ -10,6 +10,8 @@
     </interface>
 
     <children>
+        <Poster id="focusCell" opacity = "0" uri = "pkg:/images/gradienFocusButton.9.png"/>
+
         <LayoutGroup id = "containerView" itemSpacings = "[10]" vertAlignment = "center" layoutDirection = "horiz">
             <Poster id="pointsImage">
                 <Label id="pointLabel" 

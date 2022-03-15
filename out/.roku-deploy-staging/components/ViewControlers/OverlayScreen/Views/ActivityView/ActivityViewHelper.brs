@@ -7,6 +7,7 @@ sub initProperties()
     m.hidingInterpolator.addField("isShow", "boolean", false)
     m.timeForHideView = 0
     m.isShowCollection = false
+    m.isDataAnswer = false
 end sub
 
 sub initView()
@@ -16,6 +17,7 @@ sub initView()
     m.activityLayout = m.top.findNode("activityLayout")
 
     m.timeGroup = m.top.findNode("timeGroup")
+    m.scrollingArrowGroup = m.top.findNode("scrollingArrowGroup")
 
     m.backgroundActivity = m.top.findNode("backgroundActivity")
     m.logoActivity = m.top.findNode("logoActivity")
@@ -29,6 +31,8 @@ sub initView()
     m.collectionView = m.top.findNode("collectionView")
 
     m.separator = m.top.findNode("separator")
+    m.separatorScrolling = m.top.findNode("separatorScrolling")
+    m.scrollingArrow = m.top.findNode("scrollingArrow")
 
     m.translationAnimation = m.top.findNode("translationAnimation")
     m.translationInterpolator = m.top.findNode("translationInterpolator")
@@ -71,42 +75,60 @@ sub layoutViews()
 
     m.logoActivity.width = getSize(80)
     m.logoActivity.height = getSize(80)
-    m.collectionView.itemSpacing = getSize(20)
+
+    m.separatorScrolling.width = getSize(2)
+    m.separatorScrolling.height = getSize(80)
+
+    m.scrollingArrow.width = getSize(25)
+    m.scrollingArrow.height = getSize(25)
+
+    m.scrollingArrow.translation = [0, (m.separatorScrolling.height - m.scrollingArrow.height) / 2]
+    m.separatorScrolling.translation = [(m.scrollingArrow.width - m.separatorScrolling.width) / 2, 0]
+    m.scrollingArrowGroup.translation = [getSize(1550), m.activityLayout.translation[1]]
     m.collectionView.translation = [m.activityLayout.boundingRect().width + m.activityLayout.translation[0] + getSize(30), m.activityLayout.translation[1] + getSize(10)]
     m.collectionViewLeftButton.translation = [(getWidthScreen() - getSize(250)) + (getSize(250) - m.collectionViewLeftButton.localBoundingRect().width) / 2, getSize(112)]
 end sub
 
-sub layoutViewsAnswer()
-    if m.top.dataSourceAnswer.questionType = "injectRating"
+sub layoutViewsAnswer(questionType)
+    if questionType = "injectRating"
         activityBounding = m.activityLayout.boundingRect()
         translationX = activityBounding.width - activityBounding.x + ((getSize(1920) - activityBounding.width - activityBounding.x - getSize(250)  - m.collectionView.boundingRect().width) / 2)
         m.collectionView.translation = [translationX, m.activityLayout.translation[1] + getSize(20)]
+        m.collectionView.widthLayoutView = 500
+        m.collectionView.sizeMask = [maxWidth, getSize(80)]
+    else
+        maxWidth = getSize(1920) - m.activityLayout.boundingRect().width - m.activityLayout.translation[0] - getSize(410)
+        m.collectionView.widthLayoutView = 3000
+        m.collectionView.sizeMask = [maxWidth, getSize(80)]
     end if
 end sub
 
 sub configureCollectionFor(eventType)
 
-    maxWidth = getSize(1920) - m.activityLayout.boundingRect().width - m.activityLayout.translation[0] - getSize(400)
-    m.collectionView.widthLayoutView = 700
-    
-    m.collectionView.size = [maxWidth, getSize(80)]
+    maxWidth = getSize(1920) - m.activityLayout.boundingRect().width - m.activityLayout.translation[0] - getSize(410)
+    m.collectionView.widthLayoutView = 3000
+    m.collectionView.sizeMask = [maxWidth, getSize(80)]
+
     if eventType = "injectRating"
-        m.collectionView.horizontalSpacing = getSize(40)
+        m.collectionView.itemSpacing = getSize(40)
         m.collectionView.focusImage = "pkg:/nil"
     else if eventType = "prediction"
-        m.collectionView.horizontalSpacing = getSize(50)
+        m.collectionView.itemSpacing = getSize(50)
+        m.collectionView.focusImage = "pkg:/nil"
     else
-        m.collectionView.horizontalSpacing = getSize(20)
+        m.collectionView.itemSpacing = getSize(20)
         m.collectionView.focusImage = "pkg:/images/gradienFocusButton.9.png"
     end if
 end sub
 
 sub configureCollectionAnswerFor(eventType)
     if eventType = "injectRating"
-        m.collectionView.horizontalSpacing = getSize(5)
+        m.collectionView.itemSpacing = getSize(5)
         m.collectionView.focusImage = "pkg:/nil"
+        m.collectionView.widthLayoutView = 1000
     else
-        m.collectionView.horizontalSpacing = getSize(80)
+        m.collectionView.itemSpacing = getSize(80)
+        m.collectionView.focusImage = "pkg:/images/gradienFocusButton.9.png"
     end if
 end sub
 

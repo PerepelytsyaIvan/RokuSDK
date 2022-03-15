@@ -11,9 +11,14 @@
         <Group id="containerView">
             <Rectangle id="background" translation="[1920, 0]" color="#00000099" width="275" height="50">
                 <Label id="questionLabel" height="50" vertAlign="center" horizAlign="right" translation="[10, 0]"></Label>
-
+                
                 <Rectangle id="progress" translation="[1, 49]" width="253" height="2" color="#ffffff"></Rectangle>
             </Rectangle>
+
+            <Poster id = "ratingPoster"
+                width = "40"
+                height = "40">
+            </Poster>
         </Group>
 
         <Animation id="translationAnimation" duration="0.3" repeat="false" easeFunction="linear">

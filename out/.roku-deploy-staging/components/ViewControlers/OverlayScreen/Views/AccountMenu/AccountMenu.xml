@@ -27,10 +27,10 @@
 
             <RowList    id = "fieldsList"
                         itemComponentName = "FieldItemComponent"
-                        itemSize = "[320, 100]"
-                        rowItemSize = "[[320, 100]]"
-                        itemSpacing = "[0,5]"
-                        rowItemSpacing = "[[0, 5]]"
+                        itemSize = "[320, 120]"
+                        rowItemSize = "[[320, 120]]"
+                        itemSpacing = "[0,0]"
+                        rowItemSpacing = "[[0, 0]]"
                         focusBitmapUri = "pkg:/nil"
                         vertFocusAnimationStyle = "floatingFocus"
                         numRows = "2"/>
@@ -42,8 +42,8 @@
         <Group id = "avatarGroup"  opacity = "0">
             <RowList    id = "avatarsList"
                         itemComponentName = "AvatarItemComponent"
-                        itemSize = "[330, 115]"
-                        rowItemSize = "[[100, 115]]"
+                        itemSize = "[330, 100]"
+                        rowItemSize = "[[100, 100]]"
                         itemSpacing = "[15,15]"
                         rowItemSpacing = "[[15, 15]]"
                         focusBitmapUri = "pkg:/images/focus.9.png"

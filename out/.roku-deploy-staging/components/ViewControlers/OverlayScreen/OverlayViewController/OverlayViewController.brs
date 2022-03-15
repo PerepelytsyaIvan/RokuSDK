@@ -49,24 +49,14 @@ sub onResponceAnswer(event)
         eventModel = m.modelOverlay.callFunc("getAnswers", m.answer, m.eventModel, responce)
     end if
     RegWrite(eventModel.idevent, FormatJson(eventModel))
-
-
     showActivitiViewWith(true, eventModel)
-
-    m.timerHidePanel.control = "start"
-
-    if isInvalid(eventModel.closePostInteraction) then return
-    if eventModel.closePostInteraction
-        m.timeForHidingOverlay = 6
-    else
-        m.timeForHidingOverlay = 10000000
-    end if 
 end sub
 
 sub onResponceQuizEvent(event)
     quizEvent = event.getData()
     if IsValid(m.isCloseQuiz) then quizEvent.close_post_interaction = m.isCloseQuiz
     m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", quizEvent, "injectQuiz", m.timeToStay)
+    RegWrite(m.eventModel.idevent, FormatJson(m.eventModel))
     showActivitiViewWith(false)
 end sub
 
@@ -74,7 +64,7 @@ sub connectSocket()
     m.socketClient = createObject("roSGNode", "WebSocketClient")
     m.socketClient.observeField("on_open", "connectedSocket")
     m.socketClient.observeField("on_message", "on_message")
-    m.socketClient.open = "ws://ws-us2.pusher.com:80/app/9f45bc3adf59ff3ef36d?client=js&version=1.0&protocol=5"
+    m.socketClient.open = "ws://ws-us2.pusher.com:80/app/9f45bc3adf59ff3ef36d?protocol=7&client=js&version=7.0.3&flash=false"
 end sub
 
 sub connectedSocket(event)
@@ -88,6 +78,7 @@ sub on_message(event)
 
     if isValid(parseMessage.data)
         json = ParseJson(parseMessage.data)
+
         if parseMessage.event <> "pusher_internal:subscription_succeeded" and parseMessage.event <> "pusher:connection_established" and json.messageType <> "streamerInfo"
             m.isCloseQuiz = invalid
             if json.messageType = "injectQuiz"
@@ -151,14 +142,14 @@ sub infoApplication(event)
     
     connectSocket()
     if m.eventModel.isShowView
-        m.timeForHidingOverlay = m.eventModel.timeForHiding
+        ' m.timeForHidingOverlay = m.eventModel.timeForHiding
         if isValid(m.eventModel.clockData)
             m.timeForShowingOverlay = m.eventModel.clockData.time
             m.type = m.eventModel.clockData.module
-        else
-            m.timeForShowingOverlay = 10
+            m.timerShowPanel.control = "start"
+        else if m.eventModel.showAnswerView
+            showingActivityTimer()
         end if
-        m.timerShowPanel.control = "start"
     end if
 end sub
 
@@ -185,7 +176,11 @@ end sub
 sub showingOverlayWithInfoUser() 
     if m.top.videoPlayer.position > m.timeForShowingOverlay
         m.timerShowPanel.control = "stop"
-        ' showActivitiViewWith(false)
+        if m.eventModel.questiontype = "injectProduct"
+            showActivitiProductView() 
+        else
+            showActivitiViewWith(false)
+        end if
     end if
 end sub
 
@@ -207,7 +202,6 @@ sub showActivitiProductView()
         m.showActivityProductTimer.control = "start"
         return
     end if
-
     showingActivityProductTimer()
 end sub
 
@@ -216,10 +210,12 @@ sub showingActivityProductTimer()
     if isInvalid(m.activityProduct) then m.activityProduct = m.top.createChild("ProductActivity")
     m.activityProduct.videoPlayer = m.top.videoPlayer
     m.activityProduct.dataSource = m.eventModel
+    m.activityProduct.setFocus(true)
 end sub
 
 sub showingActivityTimer()
     m.showActivityViewTimer.control = "stop"
+    if isInvalid(m.isAnswer) then m.isAnswer = false
 
     if isInvalid(m.activityView)
         m.activityView = m.top.createChild("ActivityView")
@@ -228,9 +224,13 @@ sub showingActivityTimer()
 
     if m.isAnswer
         m.activityView.dataSourceAnswer = m.answers
+    else if m.eventModel.showAnswerView
+        m.activityView.dataAnswer = m.eventModel
     else
         m.activityView.dataSource = m.eventModel 
     end if
+
+    m.activityView.setFocus(true)
 end sub
 
 sub handleRemoveWikiView(event)
@@ -266,10 +266,6 @@ end sub
 function onKeyEvent(key as string, press as boolean) as boolean
     result = false
     ? " Overlay function onKeyEvent("key" as string, "press" as boolean) as boolean"
-    if key = "up" and not m.sideBarView.hasFocus()
-        m.sideBarView.setFocus(true)
-        result = true
-    end if
     
     if not press then return result
 
@@ -278,13 +274,19 @@ function onKeyEvent(key as string, press as boolean) as boolean
         result = true
     else if key = "down"
         if isValid(m.activityView)
-            m.activityView.setFocus(m.activityView.hideActivityView)
+            m.activityView.setFocus(true)
         else if isValid(m.activityProduct)
-            m.activityProduct.setFocus(m.activityProduct.hideActivityView)
+            m.activityProduct.setFocus(true)
         else
             m.top.videoPlayer.setFocus(true)
         end if
         result = true
     end if
+    
+    if key = "up" and not m.sideBarView.hasFocus()
+        m.sideBarView.setFocus(true)
+        result = true
+    end if
+
     return result
 end function

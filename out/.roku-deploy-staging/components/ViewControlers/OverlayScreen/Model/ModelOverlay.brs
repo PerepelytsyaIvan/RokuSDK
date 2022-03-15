@@ -51,6 +51,8 @@ function getEventInfo(data) as object
         return rating
     else if isValid(poll.question)
         return poll
+    else 
+
     end if
 end function
 
@@ -93,7 +95,6 @@ sub getEventInfoTrivias(data) as object
     for each item in data.trivias
         if item.id = clockData.id
             storageModel = getStorageAnswer(item.id)
-
             if isValid(storageModel) then return storageModel
             eventModel.showAnswerView = false
             eventModel.isShowView = true
@@ -180,10 +181,9 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
         if isValid(storageModel)
             storageModel.timeForHiding = data.timeToStay
-            ' return storageModel
+            return storageModel
         end if
     end if
-
 
     if messageType = "injectPoll"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
@@ -239,7 +239,7 @@ sub getStorageAnswer(id) as object
     if isValid(storageModel)
         storageModel = ParseJson(storageModel)
         storageModel.showAnswerView = true
-        return storageModel
+        ' return storageModel
     end if
     return invalid
 end sub
@@ -351,10 +351,4 @@ sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = inv
     if IsValid(questionType) then eventData.questionType = questionType
 
     return eventData
-end sub
-
-sub configureContentNode()
-
-    contentNode = CreateObject("roSGNode", "ContentNode")
-    rowContent = CreateObject("roSGNode", "ContentActivityModel")
 end sub

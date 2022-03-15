@@ -13,12 +13,12 @@ end sub
 sub configureDataSource()
     dataSource = m.top.dataSource
     for each item in dataSource
-            if item.answersending and item.isCorrectAnswer
+            if isValid(item.answersending) and isValid(item.isCorrectAnswer) and item.answersending and item.isCorrectAnswer
                 m.layoutGroupAnswer.removeChild(m.layoutGroupWrongAnswer)
                 m.rightAnswerLabel.text = item.answer
                 m.imageCellRightAnswer.uri = "pkg:/images/rightAnwer.png"
                 m.infoLabel.text = "AWESOME! \n+250 pts for the correct answer".Replace("\n", chr(10))
-            else if item.answersending and not item.isCorrectAnswer
+            else if isValid(item.answersending) and isValid(item.isCorrectAnswer) and item.answersending and not item.isCorrectAnswer
                 m.layoutGroupAnswer.insertChild(m.layoutGroupWrongAnswer, 0)
                 m.wrongAnswerLabel.text = item.answer
                 m.imageCellWrongAnswer.uri = "pkg:/images/wrongAnswer.png"
