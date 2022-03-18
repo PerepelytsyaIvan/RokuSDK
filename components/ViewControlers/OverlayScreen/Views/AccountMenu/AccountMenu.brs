@@ -92,7 +92,7 @@ sub didSelectKeyboardButton(event)
     index = event.getData()
 
     if index = 0
-        m.fieldsList.content.getChild(m.fieldsList.itemSelected).getChild(0).description = m.fieldsList.content.getChild(m.fieldsList.itemSelected).getChild(0).description + m.keyboarddialog.text
+        m.fieldsList.content.getChild(m.fieldsList.itemSelected).getChild(0).description = m.keyboarddialog.text
     end if
     m.top.removeChild(m.keyboarddialog)
     m.fieldsList.setFocus(true)
@@ -109,6 +109,7 @@ end sub
 
 sub didSelectSaveButton()
     regex = CreateObject("roRegex", "[A-Z0-9._%+-]+@", "i")
+
     if m.userData.name = ""
         m.fieldsList.content.getChild(0).getChild(0).error = "Invalid Username"
     else
@@ -205,6 +206,10 @@ function onKeyEvent(key as string, press as boolean) as boolean
     result = false
     if not press then return result
 
+    if key <> "back"
+        result = true
+    end if
+
     if key = "up" and m.saveButton.hasFocus() and not m.saveButtonAvatar.hasFocus()
         updateFocus(1)
         result = true
@@ -217,7 +222,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
     else if key = "down" and m.fieldsList.hasFocus() and m.saveButton.activateButton and not m.saveButtonAvatar.hasFocus()
         updateFocus(2)
         result = true
-    else if key = "down" and m.profileFocus.hasFocus() and not m.avatarsList.hasFocus() and not m.saveButtonAvatar.hasFocus()
+    else if key = "down" and m.profileFocus.hasFocus() and not m.avatarsList.hasFocus() and not m.saveButtonAvatar.hasFocus() and not m.fieldsList.hasFocus()
         updateFocus(1)
         result = true
     else if key = "down" and m.avatarsList.hasFocus()

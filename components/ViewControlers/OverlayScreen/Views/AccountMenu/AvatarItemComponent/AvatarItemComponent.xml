@@ -19,7 +19,8 @@
                 uri = "pkg:/images/defaultAvatar.png" />
 
         <Poster id = "profileFocus"
-                uri = "pkg:/images/focusAvatar.png"
-                opacity = "0"/>
+                translation = "[-10, -10]"
+                uri = "pkg:/images/focus.9.png"
+                opacity = "1"/>
     </children>
 </component>

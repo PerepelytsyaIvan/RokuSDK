@@ -1,0 +1,33 @@
+<component name="ShopMenu" extends="Group">
+    <script type="text/brightscript" uri="ShopMenu.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/UrlHelpers.brs" />
+
+    <interface>
+        <field id="dataSource" type="array" onChange = "configureDataSource"/>
+    </interface>
+
+    <children>
+        <Rectangle id = "background"/>
+   
+        <LayoutGroup id = "productGroup" itemSpacings = "[30, 15, 20]" addItemSpacingAfterChild = "false" horizAlignment = "center">
+            <LayoutGroup id = "labelsLayoutGroup" layoutDirection = "horiz" itemSpacings = "[5]">
+                <Label id = "subTitle"/>
+                <Label id = "title"/>
+            </LayoutGroup>
+
+            <Poster id="separator" 
+                    uri="pkg:/images/separatorGradient.png"/>
+
+            <RowList    id = "productList"
+                        itemComponentName = "ProductItemComponent"
+                        itemSize = "[340, 100]"
+                        rowItemSize = "[[340, 100]]"
+                        itemSpacing = "[0,10]"
+                        rowItemSpacing = "[[0, 10]]"
+                        focusBitmapUri = "pkg:/nil"
+                        vertFocusAnimationStyle = "floatingFocus"
+                        numRows = "10"/>
+        </LayoutGroup>
+    </children>
+</component>

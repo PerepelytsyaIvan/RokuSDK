@@ -31,3 +31,11 @@ end sub
 sub getAvatarsUrl() as string
     return baseUrl() + "userApi/user/getAvailableAvatars/avatar/null"
 end sub
+
+sub getLeadersUrl() as string
+    return baseUrl() + "userApi/leaderboard/getLeaders"
+end sub
+
+sub getProductUrl() as string
+    return baseUrl() + "userApi/shop/getProducts"
+end sub

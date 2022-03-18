@@ -1,5 +1,9 @@
 sub init()
     m.sideBarView = m.top.findNode("SideBarView")
+    m.notificationGroup = m.top.findNode("notificationGroup")
+    m.translationAnimation = m.top.findNode("translationAnimation")
+    m.iterpolator = m.top.findNode("iterpolator")
+
     m.networkLayerManager = CreateObject("roSGNode", "NetworkLayerManager")
     m.modelOverlay = CreateObject("roSGNode", "ModelOverlay")
 
@@ -49,24 +53,14 @@ sub onResponceAnswer(event)
         eventModel = m.modelOverlay.callFunc("getAnswers", m.answer, m.eventModel, responce)
     end if
     RegWrite(eventModel.idevent, FormatJson(eventModel))
-
-
     showActivitiViewWith(true, eventModel)
-
-    m.timerHidePanel.control = "start"
-
-    if isInvalid(eventModel.closePostInteraction) then return
-    if eventModel.closePostInteraction
-        m.timeForHidingOverlay = 6
-    else
-        m.timeForHidingOverlay = 10000000
-    end if
 end sub
 
 sub onResponceQuizEvent(event)
     quizEvent = event.getData()
     if IsValid(m.isCloseQuiz) then quizEvent.close_post_interaction = m.isCloseQuiz
     m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", quizEvent, "injectQuiz", m.timeToStay)
+    RegWrite(m.eventModel.idevent, FormatJson(m.eventModel))
     showActivitiViewWith(false)
 end sub
 
@@ -74,7 +68,7 @@ sub connectSocket()
     m.socketClient = createObject("roSGNode", "WebSocketClient")
     m.socketClient.observeField("on_open", "connectedSocket")
     m.socketClient.observeField("on_message", "on_message")
-    m.socketClient.open = "ws://ws-us2.pusher.com:80/app/9f45bc3adf59ff3ef36d?client=js&version=1.0&protocol=5"
+    m.socketClient.open = "ws://ws-us2.pusher.com:80/app/9f45bc3adf59ff3ef36d?protocol=7&client=js&version=7.0.3&flash=false"
 end sub
 
 sub connectedSocket(event)
@@ -88,6 +82,7 @@ sub on_message(event)
 
     if isValid(parseMessage.data)
         json = ParseJson(parseMessage.data)
+
         if parseMessage.event <> "pusher_internal:subscription_succeeded" and parseMessage.event <> "pusher:connection_established" and json.messageType <> "streamerInfo"
             m.isCloseQuiz = invalid
             if json.messageType = "injectQuiz"
@@ -98,7 +93,7 @@ sub on_message(event)
                 m.eventModel = m.modelOverlay.callFunc("getEventInfoWithSocket", json)
                 if m.eventModel.questionType = "injectWiki"
                     if m.eventModel.type = "notification"
-                        wikiView = m.top.createChild("WikiView")
+                        wikiView = m.notificationGroup.createChild("WikiView")
                         wikiView.observeField("removeWikiView", "handleRemoveWikiView")
                         if m.arrayNotificationView.count() > 0
                             oldNotifyView = m.arrayNotificationView[m.arrayNotificationView.count() - 1]
@@ -108,6 +103,7 @@ sub on_message(event)
                         wikiView.dataSource = m.eventModel
                         m.arrayNotificationView.push(wikiView)
                         wikiView.id = (m.arrayNotificationView.count() - 1).toStr()
+                        configureAnimation()
                         return
                     end if
                 end if
@@ -121,6 +117,23 @@ sub on_message(event)
                 m.type = m.eventModel.questionType
             end if
         end if
+    end if
+end sub
+
+sub configureAnimation()
+    boundingRect = m.notificationGroup.boundingRect()
+    if boundingRect.height > getSize(700) 
+        m.animation = m.top.createChild("Animation")
+        m.animation.observeField("state", "changeStateAnimationNotify")
+        m.animation.duration = 0.2
+        m.animation.easeFunction = "linear"
+        for each wikiView in m.arrayNotificationView
+            translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
+            interpolator = getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY])
+            m.animation.appendChild(interpolator)
+            m.animation.delay = 0.01
+        end for
+        m.animation.control = "start"
     end if
 end sub
 
@@ -147,33 +160,23 @@ sub infoApplication(event)
     m.sideBarView.accountRoute = m.top.accountRoute
     desingModel = m.modelOverlay.callFunc("getDesignModel", infoApp)
     saveInGlobal("design", desingModel)
-    m.eventModel = m.modelOverlay.callFunc("getEventInfo", infoApp)
-
+    m.eventModelWithGetInfo = m.modelOverlay.callFunc("getEventInfo", infoApp)
+    
     connectSocket()
-    if m.eventModel.isShowView
-        m.timeForHidingOverlay = m.eventModel.timeForHiding
-        if isValid(m.eventModel.clockData)
-            m.timeForShowingOverlay = m.eventModel.clockData.time
-            m.type = m.eventModel.clockData.module
-        else
-            m.timeForShowingOverlay = 10
+    if m.eventModelWithGetInfo.isShowView
+        if isValid(m.eventModelWithGetInfo.clockData)
+            m.timeForShowingOverlay = m.eventModelWithGetInfo.clockData.time
+            m.type = m.eventModelWithGetInfo.clockData.module
+            m.timerShowPanel.control = "start"
+        else if m.eventModelWithGetInfo.showAnswerView
+            m.eventModel = m.eventModelWithGetInfo
+            showingActivityTimer()
         end if
-        m.timerShowPanel.control = "start"
     end if
 end sub
 
 sub hidingOverlay()
-    ' if isInvalid(m.timeForHidingOverlay) then return
-    ' m.timeForHidingOverlay -= 1
-    ' ' m.overlayView.callFunc("configureSecondsLabel", m.timeForHidingOverlay)
 
-    ' if m.timeForHidingOverlay = 0
-    '     m.timeForHidingOverlay = invalid
-    '     m.timerHidePanel.control = "stop"
-    '     m.overlayView.callFunc("showPanel", false)
-    '     m.top.setFocus(false)
-    '     m.top.videoPlayer.setFocus(true)
-    ' end if
 end sub
 
 sub hidingNotification()
@@ -184,8 +187,14 @@ end sub
 
 sub showingOverlayWithInfoUser()
     if m.top.videoPlayer.position > m.timeForShowingOverlay
+        m.eventModel = m.eventModelWithGetInfo
+
         m.timerShowPanel.control = "stop"
-        ' showActivitiViewWith(false)
+        if m.eventModel.questiontype = "injectProduct"
+            showActivitiProductView() 
+        else
+            showActivitiViewWith(false)
+        end if
     end if
 end sub
 
@@ -207,7 +216,6 @@ sub showActivitiProductView()
         m.showActivityProductTimer.control = "start"
         return
     end if
-
     showingActivityProductTimer()
 end sub
 
@@ -216,10 +224,12 @@ sub showingActivityProductTimer()
     if isInvalid(m.activityProduct) then m.activityProduct = m.top.createChild("ProductActivity")
     m.activityProduct.videoPlayer = m.top.videoPlayer
     m.activityProduct.dataSource = m.eventModel
+    m.activityProduct.setFocus(true)
 end sub
 
 sub showingActivityTimer()
     m.showActivityViewTimer.control = "stop"
+    if isInvalid(m.isAnswer) then m.isAnswer = false
 
     if isInvalid(m.activityView)
         m.activityView = m.top.createChild("ActivityView")
@@ -228,30 +238,76 @@ sub showingActivityTimer()
 
     if m.isAnswer
         m.activityView.dataSourceAnswer = m.answers
+    else if m.eventModel.showAnswerView
+        m.activityView.dataAnswer = m.eventModel
     else
         m.activityView.dataSource = m.eventModel
     end if
+
+    m.activityView.setFocus(true)
 end sub
 
 sub handleRemoveWikiView(event)
     oldWikiView = event.getData()
-    m.arrayNotificationView.Delete(oldWikiView.id.toInt())
-    m.top.removeChild(oldWikiView)
+    animationRemove(oldWikiView)
+end sub
+
+sub animationRemove(removedView)
+    boundingGroup = m.notificationGroup.boundingRect()
+    m.notificationGroup.removeChild(removedView)
+
+    oldView = removedView
+
     m.animation = m.top.createChild("Animation")
-    m.animation.observeField("state", "changeStateAnimationNotify")
     m.animation.duration = 0.2
+    m.animation.delay = 0.2
     m.animation.easeFunction = "linear"
+    m.animation.observeField("state", "changeStateAnimationNotify")
 
-    for each wikiView in m.arrayNotificationView
-        if wikiView.id.toInt() > oldWikiView.id.toInt()
-            wikiView.id = (wikiView.id.toInt() - 1).toStr()
-            translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
-            interpolator = getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY])
+    if boundingGroup.height > getSize(700)
+        for i = removedView.id.toInt() to 0 step - 1
+            view = m.arrayNotificationView[i]
+            newTranslation = oldView.translation[1] + (oldView.boundingRect().height - view.boundingRect().height)
+            interpolator = getInterpolator(view.id + ".translation", view.translation, [view.translation[0], newTranslation])
             m.animation.appendChild(interpolator)
-            m.animation.delay = 0.01
-        end if
-    end for
+            oldView = view
+        end for
+    else
+        for each view in m.arrayNotificationView
+            if view.id.toInt() > removedView.id.toInt()
+                newTranslation = view.translation[1] - oldView.boundingRect().height - 10
+                interpolator = getInterpolator(view.id + ".translation", view.translation, [view.translation[0], newTranslation])
+                m.animation.appendChild(interpolator)
+                oldView = view
+            end if
+        end for
+    end if
 
+    m.arrayNotificationView.Delete(removedView.id.toInt())
+    m.animation.control = "start"
+end sub
+
+sub changeStateAnimationNotify(event)
+    state = event.getData()
+
+    if state = "stopped"
+        count = 0
+        for each item in m.arrayNotificationView
+            item.id = count.toStr()
+            count++
+        end for 
+    end if
+end sub
+
+sub animationDown(oldWikiView)
+    for index = m.arrayNotificationView.count() - 1 to 0 step - 1
+        view = m.arrayNotificationView[index]
+        newTranslation = view.translation[1] + (oldWikiView.translation[1] + oldWikiView.boundingRect().height)
+        interpolator = getInterpolator(view.id + ".translation", view.translation, [view.translation[0], newTranslation])
+        m.animation.appendChild(interpolator)
+        m.animation.delay = 0.01
+        oldWikiView = view
+    end for
     m.animation.control = "start"
 end sub
 
@@ -266,11 +322,7 @@ end sub
 function onKeyEvent(key as string, press as boolean) as boolean
     result = false
     ? " Overlay function onKeyEvent("key" as string, "press" as boolean) as boolean"
-    if key = "up" and not m.sideBarView.hasFocus()
-        m.sideBarView.setFocus(true)
-        result = true
-    end if
-
+    
     if not press then return result
 
     if key = "up" and not m.sideBarView.hasFocus()
@@ -278,13 +330,19 @@ function onKeyEvent(key as string, press as boolean) as boolean
         result = true
     else if key = "down"
         if isValid(m.activityView)
-            m.activityView.setFocus(m.activityView.hideActivityView)
+            m.activityView.setFocus(true)
         else if isValid(m.activityProduct)
-            m.activityProduct.setFocus(m.activityProduct.hideActivityView)
+            m.activityProduct.setFocus(true)
         else
             m.top.videoPlayer.setFocus(true)
         end if
         result = true
     end if
+    
+    if key = "up" and not m.sideBarView.hasFocus()
+        m.sideBarView.setFocus(true)
+        result = true
+    end if
+
     return result
 end function

@@ -76,6 +76,32 @@ function getAllAvatars(url, param)
     networkManager.control = "RUN"
 end function
 
+function getLeaders(url, param)
+    userToken = RegRead("loginizationToken")
+
+    request = CreateObject("roSGNode", "URLRequest")
+    request.url = url
+    request.method = "POST"
+    request.body = { "data": { "channelId": param.channelId, "userToken": userToken, "broadcasterName": param.broadcasterName} }
+    networkManager = CreateObject("roSGNode", "NetworkTask")
+    networkManager.request = request
+    networkManager.observeField("response", "onResponseLeaders")
+    networkManager.control = "RUN"
+end function
+
+function getProducts(url, param)
+    userToken = RegRead("loginizationToken")
+
+    request = CreateObject("roSGNode", "URLRequest")
+    request.url = url
+    request.method = "POST"
+    request.body = { "data": { "categoryId": param.categoryId, "broadcasterName": param.broadcasterName} }
+    networkManager = CreateObject("roSGNode", "NetworkTask")
+    networkManager.request = request
+    networkManager.observeField("response", "onResponseProducts")
+    networkManager.control = "RUN"
+end function
+
 sub onResponseAvatars(event)
     data = event.getData()
     m.top.avatarsResponce = data.arrayData
@@ -84,6 +110,11 @@ end sub
 sub onResponseAnsver(event)
     data = event.getData()
     m.top.answerResponce = data.data
+end sub
+
+sub onResponseProducts(event)
+    responce = event.getData()
+    m.top.productsResponce = responce.arrayData
 end sub
 
 function getQuizEvent(url)
@@ -99,4 +130,9 @@ end function
 sub onResponseQuizEvent(event)
     data = event.getData()
     m.top.quizEventResponce = data.data.question
+end sub
+
+sub onResponseLeaders(event)
+    responce = event.getData()
+    m.top.leadersResponce = responce.data
 end sub

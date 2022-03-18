@@ -29,13 +29,14 @@ sub layoutSubviews()
     images = [m.background, m.focusPoster]
     m.textLabel.translation = [getSize(10), getSize(45)]
     m.textLabel.width = m.top.width - getSize(20)
-    m.textLabel.height = m.top.height - getSize(45)
+    m.textLabel.height = m.top.height - getSize(65)
     for each image in images
         image.translation = [0, getSize(45)]
         image.width = m.top.width
-        image.height = m.top.height - getSize(45)
+        image.height = m.top.height - getSize(65)
     end for
     m.errorLabel.width = m.background.width
     m.errorLabel.height = getSize(15)
-    m.errorLabel.translation = [m.background.translation[0] + getSize(4), m.background.translation[1] + getSize(3) + m.background.height]
+    m.title.translation = [getSize(0), getSize(10)]
+    m.errorLabel.translation = [m.background.translation[0] + getSize(4), m.focusPoster.translation[1] + getSize(3) + m.focusPoster.height]
 end sub

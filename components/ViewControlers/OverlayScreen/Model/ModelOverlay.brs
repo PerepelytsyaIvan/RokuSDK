@@ -21,9 +21,10 @@ sub init()
         price: "price"
         qrCodeImage: "qrcodeimage"
         userId: "user_id"
+        content: "content"
     }
 
-    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
+    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "injectQuiz", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
 end sub
 
 function getDesignModel(data) as object
@@ -51,6 +52,8 @@ function getEventInfo(data) as object
         return rating
     else if isValid(poll.question)
         return poll
+    else 
+
     end if
 end function
 
@@ -93,7 +96,6 @@ sub getEventInfoTrivias(data) as object
     for each item in data.trivias
         if item.id = clockData.id
             storageModel = getStorageAnswer(item.id)
-
             if isValid(storageModel) then return storageModel
             eventModel.showAnswerView = false
             eventModel.isShowView = true
@@ -176,14 +178,18 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         end if
     end if
 
-    if data.DoesExist(m.eventModelKey[messageType])
-        storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
+    if data.DoesExist(m.eventModelKey[messageType]) or eventType = "injectQuiz"
+        if eventType = "injectQuiz"
+            storageModel = getStorageAnswer(data.id)
+        else
+            storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
+        end if
+        
         if isValid(storageModel)
             storageModel.timeForHiding = data.timeToStay
-            ' return storageModel
+            return storageModel
         end if
     end if
-
 
     if messageType = "injectPoll"
         eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
@@ -351,10 +357,4 @@ sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = inv
     if IsValid(questionType) then eventData.questionType = questionType
 
     return eventData
-end sub
-
-sub configureContentNode()
-
-    contentNode = CreateObject("roSGNode", "ContentNode")
-    rowContent = CreateObject("roSGNode", "ContentActivityModel")
 end sub

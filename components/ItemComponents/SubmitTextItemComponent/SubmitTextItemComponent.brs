@@ -10,6 +10,7 @@ sub configureDataSource()
 end sub
 
 sub layoutSubviews()
-    m.top.width = m.titleLabel.boundingRect().width
+    m.titleLabel.width = m.titleLabel.boundingRect().width + 10
+    m.top.width = m.titleLabel.width
     m.top.height = m.titleLabel.boundingRect().height
 end sub

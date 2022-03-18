@@ -5,14 +5,14 @@ sub init()
     m.translationAnimation = m.top.findNode("translationAnimation")
     m.iterpolator = m.top.findNode("iterpolator")
     m.progress = m.top.findNode("progress")
+    m.wikiPoster = m.top.findNode("wikiPoster")
+    m.iterpolatorWiki = m.top.findNode("iterpolatorWiki")
     m.seconds = 0
 end sub
 
 sub configureDataSource()
-    m.background.widht = getScreenWidth()
     m.questionLabel.font = getRegularFont(25)
-    ' m.questionLabel.text = m.top.dataSource.question
-    m.questionLabel.text = "000000000000000000000000000000000000000000000"
+    m.questionLabel.text = m.top.dataSource.content
     setTextLayout()
 
     m.seconds = m.top.dataSource.timeforhiding
@@ -24,20 +24,31 @@ sub configureDataSource()
 end sub
 
 sub setTextLayout()
-    maxTextWidth = 240
+    maxTextWidth = getSize(240)
     textWidth = m.questionLabel.boundingRect().width
     m.questionLabel.width = textWidth
     if textWidth > maxTextWidth
         m.questionLabel.wrap = true
         m.questionLabel.width = maxTextWidth
-        m.questionLabel.height = 100
-        m.background.height = 100
+        bounds = m.questionLabel.boundingRect()
+        if bounds.height < 500
+            m.background.height = bounds.height
+            m.questionLabel.height = bounds.height
+        else
+            m.background.height = getSize(500)
+            m.questionLabel.height = getSize(500)
+        end if
+        m.questionLabel.horizAlign = "left"
     else
+        m.questionLabel.horizAlign = "right"
         m.questionLabel.wrap = false
-        m.questionLabel.width = m.background.width
-        m.questionLabel.height = 50
-        m.background.height = 50
+        m.questionLabel.width = m.background.width - getSize(20)
+        m.questionLabel.height = getSize(50)
+        m.background.height = getSize(50)
     end if
+    m.wikiPoster.width = getSize(40)
+    m.wikiPoster.height = getSize(30)
+    m.wikiPoster.translation = [m.background.height + m.background.translation[0], 0]
 end sub
 
 sub changeTimer()
@@ -52,17 +63,19 @@ sub changeTimer()
     width = (progressPercent * m.background.width) / 100
     m.progress.width = width
     if m.questionLabel.height = 50
-        m.progress.translation = [m.background.width - width, m.progress.translation[1]]
+        m.progress.translation = [m.background.width - width, m.background.height - getSize(2)]
     else
-        m.progress.translation = [m.background.width - width, 98]
+        m.progress.translation = [m.background.width - width, m.background.height - getSize(2)]
     end if
 end sub
 
 sub showNotification(asShow)
     if asShow
         m.iterpolator.keyValue = [[getScreenWidth(), 50], [(getScreenWidth() - (m.background.width + 50)), 50]]
+        m.iterpolatorWiki.keyValue = [[getScreenWidth(), 50], [m.iterpolator.keyValue[1][0] + m.background.width, 50]]
     else
         m.iterpolator.keyValue = [m.iterpolator.keyValue[1], [getScreenWidth(), 50]]
+        m.iterpolatorWiki.keyValue = [m.iterpolatorWiki.keyValue[1], [getScreenWidth(), 50]]
     end if
     m.translationAnimation.control = "start"
 end sub

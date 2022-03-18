@@ -1,7 +1,6 @@
 sub init()
     m.baseGroup = m.top.findNode("baseGroup")
     m.focus = m.top.findNode("focus")
-    m.maskGroup = m.top.findNode("maskGroup")
 
     m.translationAnimation = m.top.findNode("translationAnimation")
     m.translationInterpolator = m.top.findNode("translationInterpolator")
@@ -35,7 +34,6 @@ end sub
 
 sub changeFractionFocusOpacity(event)
     fraction = event.getData()
-    if isInvalid(m.currentElement) then return
     if m.top.hasFocus()
         m.currentElement.percentFocus = fraction
     else
@@ -55,19 +53,29 @@ sub changeFractionFocus(event)
     end if
 end sub
 
+sub reloadCollection()
+    m.moveRowInterpolator.keyValue = []
+    m.moveRowInterpolator.fieldToInterp = ""
+    m.widthInterpolator.keyValue = []
+    m.heightInterpolator.keyValue = []
+    m.opacityFocusInterpolator.keyValue = []
+    m.translationInterpolator.keyValue = []
+    m.indexPath = [0, 0]
+end sub
+
 sub configureDataSource()
     m.baseGroup.removeChildrenIndex(100, 0)
+    reloadCollection()
+
     if m.top.dataSource = invalid then return
     dataSource = m.top.dataSource
     elements = []
     collectionElements = []
-    m.indexPath = [0, 0]
     count = 0
     countRow = 0
     for each item in dataSource
         count++
-        if IsInvalid(item.newSection) then item.newSection = false
-        if item.newSection or countRow = 0
+        if calculateWidthRow(elements, getNextWidthItem(item))
             countRow++
             layoutGroupRow = m.baseGroup.CreateChild("Group")
             layoutGroupRow.id = countRow.toStr()
@@ -90,6 +98,7 @@ sub configureDataSource()
         collectionElements.append(elements)
     end if
     m.top.elements = collectionElements
+
     setFocusElement()
 end sub
 
@@ -120,7 +129,7 @@ sub getTranslation() as object
     end if
 
     if isValid(previusElement)
-        translationX = previusElement.translation[0] + previusElement.width + m.top.horizontalSpacing
+        translationX = previusElement.translation[0] + previusElement.width + m.top.itemSpacing
     else
         translationX = 0
     end if
@@ -185,15 +194,15 @@ end sub
 
 sub configureFocusElement(newTrRow, element, key)
     if key = "right"
-        translationX = m.currentElement.translation[0] + (m.currentElement.width + m.top.horizontalSpacing)
+        translationX = m.currentElement.translation[0] + (m.currentElement.width + m.top.itemSpacing)
         if IsValid(newTrRow)
-            translationX = m.currentElement.translation[0] + (m.currentElement.width + m.top.horizontalSpacing)
+            translationX = m.currentElement.translation[0] + (m.currentElement.width + m.top.itemSpacing)
             m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [newTrRow + translationX, m.translationInterpolator.keyValue[1][1]]]
         else
             m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [translationX, m.translationInterpolator.keyValue[1][1]]]
         end if
     else if key = "left"
-        translationX = newTrRow.translation[0] + (m.currentElement.translation[0] - (element.width + m.top.horizontalSpacing))
+        translationX = newTrRow.translation[0] + (m.currentElement.translation[0] - (element.width + m.top.itemSpacing))
         m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [translationX, m.translationInterpolator.keyValue[1][1]]]
     else if key = "down"
         m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [element.focusTranslation[0], element.focusTranslation[1] + newTrRow[1]]]
@@ -204,6 +213,7 @@ sub configureFocusElement(newTrRow, element, key)
             m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], m.translationInterpolator.keyValue[1]]
         end if
     end if
+
     m.widthInterpolator.keyValue = [m.widthInterpolator.keyValue[1], element.width]
     m.heightInterpolator.keyValue = [m.heightInterpolator.keyValue[1], element.height]
     m.translationAnimation.control = "start"
@@ -219,7 +229,7 @@ sub configureAnimationLeft()
 
     if translationX < 0
         m.moveRowInterpolator.fieldToInterp = row.id + ".translation"
-        differenceTranslation = ((element.focusTranslation[0] - 600) + element.width) + row.translation[0]
+        differenceTranslation = ((element.focusTranslation[0] - m.top.sizeMask[0]) + element.width) + row.translation[0]
         newTranslation = [row.translation[0] - differenceTranslation, row.translation[1]]
         m.moveRowInterpolator.keyValue = [m.moveRowInterpolator.keyValue[1], [(row.translation[0] - translationX), row.translation[1]]]
         configureFocusElement({ translation: m.moveRowInterpolator.keyValue[1] }, element, "left")
@@ -234,9 +244,9 @@ sub configureAnimationDown()
     element = row.getChild(m.indexPath[1])
     boundingRectRow = row.boundingRect()
 
-    if row.translation[1] > 215
+    if row.translation[1] > m.top.sizeMask[1]
         m.moveRowInterpolator.fieldToInterp = "baseGroup.translation"
-        m.moveRowInterpolator.keyValue = [m.baseGroup.translation, [m.baseGroup.translation[0], 215 - (row.translation[1] + element.height)]]
+        m.moveRowInterpolator.keyValue = [m.baseGroup.translation, [m.baseGroup.translation[0], m.top.sizeMask[1] - (row.translation[1] + element.height)]]
         configureFocusElement(m.moveRowInterpolator.keyValue[1], element, "down")
         m.moveRowAnimation.control = "start"
     else
@@ -264,9 +274,9 @@ sub configureAnimationRow() as boolean
     element = row.getChild(m.indexPath[1])
     boundingRectRow = row.boundingRect()
 
-    if element.translation[0] > m.top.widthLayoutView
+    if (element.translation[0] + element.width) > m.top.sizeMask[0]
         m.moveRowInterpolator.fieldToInterp = row.id + ".translation"
-        differenceTranslation = ((element.focusTranslation[0] - m.top.widthLayoutView) + element.width) + row.translation[0]
+        differenceTranslation = ((element.focusTranslation[0] - m.top.sizeMask[0]) + element.width) + row.translation[0]
         newTranslation = [row.translation[0] - differenceTranslation, row.translation[1]]
         m.moveRowInterpolator.keyValue = [row.translation, newTranslation]
         configureFocusElement(newTranslation[0], element, "right")

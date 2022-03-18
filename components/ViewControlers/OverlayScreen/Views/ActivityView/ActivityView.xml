@@ -6,6 +6,7 @@
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource"/>
         <field id="dataSourceAnswer" type="assocarray" onChange="configureAnswerDataSource"/>
+        <field id="dataAnswer" type="assocarray" onChange="configureAnswer"/>
 
         <field id="videoPlayer" type="node" />
         <field id="selectedAnswer" type="assocarray" />
@@ -37,10 +38,8 @@
                         uri="pkg:/images/separatorGradient.png"/>
             </LayoutGroup>
 
-            <CollectionView id="collectionView" 
-                                translation="[500, 0]" 
-                                size="[700, 100]" 
-                                widthLayoutView="700"/>
+            <CustomMarkupGrid id="collectionView" 
+                                translation="[500, 0]"/>
 
             <CollectionView id="collectionViewLeftButton" 
                             size="[700, 100]" 
@@ -64,6 +63,14 @@
                         horizAlign="bottom"
                         color="#ffffff"/>
             </LayoutGroup>
+
+            <Group id = "scrollingArrowGroup" visible = "false">
+                <Poster id="separatorScrolling" 
+                        uri="pkg:/images/separatorGradient.png"/>
+
+                <Poster id="scrollingArrow" 
+                        uri="pkg:/images/rightArrow.png"/>
+            </Group>
         </Group>
 
         <LoadingIndicator 

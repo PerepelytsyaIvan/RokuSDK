@@ -11,5 +11,10 @@
 
     <children>
         <SideBarView id = "sideBarView" />
+        <Group id = "notificationGroup"/>
+
+        <Animation id="translationAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="iterpolator" key="[0.0, 1.0]" keyValue = "[[0, 0], [0, 0]]" fieldToInterp="notificationGroup.translation" />
+        </Animation>
     </children>
 </component>

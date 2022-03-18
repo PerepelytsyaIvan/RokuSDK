@@ -8,6 +8,7 @@ sub initView()
     m.pointLabel = m.top.findNode("pointLabel")
     m.posterCell = m.top.findNode("posterCell")
     m.titleLabel = m.top.findNode("titleLabel")
+    m.focusCell = m.top.findNode("focusCell")
 end sub
 
 sub configureDataSource()
@@ -22,6 +23,10 @@ sub configureDataSource()
     layoutSubviews()
 end sub
 
+sub onChangePercentFocus()
+    m.focusCell.opacity = m.top.percentFocus
+end sub
+
 sub layoutSubviews()
     m.pointsImage.width = getSize(60)
     m.pointsImage.height = getSize(60)
@@ -30,19 +35,22 @@ sub layoutSubviews()
     m.pointLabel.translation = [getSize(5), getSize(5)]
 
     m.containerView.itemSpacings = [getSize(5)]
+    m.focusCell.width = (m.containerView.boundingRect().width) - (m.pointsImage.height / 2) + getSize(10)
 
     if m.posterCell.uri <> getImageWithName("")
         m.posterCell.width = getSize(30)
         m.posterCell.height = getSize(30)
         m.containerView.itemSpacings = [getSize(10)]
+        m.focusCell.width = (m.containerView.boundingRect().width) - (m.pointsImage.height / 2) + getSize(20)
     end if
-
+    m.focusCell.height = m.pointsImage.height - getSize(2)
+    m.focusCell.translation = [(m.pointsImage.height / 2), getSize(2)]
     m.titleLabel.width = m.titleLabel.boundingRect().width
-    m.titleLabel.height = getSize(80)
+    m.titleLabel.height = getSize(60)
 
     m.containerView.translation = [0, getSize(60) / 2]
 
     boundingRect = m.containerView.boundingRect()
-    m.top.width = m.containerView.boundingRect().width + getSize(10)
+    m.top.width = m.containerView.boundingRect().width 
     m.top.height = getSize(60)
 end sub
