@@ -34,7 +34,7 @@ sub configureObservers()
 end sub
 
 sub onSelectAnswer(event)
-    m.answer = event.getData() 
+    m.answer = event.getData()
     answer = m.answer.answer
     wager = invalid
     if isInvalid(answer) then answer = m.answer.title
@@ -110,9 +110,9 @@ sub on_message(event)
 
                 if isInvalid(m.eventModel.questionType) then return
                 if m.eventModel.questiontype = "injectProduct"
-                    showActivitiProductView() 
+                    showActivitiProductView()
                 else
-                    showActivitiViewWith(false)
+                    ' showActivitiViewWith(false)
                 end if
                 m.type = m.eventModel.questionType
             end if
@@ -185,7 +185,7 @@ sub hidingNotification()
     m.timerHideNotification.control = "stop"
 end sub
 
-sub showingOverlayWithInfoUser() 
+sub showingOverlayWithInfoUser()
     if m.top.videoPlayer.position > m.timeForShowingOverlay
         m.eventModel = m.eventModelWithGetInfo
 
@@ -202,16 +202,16 @@ sub showActivitiViewWith(isAnswer, answers = invalid)
     m.answers = answers
     m.isAnswer = isAnswer
 
-    if isValid(m.activityProduct) 
-        m.activityProduct.hideActivityView = not m.activityProduct.hideActivityView 
+    if isValid(m.activityProduct)
+        m.activityProduct.hideActivityView = not m.activityProduct.hideActivityView
         m.showActivityViewTimer.control = "start"
         return
     end if
     showingActivityTimer()
 end sub
 
-sub showActivitiProductView() 
-    if isValid(m.activityView) 
+sub showActivitiProductView()
+    if isValid(m.activityView)
         m.activityView.hideActivityView = not m.activityView.hideActivityView
         m.showActivityProductTimer.control = "start"
         return
@@ -241,7 +241,7 @@ sub showingActivityTimer()
     else if m.eventModel.showAnswerView
         m.activityView.dataAnswer = m.eventModel
     else
-        m.activityView.dataSource = m.eventModel 
+        m.activityView.dataSource = m.eventModel
     end if
 
     m.activityView.setFocus(true)
