@@ -32,7 +32,7 @@ sub layoutSubviews()
     m.pointsImage.height = getSize(60)
     m.pointLabel.width = getSize(50)
     m.pointLabel.height = getSize(50)
-    m.pointLabel.translation = [getSize(5), getSize(8)]
+    m.pointLabel.translation = [getSize(5), getSize(5)]
 
     m.containerView.itemSpacings = [getSize(5)]
     m.focusCell.width = (m.containerView.boundingRect().width) - (m.pointsImage.height / 2) + getSize(10)

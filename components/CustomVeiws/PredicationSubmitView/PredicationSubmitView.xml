@@ -32,6 +32,7 @@
             <CollectionView id="collectionView" 
                 size="[200, 200]" 
                 widthLayoutView="175"
+                
                 itemSpacing = "10"
                 focusImage = "pkg:/images/focusSubmit.9.png">
             </CollectionView>

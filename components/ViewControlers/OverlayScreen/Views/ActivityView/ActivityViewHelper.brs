@@ -55,12 +55,20 @@ end sub
 
 sub layoutViews()
     m.questionLabel.font = getBoldFont(getSize(35))
-
+    m.questionLabel.width = 0
     if m.questionLabel.boundingRect().width > getSize(550) 
         m.questionLabel.width = getSize(550)
         m.questionLabel.font = getBoldFont(getSize(30))
     else
         m.questionLabel.width = m.questionLabel.boundingRect().width
+    end if
+
+    if IsValid(m.top.dataSource) and m.top.dataSource.questiontype = "injectWiki" and not m.isShowAnswer
+        m.separator.visible = false
+        m.questionLabel.width = getSize(1300)
+        m.scrollingArrowGroup.visible = false
+    else
+        m.separator.visible = true
     end if
 
     m.questionLabel.height = getSize(80)
@@ -104,7 +112,6 @@ sub layoutViewsAnswer(questionType)
 end sub
 
 sub configureCollectionFor(eventType)
-
     maxWidth = getSize(1920) - m.activityLayout.boundingRect().width - m.activityLayout.translation[0] - getSize(410)
     m.collectionView.widthLayoutView = 3000
     m.collectionView.sizeMask = [maxWidth, getSize(80)]

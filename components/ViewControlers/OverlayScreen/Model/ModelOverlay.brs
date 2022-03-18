@@ -21,9 +21,10 @@ sub init()
         price: "price"
         qrCodeImage: "qrcodeimage"
         userId: "user_id"
+        content: "content"
     }
 
-    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
+    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "injectQuiz", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
 end sub
 
 function getDesignModel(data) as object
@@ -177,8 +178,13 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         end if
     end if
 
-    if data.DoesExist(m.eventModelKey[messageType])
-        storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
+    if data.DoesExist(m.eventModelKey[messageType]) or eventType = "injectQuiz"
+        if eventType = "injectQuiz"
+            storageModel = getStorageAnswer(data.id)
+        else
+            storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
+        end if
+        
         if isValid(storageModel)
             storageModel.timeForHiding = data.timeToStay
             return storageModel
@@ -239,7 +245,7 @@ sub getStorageAnswer(id) as object
     if isValid(storageModel)
         storageModel = ParseJson(storageModel)
         storageModel.showAnswerView = true
-        ' return storageModel
+        return storageModel
     end if
     return invalid
 end sub

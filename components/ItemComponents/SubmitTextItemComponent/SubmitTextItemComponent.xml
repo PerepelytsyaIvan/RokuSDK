@@ -10,6 +10,6 @@
     </interface>
 
     <children>
-        <Label id="titleLabel" translation="[15,0]" width = "120" horizAlign="left" vertAlign="center"/>
+        <Label id="titleLabel" translation="[20,0]" width = "120" horizAlign="left" vertAlign="center"/>
     </children>
 </component>

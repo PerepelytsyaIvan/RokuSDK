@@ -56,7 +56,7 @@ sub layoutSubwview()
     m.containerView.translation = [0, m.collectionView.boundingRect().height / 2]
     m.containerView.itemSpacings = [getSize(15), getSize(40), getSize(20)]
     if IsValid(m.collectionView.elements)
-        m.separator.translation = [m.containerView.boundingRect().width - m.collectionView.elements[1].width - getSize(30), 0]
+        m.separator.translation = [m.containerView.boundingRect().width - m.collectionView.elements[1].width - getSize(35), 0]
     end if
     m.separator.height = getSize(80)
     m.separator.width = getSize(1)
