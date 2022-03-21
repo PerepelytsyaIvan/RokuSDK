@@ -112,7 +112,7 @@ sub on_message(event)
                 if m.eventModel.questiontype = "injectProduct"
                     showActivitiProductView()
                 else
-                    ' showActivitiViewWith(false)
+                    showActivitiViewWith(false)
                 end if
                 m.type = m.eventModel.questionType
             end if
@@ -159,6 +159,8 @@ sub infoApplication(event)
     infoApp = event.getData()
     m.sideBarView.accountRoute = m.top.accountRoute
     desingModel = m.modelOverlay.callFunc("getDesignModel", infoApp)
+    localizationModel = m.modelOverlay.callFunc("getLocaliztion", infoApp)
+    saveInGlobal("localization", localizationModel)
     saveInGlobal("design", desingModel)
     m.eventModelWithGetInfo = m.modelOverlay.callFunc("getEventInfo", infoApp)
     
@@ -223,6 +225,7 @@ sub showingActivityProductTimer()
     m.showActivityProductTimer.control = "stop"
     if isInvalid(m.activityProduct) then m.activityProduct = m.top.createChild("ProductActivity")
     m.activityProduct.videoPlayer = m.top.videoPlayer
+    m.activityProduct.accountRoute = m.top.accountRoute
     m.activityProduct.dataSource = m.eventModel
     m.activityProduct.setFocus(true)
 end sub

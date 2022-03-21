@@ -24,6 +24,10 @@ sub initView()
 
     m.hidingAnimation = m.top.findNode("hidingAnimation")
     m.hidingInterpolator = m.top.findNode("hidingInterpolator")
+
+    m.numberLabel = m.top.findNode("numberLabel")
+
+    m.collectionWithLabelGroup = m.top.findNode("collectionWithLabelGroup")
 end sub
 
 sub configureObservers()
@@ -47,6 +51,7 @@ sub layoutViews()
     m.questionLabel.height = getSize(80)
     m.priceLabel.height = getSize(80)
     m.unitTime.height = m.timeLabel.boundingRect().height - 5
+    m.collectionWithLabelGroup.itemSpacings = [0]
     array = [m.logoActivity, m.productImage]
     arraySeparator = [m.separatorL, m.separatorR]
 
@@ -61,7 +66,7 @@ sub layoutViews()
     end for
 
     m.activityLayout.translation = getSizeMaskGroupWith([50, 50])
-    m.centralViewsLayout.translation = [(getWidthScreen() - getSize(360)) - m.centralViewsLayout.localBoundingRect().width, m.activityLayout.translation[1]]
+    m.centralViewsLayout.translation = [(getWidthScreen() - getSize(360)) - m.centralViewsLayout.localBoundingRect().width, 90]
     m.collectionViewLeftButton.translation = [(getWidthScreen() - getSize(250)) + (getSize(250) - m.collectionViewLeftButton.localBoundingRect().width) / 2, getSize(112)]
 
     if m.productImage.uri = getImageWithName("")
@@ -78,12 +83,19 @@ sub configureDesign()
     m.priceLabel.font = getBoldFont(getSize(30))
     m.timeLabel.font = getBoldFont(getSize(60))
     m.unitTime.font = getMediumFont(getSize(40))
+    m.numberLabel.font = getRegularFont(0)
 end sub
 
 sub configureLabel(seconds)
-    time = getTime(seconds)
-    m.timeLabel.text = time[0]
-    m.unitTime.text = time[1]
+    hidingTime = gmdate(seconds)
+    array = hidingTime.split("m")
+    if array.count() = 2
+        m.timeLabel.text = array[0] + "m"
+        m.unitTime.text = array[1]
+    else
+        m.timeLabel.text = array[0]
+        m.unitTime.text = "sec"
+    end if
     m.timeGroup.translation = [(getSize(1920) - getSize(260)) + ((getSize(260) - m.timeGroup.localboundingRect().width) / 2), (m.timeGroup.localboundingRect().height - getSize(30)) / 2]
 end sub
 
@@ -92,6 +104,7 @@ sub createPersonalArea(dataSource)
     if isInvalid(m.personalArea) then m.personalArea = m.top.createChild("PersonalArea")
     m.personalArea.id = "personalArea"
     m.personalArea.opacity = 0
+    m.personalArea.accountRoute = m.top.accountRoute
     m.personalArea.dataSource = dataSource
     m.personalArea.setFocus(true)
     m.personalArea.observeField("pressBackButton", "didSelectBackButton")

@@ -1,6 +1,8 @@
 <component name="ModelOverlay" extends="Node">
     <script type="text/brightscript" uri="./ModelOverlay.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Enums/LacalizationEnum.brs" />
+    <script type="text/brightscript" uri="../../../Enums/EventEnum.brs" />
 
     <interface>
         <function name = "getDesignModel"/>
@@ -9,5 +11,6 @@
         <function name = "getAnswers"/>
         <function name = "getAnswerModelForRatings"/>
         <function name = "getAnswerWagerPrediction"/>
+        <function name = "getLocaliztion"/>
     </interface>
 </component>

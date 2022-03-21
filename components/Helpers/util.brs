@@ -563,7 +563,7 @@ function getSize(size) as object
         return size
     end if
     return size
-end function 
+end function
 
 function localize(key)
     if IsValid(m.global.Custom_Application_LocalizationUrl)
@@ -601,7 +601,7 @@ sub sortedVideoTrending(shows) as object
     return []
 end sub
 
-sub getLanguage() as String
+sub getLanguage() as string
     di = CreateObject("roDeviceInfo")
     locale = di.GetCurrentLocale().split("_")
     return locale[0]
@@ -620,21 +620,21 @@ sub getHeightScreen() as object
 end sub
 
 sub getMediumFont(size = 25) as object
-    font  = CreateObject("roSGNode", "Font")
+    font = CreateObject("roSGNode", "Font")
     font.uri = "pkg:/components/fonts/Medium.otf"
     font.size = size
     return font
 end sub
 
 sub getBoldFont(size = 25) as object
-    font  = CreateObject("roSGNode", "Font")
+    font = CreateObject("roSGNode", "Font")
     font.uri = "pkg:/components/fonts/Bold.otf"
     font.size = size
     return font
 end sub
 
 sub getRegularFont(size = 25) as object
-    font  = CreateObject("roSGNode", "Font")
+    font = CreateObject("roSGNode", "Font")
     font.uri = "pkg:/components/fonts/Regular.otf"
     font.size = size
     return font
@@ -676,13 +676,45 @@ end sub
 sub getTime(seconds) as object
 
     minute = seconds / 60
-    hour = minute / 60  
+    hour = minute / 60
 
-    if hour > 1 
+    if hour > 1
         return [hour.toStr().split(".")[0], "h"]
     else if minute > 1
+        a = gmdate(seconds)
         return [minute.toStr().split(".")[0], "m"]
     else
         return [seconds.toStr().split(".")[0], "sec"]
     end if
 end sub
+
+
+function gmdate(seconds as dynamic) as dynamic
+    a = seconds
+    b = 60
+    c = Fix(a / b)
+    sec = a - b * c
+
+
+    a = Fix(a / 60)
+    b = 60
+    c = Fix(a / b)
+    minute = a - b * c
+
+    a = Fix(a / 60)
+    b = 60
+    c = Fix(a / b)
+    hour = a - b * c
+
+    if hour > 9
+        hour = hour.toStr()
+    else
+        hour = "0" + hour.toStr()
+    end if
+
+    if minute > 0
+        return minute.toStr() + "m " + sec.toStr() + "sec"
+    else 
+        return sec.toStr()
+    end if
+end function

@@ -127,6 +127,25 @@ function getQuizEvent(url)
     networkManager.control = "RUN"
 end function
 
+function buyProduct(url, param)
+    userToken = RegRead("loginizationToken")
+
+    request = CreateObject("roSGNode", "URLRequest")
+    request.url = url
+    request.method = "POST"
+
+    request.body = {"data":{"productId": param.productId, "userPhoneNum":param.userPhoneNum, "userToken": userToken, "broadcasterName": param.broadcasterName, "language": getLanguage()}}
+    networkManager = CreateObject("roSGNode", "NetworkTask")
+    networkManager.request = request
+    networkManager.observeField("response", "onResponseBuyProduct")
+    networkManager.control = "RUN"
+end function
+
+sub onResponseBuyProduct(event)
+    data = event.getData()
+    m.top.buyItem = data.data
+end sub
+
 sub onResponseQuizEvent(event)
     data = event.getData()
     m.top.quizEventResponce = data.data.question

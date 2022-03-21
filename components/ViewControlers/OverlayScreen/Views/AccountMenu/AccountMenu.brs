@@ -38,14 +38,14 @@ end sub
 sub configureDesign()
     m.subTitle.font = getMediumFont(30)
     m.title.font = getMediumFont(30)
-    m.title.color = m.global.design.questionTextColor
+    m.title.color =  m.global.design.questionTextColor
     m.subTitle.color = m.global.design.buttonBackgroundColor
     m.background.color = "#454545"
 end sub
 
 sub configureDataSource()
-    m.subTitle.text = "MY"
-    m.title.text = "ACCOUNT"
+    m.subTitle.text = UCase(m.global.localization.sideMenuMy)
+    m.title.text = UCase(m.global.localization.sideMenuAccount) 
 
     contentNode = CreateObject("roSGNode", "ContentNode")
     titles = ["Username", "Email"]
@@ -83,7 +83,7 @@ sub createKeyboard(title)
     m.keyboarddialog.title = "Please enter " + title
     m.keyboarddialog.text = m.fieldsList.content.getChild(m.fieldsList.itemFocused).getChild(0).description
     m.keyboarddialog.focusButton = "pkg:/nil"
-    m.keyboarddialog.buttons = ["OK", "Close"]
+    m.keyboarddialog.buttons = [m.global.localization.personalAreaClosePersonalArea, "OK"]
     m.keyboarddialog.observeField("buttonSelected", "didSelectKeyboardButton")
     m.keyboarddialog.setFocus(true)
 end sub

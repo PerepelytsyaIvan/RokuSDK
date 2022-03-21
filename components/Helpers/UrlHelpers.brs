@@ -39,3 +39,7 @@ end sub
 sub getProductUrl() as string
     return baseUrl() + "userApi/shop/getProducts"
 end sub
+
+sub buyItemUrl() as string
+    return baseUrl() + "userApi/shop/buyItem"
+end sub

@@ -1,32 +1,3 @@
-sub init()
-    m.EventModelProperties = {
-        idEvent: "id"
-        question: ["question", "name"]
-        closePostInteraction: "close_post_interaction"
-        questionType: ["questionType", "messageType"]
-        answers: "answers"
-        timeForHiding: "timeToStay"
-        type: "type"
-        averageRate: "averageRate"
-        optionsNumber: "optionsNumber"
-        icon: "icon"
-        halfIcon: "halfIcon"
-        emptyIcon: "emptyIcon"
-        buttonText: "actionBtnText"
-        categoryId: "categoryId"
-        currency: "currency"
-        description: "description"
-        image: "image"
-        name: "name"
-        price: "price"
-        qrCodeImage: "qrcodeimage"
-        userId: "user_id"
-        content: "content"
-    }
-
-    m.eventModelKey = {"injectPoll": "poll", "injectRating": "rating", "prediction": "poll", "injectQuiz": "injectQuiz", "predictionWager": "poll", "injectWiki": "wiki", "injectProduct": "product"}
-end sub
-
 function getDesignModel(data) as object
     designModel = {
         "backgrounImage": getImageWithName(data.designs.backgroundImage)
@@ -40,6 +11,18 @@ function getDesignModel(data) as object
         "halfStarIcon": data.designs.ratingHalfIcon,
     }
     return designModel
+end function
+
+
+
+function getLocaliztion(data) as object
+    jsonLocalization = ParseJson(data.languages)
+    ? jsonLocalization
+    localization = {}
+    for each item in LocalizationEnum().Items()
+        localization[item.key] = jsonLocalization[item.value]
+    end for 
+    return localization
 end function
 
 function getEventInfo(data) as object
@@ -178,11 +161,11 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         end if
     end if
 
-    if data.DoesExist(m.eventModelKey[messageType]) or eventType = "injectQuiz"
+    if data.DoesExist(EventKeyEnum()[messageType]) or eventType = "injectQuiz"
         if eventType = "injectQuiz"
             storageModel = getStorageAnswer(data.id)
         else
-            storageModel = getStorageAnswer(data[m.eventModelKey[messageType]].id)
+            storageModel = getStorageAnswer(data[EventKeyEnum()[messageType]].id)
         end if
         
         if isValid(storageModel)
@@ -192,7 +175,7 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
     end if
 
     if messageType = "injectPoll"
-        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
+        eventModel = getDataForModel(data, EventKeyEnum()[messageType], false, true)
         eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
     else if messageType = "injectRating"
         eventModel = getDataForModel(data, "rating", false, true)
@@ -203,22 +186,22 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
         end for
         eventModel.answers = answers
     else if messageType = "prediction"
-        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true)
+        eventModel = getDataForModel(data, EventKeyEnum()[messageType], false, true)
         eventModel.answers = getItemComponentName(eventModel.answers, "PredictionItemComponent")
     else if messageType = "injectQuiz"
-        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectQuiz")
+        eventModel = getDataForModel(data, EventKeyEnum()[messageType], false, true, "injectQuiz")
         eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
     else if messageType = "predictionWager"
-        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "predictionWager")
+        eventModel = getDataForModel(data, EventKeyEnum()[messageType], false, true, "predictionWager")
 
         for each answer in eventModel.answers
             answer.points = data.poll.expoints
             answer.itemComponent = "ActivityButtonWithImage"
         end for
     else if messageType = "injectWiki"
-        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectWiki")
+        eventModel = getDataForModel(data, EventKeyEnum()[messageType], false, true, "injectWiki")
     else if messageType = "injectProduct"
-        eventModel = getDataForModel(data, m.eventModelKey[messageType], false, true, "injectProduct")
+        eventModel = getDataForModel(data, EventKeyEnum()[messageType], false, true, "injectProduct")
         eventModel.itemComponent = "ActivityButton"
     end if
 
@@ -336,7 +319,7 @@ end function
 sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = invalid) as object
     eventData = {}
 
-    for each item in m.EventModelProperties.Items()
+    for each item in EventEnum().Items()
         if Type(item.Value) = "roArray"
             for each value in item.Value
                 if data.DoesExist(keyEvent)

@@ -1,0 +1,18 @@
+<component name="AreaButtonItemComponent" extends="Group">
+    <script type="text/brightscript" uri="AreaButtonItemComponent.brs" />
+    <script type="text/brightscript" uri="../../../../../../Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="height" type="float"/>
+        <field id="width" type="float"/>
+        <field id="focusPercent" type="float" onChange = "onChangePercentFocus"/>
+    </interface>
+
+    <children>
+        <Label id="titleLabel"
+                color="#FF0000" 
+                horizAlign="left"
+                vertAlign="center"/>
+    </children>
+</component>

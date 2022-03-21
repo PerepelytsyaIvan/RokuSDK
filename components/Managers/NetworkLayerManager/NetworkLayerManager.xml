@@ -10,6 +10,7 @@
         <field id="quizEventResponce" type="assocarray" />
         <field id="avatarsResponce" type="array" />
         <field id="leadersResponce" type="assocarray" />
+        <field id="buyItem" type="assocarray" />
         <field id="productsResponce" type="array" />
 
         <function name = "registerUser"/>
@@ -20,6 +21,7 @@
         <function name = "getAllAvatars"/>
         <function name = "getLeaders"/>
         <function name = "getProducts"/> 
+        <function name = "buyProduct"/> 
     </interface>
 
     <children>

@@ -2,6 +2,7 @@
     <script type="text/brightscript" uri="ProductActivity.brs" />
     <script type="text/brightscript" uri="ProductActivityHelper.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/UrlHelpers.brs" />
 
     <interface>
         <field id="designModel" type="assocarray" onChange="configureDesign" />
@@ -9,6 +10,7 @@
         <field id="videoPlayer" type="node" />
         <field id="selectedAnswer" type="assocarray" />
         <field id="hideActivityView" type = "bool" onChange = "hideActivity"/>
+        <field id="accountRoute" type="assocarray"/>
     </interface>
 
     <children>
@@ -36,7 +38,7 @@
                        lineSpacing = "0"/>
             </LayoutGroup>
 
-            <LayoutGroup id = "centralViewsLayout" layoutDirection = "horiz" itemSpacings = "[20,30]">
+            <LayoutGroup id = "centralViewsLayout" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[20,30]">
                 <Poster id="separatorL" 
                         width="2" 
                         height="80" 
@@ -54,13 +56,14 @@
                         uri="pkg:/images/separatorGradient.png"/>
 
 
-                <LayoutGroup itemSpacings = "[10]">
-                    <Rectangle />
-                    <CollectionView id="collectionView" 
-                                    size="[700, 80]" 
-                                    widthLayoutView="800"
-                                    focusImage = "pkg:/images/gradienFocusButton.9.png"/>
-                </LayoutGroup>
+                    <LayoutGroup id = "collectionWithLabelGroup">
+                        <Label id = "numberLabel"/>
+
+                        <CollectionView id="collectionView" 
+                                        size="[700, 60]" 
+                                        widthLayoutView="800"
+                                        focusImage = "pkg:/images/gradienFocusButton.9.png"/>
+                    </LayoutGroup>
             </LayoutGroup>
 
             <CollectionView id="collectionViewLeftButton" 

@@ -2,6 +2,7 @@ sub init()
     initView()
     configureObservers()
     configureDesign()
+    m.networkLayerManager = CreateObject("roSGNode", "NetworkLayerManager")
 
     m.hidingTimer = configureTimer(1, true)
     m.showActivityTimer = configureTimer(0.5, false)
@@ -75,7 +76,21 @@ sub didSelectButtonLeft(event)
 end sub
 
 sub didSelectButton()
-    createPersonalArea(m.top.dataSource)
+    number = RegRead("SMS")
+
+    if isValid(number) and number <> ""
+        m.networkLayerManager.callFunc("buyProduct", buyItemUrl(), {"productId": m.top.dataSource.idEvent, "userPhoneNum": m.interactiveLabel.text, "broadcasterName": m.top.accountRoute.broadcasterName})
+        m.networkLayerManager.observeField("buyItem", "responceSendSMS")
+        m.collectionWithLabelGroup.itemSpacings = [5]
+        m.numberLabel.font = getRegularFont(15)
+        m.numberLabel.text = "Will send SMS to ***_****" + right(number, 3)
+    else
+        createPersonalArea(m.top.dataSource)
+    end if
+end sub
+
+sub responceSendSMS(event)
+    data = event.getData()
 end sub
 
 sub didSelectBackButton()

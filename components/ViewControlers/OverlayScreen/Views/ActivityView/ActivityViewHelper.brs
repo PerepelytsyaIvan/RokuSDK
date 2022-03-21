@@ -150,9 +150,15 @@ sub configureDesign()
 end sub
 
 sub configureLabel(seconds)
-    time = getTime(seconds)
-    m.timeLabel.text = time[0]
-    m.unitTime.text = time[1]
+    hidingTime = gmdate(seconds)
+    array = hidingTime.split("m")
+    if array.count() = 2
+        m.timeLabel.text = array[0] + "m"
+        m.unitTime.text = array[1]
+    else
+        m.timeLabel.text = array[0]
+        m.unitTime.text = "sec"
+    end if
     m.timeGroup.translation = [(getSize(1920) - getSize(260)) + ((getSize(260) - m.timeGroup.localboundingRect().width) / 2), (m.timeGroup.localboundingRect().height - getSize(30)) / 2]
 end sub
 
