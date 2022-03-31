@@ -1,0 +1,46 @@
+<component name="MyPredictionItemComponent" extends="Group">
+    <script type="text/brightscript" uri="MyPredictionItemComponent.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="rowFocusPercent" type="float" onChange="itemFocused" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="rowListHasFocus" type="bool" onChange="itemFocused" />
+    </interface>
+
+    <children>
+        <Poster id="background"
+                uri="pkg:/images/bigBackground.png" />
+
+        <Poster id="focusCell"
+                uri="pkg:/images/bigFocus.png" />
+                
+        <LayoutGroup id = "layoutGroup" itemSpacings = "[5, 15, 22]">
+            <Label  id="titleLabel" />
+            <Rectangle id = "separator"/>
+            <Label  id="answerLabel"/>
+
+            <Poster id="correctedPoster"
+                    uri = "pkg:/images/backgroundCorrected.png">
+                <Label  id="correctedLabel"
+                        vertAlign = "center"
+                        horizAlign = "center"
+                        color = "#000000"/>
+            </Poster>
+        </LayoutGroup>
+
+        <LayoutGroup    id = "leftLabelsContainer" 
+                        itemSpacings = "[5]">
+            <Label  id="pointsLabel"
+                    vertAlign = "center"
+                    horizAlign = "right"
+                    height = "20"/>
+            <Label  id="avaliablePointsLabel"
+                    vertAlign = "center"
+                    horizAlign = "right"
+                    height = "20"/>
+        </LayoutGroup>
+    </children>
+</component>

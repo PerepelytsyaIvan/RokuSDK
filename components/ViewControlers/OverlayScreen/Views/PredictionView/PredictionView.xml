@@ -1,0 +1,41 @@
+<component name="PredictionView" extends="Group" initialFocus = "leaderList">
+    <script type="text/brightscript" uri="PredictionView.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/UrlHelpers.brs" />
+
+    <interface>
+        <field id="accountRoute" type="assocarray" onChange = "configureDataSource"/>
+        <field id="dataSource" type="assocarray" onChange = "configureDataSource"/>
+    </interface>
+
+    <children>
+        <Group id = "containerView">
+            <Rectangle id = "background"/>
+
+            <LayoutGroup id = "layoutView" itemSpacings = "[20]" horizAlignment = "center">
+                <LayoutGroup id = "labelsLayoutGroup" layoutDirection = "horiz" itemSpacings = "[5]">
+                    <Label id = "subTitle"/>
+                    <Label id = "title"/>
+                </LayoutGroup>
+
+                <Rectangle id = "verticalSeparator"/>
+
+                <LayoutGroup  itemSpacings = "[10]" layoutDirection = "horiz">
+                    <Label id = "ptsLabel"/>
+                    <Rectangle id = "separator"/>
+                    <Label id = "rankLabel"/>
+                </LayoutGroup>
+            </LayoutGroup>
+
+            <RowList    id = "predictionList"
+                        itemComponentName = "MyPredictionItemComponent"
+                        itemSize = "[340, 120]"
+                        rowItemSize = "[[340, 120]]"
+                        itemSpacing = "[0, 15]"
+                        rowItemSpacing = "[[0, 15]]"
+                        focusBitmapUri = "pkg:/nil"
+                        vertFocusAnimationStyle = "floatingFocus"
+                        numRows = "5"/>
+        </Group>
+    </children>
+</component>

@@ -1,0 +1,25 @@
+<component name="FieldItemComponent" extends="Group">
+    <script type="text/brightscript" uri="FieldItemComponent.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="rowFocusPercent" type="float" onChange="itemFocused"/>
+        <field id="width" type="float" onChange="layoutSubviews"/>
+        <field id="height" type="float" onChange="layoutSubviews"/>
+        <field id="rowListHasFocus" type = "bool" onChange="itemFocused"/>
+    </interface>
+
+    <children>
+        <Poster id = "background"
+                uri = "pkg:/images/fieldMask.png"/>
+        <Poster id = "focusPoster"
+                uri = "pkg:/images/focusField.png"
+                opacity = "0"/>     
+        <Label  id = "title"/>
+        <Label  id = "textLabel"
+                vertAlign = "center"/>
+        <Label  id = "errorLabel"
+                vertAlign = "center"/>
+    </children>
+</component>

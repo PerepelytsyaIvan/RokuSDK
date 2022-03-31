@@ -1,0 +1,35 @@
+<component name="WikiView" extends="Group">
+    <script type="text/brightscript" uri="WikiView.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="removeWikiView" type="node" />
+    </interface>
+
+    <children>
+        <Group id="containerView">
+            <Rectangle id="background" translation="[1920, 0]" color="#00000099" width="275" height="50">
+                <Label  id="questionLabel" 
+                        vertAlign="center" 
+                        horizAlign="right" 
+                        lineSpacing = "0"
+                        translation="[10, 0]"/>
+                
+                <Rectangle  id="progress" 
+                            translation="[1, 49]" 
+                            width="253" 
+                            height="2" 
+                            color="#ffffff"/>
+            </Rectangle>
+
+            <Poster id = "wikiPoster"
+                    uri = "pkg:/images/wiki.png"/>
+        </Group>
+
+        <Animation id="translationAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="iterpolator" key="[0.0, 1.0]" fieldToInterp="background.translation" />
+            <Vector2DFieldInterpolator id="iterpolatorWiki" key="[0.0, 1.0]" fieldToInterp="wikiPoster.translation" />
+        </Animation>
+    </children>
+</component>

@@ -1,0 +1,33 @@
+<component name="InputNumberItemComponent" extends="Group">
+    <script type="text/brightscript" uri="InputNumberItemComponent.brs" />
+    <script type="text/brightscript" uri="../../../../../../Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="rowFocusPercent" type="float" onChange="itemFocused" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="rowListHasFocus" type="bool" onChange="itemFocused" />
+    </interface>
+
+    <children>
+        <Poster id="focusCell"
+            uri="pkg:/images/numberFocus.9.png" />
+
+        <Poster id="background"
+                uri="pkg:/images/numberBackground.9.png" />
+
+        <LayoutGroup id = "editBoxGroup" itemSpacings = "[0]" layoutDirection = "horiz" vertAlignment = "center">
+            <Label  id="codeLabel"
+                    horizAlign="left"
+                    vertAlign="center"/>
+
+            <Rectangle  id = "indicator"
+                        color = "#ffffff"/>
+        </LayoutGroup>
+
+        <Animation id="animation" duration="1" repeat="true" easeFunction="linear">
+            <FloatFieldInterpolator id="interpolator" key="[0.0, 0.25, 0.5, 0.75, 1.0]" keyValue = "[0, 0.5, 1, 0.5, 0]" fieldToInterp="indicator.opacity" />
+        </Animation>
+    </children>
+</component>
