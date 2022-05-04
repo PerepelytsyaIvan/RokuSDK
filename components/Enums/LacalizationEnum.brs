@@ -1,5 +1,6 @@
 sub LocalizationEnum() as object
-    return { "generalOverlayPoint": "generalOverlay_point",
+    return { 
+        "generalOverlayPoint": "generalOverlay_point",
         "generalOverlayLevel": "generalOverlay_level",
         "generalOverlaySeconds": "generalOverlay_seconds",
         "personalAreaOpenPersonalArea": "personalArea_open_personal_area",
@@ -70,5 +71,12 @@ sub LocalizationEnum() as object
         "sideMenuLabelPoints": "sideMenu_label_points",
         "sideMenuUsernameValidation": "sideMenu_username_validation"
         "sideMenuEmailValidation": "sideMenu_email_validation",
-    "sideMenuInfoSaved": "sideMenu_info_saved" }
+        "sideMenuInfoSaved": "sideMenu_info_saved",
+        "refreshLeaderboard": "refresh_leaderboard"
+        "triviaRightAnswerNoteOne": "trivia_right_answer_note1"
+        "triviaRightAnswerNoteTwo": "trivia_right_answer_note2"
+        "generalOverlayMenu": "generalOverlay_menu"
+        "triviaRightAnswerNote3": "trivia_right_answer_note3"
+        "sideMenuChat": "sideMenu_chat"
+    }
 end sub

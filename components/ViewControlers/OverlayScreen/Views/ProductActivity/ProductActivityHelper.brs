@@ -78,7 +78,7 @@ sub layoutViews()
     end for
 
     m.activityLayout.translation = getSizeMaskGroupWith([50, 50])
-    m.centralViewsLayout.translation = [(getWidthScreen() - getSize(360)) - m.centralViewsLayout.localBoundingRect().width, 90]
+    m.centralViewsLayout.translation = [(getWidthScreen() - getSize(360)) - m.centralViewsLayout.localBoundingRect().width, getSize(90)]
     m.collectionViewLeftButton.translation = [(getWidthScreen() - getSize(250)) + (getSize(250) - m.collectionViewLeftButton.localBoundingRect().width) / 2, getSize(112)]
 
     if m.productImage.uri = getImageWithName("")

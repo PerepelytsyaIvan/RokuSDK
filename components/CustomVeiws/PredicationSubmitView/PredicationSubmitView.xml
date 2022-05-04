@@ -9,10 +9,17 @@
         <field id="percentFocus" type="float" onChange = "onChangePercentFocus"/>
         <field id="pressBack" type = "bool" alwaysNotify = "true"/>
         <field id="itemParam" type="assocarray"/>
+        <field id="focusKey" type="int" onChange = "updateFocus" alwaysNotify = "true" value = "0"/>
+        <field id="showNotificationPoints" type = "assocarray"/>
     </interface>
 
     <children>
-        <LayoutGroup id = "containerView" vertAlignment = "center" itemSpacings = "[15, 50, 20]" layoutDirection = "horiz">
+        <Poster id="focusCounter"
+                width="2" 
+                height="100" 
+                uri="pkg:/images/gradienFocusButton.9.png"/>
+
+        <LayoutGroup id = "containerView" vertAlignment = "center" itemSpacings = "[15, 50, 10]" layoutDirection = "horiz">
             <Poster id = "posterCell" >
             </Poster>
 
@@ -29,14 +36,30 @@
                 vertAlign="center">
             </Label>
 
-            <CollectionView id="collectionView" 
-                size="[200, 200]" 
-                widthLayoutView="175"
-                
-                itemSpacing = "10"
-                focusImage = "pkg:/images/focusSubmit.9.png">
-            </CollectionView>
+            <LayoutGroup id = "arrowContainer"  itemSpacings = "[20]">
+                <Poster id = "topArrowPoster" 
+                        width = "20" 
+                        height = "15"
+                        uri = "pkg:/images/top.png"/>
+
+                <Poster id = "downArrowPoster" 
+                        width = "20"
+                        height = "15"
+                        uri = "pkg:/images/down.png"/>
+            </LayoutGroup>
         </LayoutGroup>
+
+
+        <RowList    id = "rowList"
+                    itemComponentName = "ItemComponent"
+                    itemSize = "[100, 30]"
+                    rowItemSize = "[[100, 30]]"
+                    itemSpacing = "[0,10]"
+                    rowItemSpacing = "[[0, 10]]"
+                    focusBitmapUri = "pkg:/images/gradienFocusButton.9.png"
+                    vertFocusAnimationStyle = "floatingFocus"
+                    drawFocusFeedbackOnTop = "false"
+                    numRows = "2"/>
 
         <Poster id="separator"
             width="2" 

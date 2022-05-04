@@ -54,7 +54,7 @@ sub configureObservers()
     m.top.observeField("focusedChild", "onChangeFocusedChild")
 end sub
 
-sub layoutViews()
+sub configureQuestionLabel()
     m.questionLabel.font = getBoldFont(getSize(30))
     m.questionLabel.width = 0
 
@@ -68,7 +68,12 @@ sub layoutViews()
     else
         m.questionLabel.width = m.questionLabel.boundingRect().width
     end if
+end sub
 
+sub layoutViews()
+    m.questionLabel.height = getSize(80)
+
+    configureQuestionLabel()
     if IsValid(m.top.dataSource) and m.top.dataSource.questiontype = "injectWiki" and not m.isShowAnswer
         m.separator.visible = false
         m.questionLabel.width = getSize(1300)
@@ -77,10 +82,9 @@ sub layoutViews()
         m.separator.visible = true
     end if
 
-    m.questionLabel.height = getSize(80)
     m.unitTime.height = m.timeLabel.boundingRect().height - 5
     m.activityContainerGroup.translation = getSizeMaskGroupWith([0, 1080])
-    m.activityLayout.translation = getSizeMaskGroupWith([30, 50])
+    m.activityLayout.translation = [getSize(30), getSize(50)]
     m.backgroundActivity.width = getSize(1920)
     m.backgroundActivity.height = getSize(150)
 
@@ -118,18 +122,18 @@ sub layoutViewsAnswer(questionType)
 end sub
 
 sub configureCollectionFor(eventType)
+    a = m.collectionView.boundingrect()
     maxWidth = getSize(1920) - m.activityLayout.boundingRect().width - m.activityLayout.translation[0] - getSize(410)
     m.collectionView.widthLayoutView = 3000
     m.collectionView.sizeMask = [maxWidth, getSize(80)]
 
     if eventType = "injectRating"
         m.collectionView.itemSpacing = getSize(40)
-        m.collectionView.focusImage = "pkg:/nil"
     else if eventType = "prediction"
         m.collectionView.itemSpacing = getSize(50)
         m.collectionView.focusImage = "pkg:/nil"
     else
-        m.collectionView.itemSpacing = getSize(20)
+        m.collectionView.itemSpacing = getSize(50)
         m.collectionView.focusImage = "pkg:/images/gradienFocusButton.9.png"
     end if
 end sub
@@ -153,9 +157,24 @@ sub configureDesign()
     m.timeLabel.font = getBoldFont(getSize(60))
     m.unitTime.font = getMediumFont(getSize(40))
     m.wagerSummitedLabel.font = getRegularFont(getSize(40))
+
+    ' m.questionLabel.drawingStyles = {
+    '     "b": {
+    '         "fontSize": getSize(30)
+    '         "fontUri": getBoldFont(getSize(30)).uri
+    '         "color": "#ffffff"
+    '     }
+
+    '     "default": {
+    '         "fontSize": getSize(30)
+    '         "fontUri": getBoldFont(getSize(30)).uri
+    '         "color": "#ffffff"
+    '     }
+    ' }
 end sub
 
 sub configureLabel(seconds)
+    if isString(seconds) then seconds = seconds.toInt()
     hidingTime = gmdate(seconds)
     array = hidingTime.split("m")
     if array.count() = 2
@@ -181,12 +200,13 @@ sub createPredictionSubmitView(item)
     m.predicationSubmitView.opacity = 0
     m.predicationSubmitView.observeField("pressBack", "didSelectBackButton")
     m.predicationSubmitView.observeField("itemParam", "didSelectButtonSubmit")
+    m.predicationSubmitView.observeField("showNotificationPoints", "onShowNotificationPoints")
     m.predicationSubmitView.dataSource = item
     boundingRect = m.predicationSubmitView.boundingRect()
 
 
     width = m.activityLayout.localBoundingRect().width
-    maxWidth = (1920 - width - m.activityLayout.translation[0] - getSize(365))
+    maxWidth = (getSize(1920) - width - m.activityLayout.translation[0] - getSize(365))
     centerX = (maxWidth - boundingRect.width) / 2
     transaltionX = centerX + (width + m.activityLayout.translation[0])
 
@@ -194,6 +214,11 @@ sub createPredictionSubmitView(item)
     m.predicationSubmitView.id = "predicationSubmitView"
     m.top.focusKey = 2
     m.previusFocusedNode = m.predicationSubmitView
+end sub
+
+sub onShowNotificationPoints(event)
+    params = event.getData()
+    m.top.showNotificationPoints = params
 end sub
 
 sub configureWagerAnswer(item)

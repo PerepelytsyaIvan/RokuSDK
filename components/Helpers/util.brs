@@ -23,84 +23,6 @@ function getWidthForText(text, font)
     return label.boundingrect().width
 end function
 
-function GetRegularFontWithSize(size)
-    return GetFontWithSize(size, "pkg:/fonts/Roboto-Regular.ttf")
-end function
-
-function GetMontserratSemiBoldFontWithSize(size)
-    return GetFontWithSize(size, "pkg:/fonts/Montserrat-SemiBold.ttf")
-end function
-
-function GetFontWithSize(size, fontFile = "pkg:/fonts/Roboto-Regular.ttf")
-    font = CreateObject("roSGNode", "Font")
-    font.uri = fontFile
-    font.size = size
-    return font
-end function
-
-function getRuntime(runtime as integer) as string
-    runtime = runtime / 1000
-    runtimeSecs = runtime MOD 60
-    runtimeMins = (runtime \ 60) MOD 60
-    runtimeHours = (runtime \ 3600)
-
-    if runtimeSecs < 10
-        runtimeSecs = "0" + runtimeSecs.toStr()
-    else
-        runtimeSecs = runtimeSecs.toStr()
-    end if
-
-    if runtimeMins < 10
-        runtimeMins = "0" + runtimeMins.toStr()
-    else
-        runtimeMins = runtimeMins.toStr()
-    end if
-    if runtimeHours > 0
-        if runtimeHours < 10
-            runtimeHours = "0" + runtimeHours.toStr()
-        else
-            runtimeHours = runtimeHours.toStr()
-        end if
-        totalRuntime = runtimeHours + ":" + runtimeMins + ":" + runtimeSecs
-    else
-        totalRuntime = "00:" + runtimeMins + ":" + runtimeSecs
-    end if
-    return totalRuntime
-end function
-
-function getSecondsFrom(intervalString)
-    numberValue = 1
-    r = CreateObject("roRegex", "\d+", "")
-    values = r.Match(intervalString)
-    if values.Count() > 0
-        value = values[0].ToInt()
-        if IsInteger(value)
-            numberValue = value
-            lastPart = intervalString.Split(values[0]).Peek()
-            if lastPart = "M"
-                numberValue = numberValue * 60
-            else if lastPart = "H"
-                numberValue = numberValue * 60 * 60
-            else if lastPart = "D"
-                numberValue = numberValue * 60 * 60 * 24
-            end if
-        end if
-    end if
-    return numberValue
-end function
-
-function getHeightOfTextWith(width, font, text)
-    height = 0
-    label = CreateObject("roSGNode", "Label")
-    label.font = font
-    label.wrap = true
-    label.width = width
-    label.height = 0
-    label.text = text
-    height = label.boundingRect().height
-    return height
-end function
-
 ' ******************************************************
 ' Logging Helper Functions
 ' ******************************************************
@@ -457,23 +379,13 @@ function IsInvalid(value as dynamic) as boolean
     return Type(value) = "<uninitialized>" or value = invalid
 end function
 
+function IsNonEmptyString(value as dynamic) as boolean
+    return IsString(value) and value <> ""
+end function
 
 function defaultValueIfInvalid(default as object, unknown)
     if unknown = invalid then return default
     return unknown
-end function
-
-function getDeviceID()
-    di = CreateObject("roDeviceInfo")
-    uuid = ""
-    if di.IsRIDADisabled()
-        uuid = GenerateUUID()
-        ConsolLog().logObject(uuid)
-    else
-        uuid = di.GetRIDA()
-        ConsolLog().logObject(uuid)
-    end if
-    return uuid
 end function
 
 function getDeviceModel()
@@ -486,57 +398,9 @@ function getDeviceName()
     return di.GetModelDisplayName()
 end function
 
-function getUserToken()
-    customer = RegRead("customer")
-    if isValid(customer)
-        'return customer[EnumsUtil().DTOProperties.CUSTOM_USER_TOKEN]
-    end if
-end function
-
-function getRefreshToken()
-    customer = RegRead("customer")
-    if isValid(customer)
-        'return customer[EnumsUtil().DTOProperties.CUSTOM_REFRESH_TOKEN]
-    end if
-end function
-
-function getProductStatus()
-    if isValid(m.global.products)
-
-    end if
-    return invalid
-end function
-
-function getProductCode()
-    if isValid(m.global.products)
-
-    end if
-    return invalid
-end function
-
 function getLocale()
     di = CreateObject("roDeviceInfo")
     return di.GetCurrentLocale()
-end function
-
-function GenerateUUID() as string
-    stored = RegRead("UUID")
-    if stored <> invalid then return stored
-    new = GetRandomHexString(8) + "-" + GetRandomHexString(4) + "-" + GetRandomHexString(4) + "-" + GetRandomHexString(4) + "-" + GetRandomHexString(12)
-    valueObject = {
-        "UUID": new
-    }
-    RegWriteMulti(valueObject)
-    return new
-end function
-
-function GetRandomHexString(length as integer) as string
-    hexChars = "0123456789ABCDEF"
-    hexString = ""
-    for i = 1 to length
-        hexString = hexString + hexChars.Mid(Rnd(16) - 1, 1)
-    next
-    return hexString
 end function
 
 function toBase64String(object) as string
@@ -581,42 +445,6 @@ function getSize(size) as object
     return size
 end function
 
-function localize(key)
-    if IsValid(m.global.Custom_Application_LocalizationUrl)
-        localizedString = firstWhere(m.global.Custom_Application_LocalizationUrl.Properties, "Name", key)
-        if IsValid(localizedString)
-            return localizedString.Value.Replace("%@", "")
-        else
-            return key
-        end if
-    else
-        return key
-    end if
-end function
-
-function isAddWatchlist(clean_title) as object
-    for each item in m.global.watchlist
-        if item.clean_title = clean_title
-            return true
-        end if
-    end for
-    return false
-end function
-
-sub sortedVideoTrending(shows) as object
-    data = shows.data
-    if IsValid(shows.data)
-        if shows.data.response.rows.Count() > 0
-            data.response.Delete("rows")
-            sortedArray = sortArray(shows.data.response.rows, "views_count", false)
-            data.response.AddReplace("rows", sortedArray)
-            shows.setField("data", data)
-            return shows
-        end if
-    end if
-    return []
-end sub
-
 sub getLanguage() as string
     di = CreateObject("roDeviceInfo")
     locale = di.GetCurrentLocale().split("_")
@@ -637,31 +465,78 @@ end sub
 
 sub getMediumFont(size = 25) as object
     font = CreateObject("roSGNode", "Font")
-    font.uri = "pkg:/components/fonts/Medium.otf"
+    customFont = getFont("Medium")
+    if IsValid(customFont)
+        font.uri = font.uri
+    else
+        font.uri = "pkg:/components/fonts/Medium.otf"
+    end if
     font.size = size
     return font
 end sub
 
 sub getBoldFont(size = 25) as object
     font = CreateObject("roSGNode", "Font")
-    font.uri = "pkg:/components/fonts/Bold.otf"
+    customFont = getFont("Bold")
+    if IsValid(customFont)
+        font.uri = customFont.uri
+    else
+        font.uri = "pkg:/components/fonts/Bold.otf"
+    end if
     font.size = size
     return font
 end sub
 
+sub convertStrToInt(value) as object
+    if IsString(value) then return value.toInt()
+    return value
+end sub
+
+sub convertIntToStr(value) as object
+    if IsInteger(value) then return value.toStr()
+    return value
+end sub
+
+sub getFont(typeFont) as object
+    if isInvalid(m.global.fonts) then return invalid
+
+    for each font in m.global.fonts
+        if IsValid(font.type) and font.type = typeFont
+            if font.uri = "pkg:/<font path>.otf" or font.uri = "" then return invalid
+            return font
+        end if
+    end for 
+
+    return invalid
+end sub
+
 sub getRegularFont(size = 25) as object
     font = CreateObject("roSGNode", "Font")
-    font.uri = "pkg:/components/fonts/Regular.otf"
+    customFont = getFont("Regular")
+    if IsValid(customFont)
+        font.uri = font.uri
+    else
+        font.uri = "pkg:/components/fonts/Regular.otf"
+    end if
     font.size = size
     return font
+end sub
+
+sub validationUsername(username) as object
+    regexUsername = CreateObject("roRegex", "[`!@#$%^&*()+\=\[\]{};:\\|,.<>\/?~]", "i")
+    isMatchUsername = regexUsername.isMatch(username)
+
+    if username.len() < 30 and username.len() > 3 then isMatchUsername = true
+    if username.len() < 3 then isMatchUsername = false
+    return isMatchUsername
 end sub
 
 sub getPercent(percent) as object
     strPercent = percent.toStr().split(".")
     if strPercent.count() > 1
-        return strPercent[0] + "." + strPercent[1].left(2) + "%"
+        return (strPercent[0] + "." + strPercent[1].left(2) + "%").replace("-", "")
     else
-        return strPercent[0] + "%"
+        return (strPercent[0] + "%").replace("-", "")
     end if
 end sub
 

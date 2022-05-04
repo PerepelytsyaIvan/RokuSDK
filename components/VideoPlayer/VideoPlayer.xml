@@ -1,12 +1,14 @@
-<component name="VideoPlayer" extends="Scene" initialFocus = "videoPlayer">
+<component name="VideoPlayer" extends="Group" initialFocus = "videoPlayer">
     <script type="text/brightscript" uri="./VideoPlayer.brs" />
 
     <interface>
-       
+        <field id="accountRoute" type="assocarray" onChange = "configureVideoContentNode"/>
+        <field id="videoUrl" type="string"/>
     </interface>
 
     <children>
         <Video id="videoPlayer" translation = "[0,0]"/>
+        <!-- <Poster translation = "[100,100]" id = "test" width = "500" height = "80" uri = "pkg:/images/wikiNotification.9.png"/> -->
         <OverlayViewController id="overlayViewController"/>
     </children>
 </component>

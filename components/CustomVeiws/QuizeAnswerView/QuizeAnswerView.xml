@@ -11,7 +11,8 @@
 
             <LayoutGroup id="layoutGroupAnswer" itemSpacings = "[10]">
                 <LayoutGroup id="layoutGroupWrongAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
-                    <Poster id = "imageCellWrongAnswer" />
+                    <Poster id = "imageCellWrongAnswer" 
+                            loadDisplayMode = "scaleToZoom"/>
         
                     <Label id = "wrongAnswerLabel"
                            vertALign = "center"  
@@ -19,7 +20,8 @@
                 </LayoutGroup>
 
                 <LayoutGroup id="layoutGroupRightAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
-                    <Poster id = "imageCellRightAnswer" />
+                    <Poster id = "imageCellRightAnswer" 
+                            loadDisplayMode = "scaleToZoom"/>
 
                     <Label id = "rightAnswerLabel"
                            vertALign = "center"  
@@ -27,7 +29,7 @@
                 </LayoutGroup>
             </LayoutGroup>
 
-            <Label id = "infoLabel"
+            <MultiStyleLabel id = "infoLabel"
                    vertALign = "center"  
                    horizAlign = "left"
                    wrap = "true"

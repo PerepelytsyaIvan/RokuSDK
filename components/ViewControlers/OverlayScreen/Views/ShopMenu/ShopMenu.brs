@@ -36,8 +36,8 @@ sub onItemSelected(event)
 end sub
 
 sub configureDesign()
-    m.subTitle.font = getMediumFont(30)
-    m.title.font = getMediumFont(30)
+    m.subTitle.font = getMediumFont(getSize(30))
+    m.title.font = getMediumFont(getSize(30))
     m.title.color = m.global.design.questionTextColor
     m.subTitle.color = m.global.design.buttonBackgroundColor
     m.background.color = "#000000"
@@ -50,19 +50,21 @@ sub onFocusedChild()
 end sub
 
 sub layoutSubviews()
-    m.background.width = getSize(400)
+    m.productList.itemSize = [getSize(340), getSize(100)]
+    m.productList.rowItemSize = [[getSize(340), getSize(100)]]
+    m.productList.itemSpacing = [getSize(0),getSize(10)]
+    m.productList.rowItemSpacing = [[0, getSize(10)]]
+    m.background.width = getSize(405)
     m.background.height = getSize(1080)
     m.background.translation = [(getSize(1920) - getSize(400)), 0]
-    m.productGroup.translation = [(getSize(1920) - getSize(400)) + (400 / 2), 0]
-    m.separator.width = 340
-    m.separator.height = 1
-    m.productList.translation = [(getSize(1920) - getSize(400)) + 30, 110]
+    m.productGroup.translation = [(getSize(1920) - getSize(400)) + (getSize(400) / 2), 0]
+    m.separator.width = getSize(340)
+    m.separator.height = getSize(1)
+    m.productList.translation = [(getSize(1920) - getSize(400)) + getSize(30), 110]
 end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean
     result = false
-
     if not press then return result
-
     return result
 end function

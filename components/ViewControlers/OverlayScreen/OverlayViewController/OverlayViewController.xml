@@ -3,12 +3,15 @@
     <script type="text/brightscript" uri="./OverlayViewControllerHelper.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/UrlHelpers.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../../Helpers/Promise.brs" />
 
     <interface>
         <field id="videoPlayer" type="node"/>
         <field id="accountRoute" type="assocarray" onChange = "configurationUser"/>
         <field id="setVideoFocus" type="bool"/>
         <field id="focusedMenu" type="bool" alwaysNotify = "true" onChange = "setFocusMenu"/>
+        <field id="isShownActivity" type="bool"/>
+        <field id="fonts" type="array" onChange = "configureFonts"/>
     </interface>
 
     <children>

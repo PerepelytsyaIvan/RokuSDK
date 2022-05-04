@@ -1,0 +1,27 @@
+<component name="RefreshItemComponent" extends="Group">
+    <script type="text/brightscript" uri="RefreshItemComponent.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="rowFocusPercent" type="float" onChange="itemFocused" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="rowListHasFocus" type="bool" onChange="itemFocused" />
+    </interface>
+
+    <children>
+        <Poster id="background"
+                uri="pkg:/images/backgroundLeaderboard.png"
+                blendColor = "#68686800" />
+
+        <LayoutGroup id = "containerLayout" horizAlignment = "center" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+            <BusySpinner id="busySpinner"/>
+                    
+            <Label  id="nameLabel" 
+                    vertAlign = "center"/>
+        </LayoutGroup>
+
+        <ColorFieldInterpolator id = "colorInterpolator" key="[0.0, 1.0]" keyValue="[#68686800, #686868ff]" fieldToInterp="background.blendColor"/>
+    </children>
+</component>

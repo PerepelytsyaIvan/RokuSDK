@@ -183,6 +183,14 @@ sub moveFocus(key) as object
     return result
 end sub
 
+sub jumpItem()
+    index = m.top.indexPathFocused
+    if m.top.indexPathFocused[1] <> m.indexPath[1]
+        m.indexPath = index
+        configureAnimationRow()
+    end if
+end sub
+
 sub configureFocusElement(newTrRow, element, key)
     if key = "right"
         translationX = m.currentElement.translation[0] + (m.currentElement.width + m.top.horizontalSpacing)
@@ -263,7 +271,6 @@ sub configureAnimationRow() as boolean
     row = m.baseGroup.getChild(m.indexPath[0])
     element = row.getChild(m.indexPath[1])
     boundingRectRow = row.boundingRect()
-
     if element.translation[0] > m.top.widthLayoutView
         m.moveRowInterpolator.fieldToInterp = row.id + ".translation"
         differenceTranslation = ((element.focusTranslation[0] - m.top.widthLayoutView) + element.width) + row.translation[0]

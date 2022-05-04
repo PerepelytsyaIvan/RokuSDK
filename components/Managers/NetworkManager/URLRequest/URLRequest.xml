@@ -13,7 +13,8 @@
         <field id="arrayBody" type="array"/>
         <field id="context" type="assocarray"/>
         <field id="querryParams" type="assocarray"/>        
-        
+        <field id="withBody" type="bool" value = "true"/>        
+
         <function name="getUrl"/>
         <function name="getBody"/>
         <function name="getHeaders"/>        

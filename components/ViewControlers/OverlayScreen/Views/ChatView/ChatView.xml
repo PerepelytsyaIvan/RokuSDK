@@ -1,0 +1,77 @@
+<component name="ChatView" extends="Group">
+    <script type="text/brightscript" uri="ChatView.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../../../Helpers/UrlHelpers.brs" />
+
+    <interface>
+        <field id="accountRoute" type="assocarray" onChange="configureDataSource"/>
+        <field id="focusKey" type="int" onChange = "updateFocus" alwaysNotify = "true" value = "0"/>
+        <field id="isShowActivity" type="bool" onChange="animationJumpChat"/>
+    </interface>
+
+    <children>
+        <Rectangle  id = "background"
+                    color = "#000000"/>
+
+        <MessageView    id = "messageView"
+                        itemSpacing = "15"/>
+
+        <Rectangle  id = "mask"
+                    color = "#000000"
+                    width = "395"
+                    height = "150"/>
+
+        <Poster     id = "logoChat" 
+                    uri = "pkg:/images/icLogoChat.png"
+                    width = "265"
+                    height = "71"/>
+
+        <Group id = "bottomContainer">
+            <Group id = "messageGroup">
+                <Poster id = "messageBackground" 
+                        uri = "pkg:/images/messageBackground.png"
+                        width = "355"
+                        height = "75"/>
+                <LayoutGroup id = "containerTopSmiles" layoutDirection = "horiz" vertAlignment = "center" itemSpacings = "[7,5,5, 5]">
+                    <Poster id = "profileImage"
+                            width  = "50"
+                            height  = "50"/>
+                    <SendSmileContainerView id = "sendSmileView"/>
+                    <SendSmileContainerView id = "sendSmileView1"/>
+                    <SendSmileContainerView id = "sendSmileView2"/>
+
+                    <LayoutGroup id = "containerButton" itemSpacings = "[5]">
+                        <CustomButtonSms    id = "sendButton" 
+                                            icon = "pkg:/images/icSendSmile.png"/>
+    
+                        <CustomButtonSms    id = "removeButton"
+                                            icon = "pkg:/images/icRemoveSmile.png"/>
+                    </LayoutGroup>
+                </LayoutGroup>
+
+                <RowList    id = "sectionCheerList"
+                            itemComponentName = "SectionCheerItemComponent"
+                            itemSize = "[40, 40]"
+                            rowItemSize = "[[40, 40]]"
+                            itemSpacing = "[0, 15]"
+                            rowItemSpacing = "[[0, 15]]"
+                            focusBitmapUri = "pkg:/nil"
+                            vertFocusAnimationStyle = "floatingFocus"
+                            numRows = "4"/>
+
+                <MarkupGrid id = "cheerList"
+                            itemComponentName = "CheerItemComponent"
+                            itemSize = "[300, 55]"
+                            numColumns = "5"
+                            vertFocusAnimationStyle = "floatingFocus"
+                            focusBitmapUri = "pkg:/nil"/>
+            </Group>
+        </Group>
+
+        <Animation id="animation" duration="0.4" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="interpolatorChatGroup" key="[0.0, 1.0]" fieldToInterp="messageView.translation"/>
+            <Vector2DFieldInterpolator id="interpolatorEmojiGroup" key="[0.0, 1.0]" fieldToInterp="bottomContainer.translation"/>
+            <FloatFieldInterpolator id="interpolatorHeightEmojiGroup" key="[0.0, 1.0]" fieldToInterp="messageView.height"/>
+        </Animation>
+    </children>
+</component>

@@ -102,6 +102,14 @@ sub configureDataSource()
     setFocusElement()
 end sub
 
+sub jumpItem()
+    index = m.top.indexPathFocused 
+
+    for i = 0 to m.top.indexPathFocused[1] - 1
+        moveFocus("right")
+    end for
+end sub
+
 sub getNextWidthItem(item) as object
     element = CreateObject("roSGNode", item.itemComponent)
     element.dataSource = item
@@ -208,7 +216,7 @@ sub configureFocusElement(newTrRow, element, key)
         m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [element.focusTranslation[0], element.focusTranslation[1] + newTrRow[1]]]
     else if key = "up"
         if IsInvalid(newTrRow)
-            m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [element.focusTranslation[0], m.translationInterpolator.keyValue[1][1] - element.height - m.top.itemSpacing]]  
+            m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], [element.focusTranslation[0], m.translationInterpolator.keyValue[1][1] - element.height - m.top.itemSpacing]]
         else
             m.translationInterpolator.keyValue = [m.translationInterpolator.keyValue[1], m.translationInterpolator.keyValue[1]]
         end if

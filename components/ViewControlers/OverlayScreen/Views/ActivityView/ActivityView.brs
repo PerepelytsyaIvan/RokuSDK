@@ -3,8 +3,9 @@ sub init()
     initProperties()
     configureObservers()
     configureDesign()
+    layoutViews()
 end sub
-
+ 
 sub configureDataSource()
     m.wagerSummitedLabel.text = ""
     m.showCollectionTimer.duration = 0.4
@@ -19,8 +20,13 @@ sub configureDataSource()
         return
     end if
 
+    if IsValid(m.levelsLabelView) then m.levelsLabelView.opacity = 0
+
     m.questionLabel.width = 0
     if m.top.dataSource.questiontype = "injectWiki"
+        m.timeGroup.opacity = 0
+        createPointsView(m.top.dataSource)
+        m.levelsLabelView.opacity = 1
         m.questionLabel.text = m.top.dataSource.content
     else
         m.questionLabel.text = m.top.dataSource.question
@@ -30,8 +36,9 @@ sub configureDataSource()
         m.collectionView.visible = m.top.dataSource.answers.count() > 0
         m.collectionView.opacity = 1
 
-        if IsValid(m.top.dataSource.answers) and m.top.dataSource.answers.count() > 0
+        if m.top.dataSource.answers.count() > 0
             if isValid(m.top.dataSource)
+                configureQuestionLabel()
                 configureCollectionFor(m.top.dataSource.questionType)
                 m.collectionView.dataSource = m.top.dataSource.answers
                 m.top.focusKey = 1
@@ -48,12 +55,16 @@ sub configureDataSource()
         m.previusFocusedNode = m.collectionViewLeftButton
     end if
 
-    dataSourceLeftButton = [{ "title": "Menu", "itemComponent": "TextItemComponent" }, { "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    if not m.global.infoApp.modules.logo
+        dataSourceLeftButton = [{ "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    else
+        dataSourceLeftButton = [{ "title": "Menu", "itemComponent": "TextItemComponent" }, { "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    end if
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
     m.timeForHideView = m.top.dataSource.timeForHiding
     m.scrollingArrowGroup.visible = m.collectionView.sizeMask[0] < m.collectionView.boundingRect().width
    
-    configureLabel(m.timeForHideView)
+    configureLabel(convertStrToInt(m.timeForHideView))
     layoutViews()
     showActivity()
 end sub
@@ -83,7 +94,11 @@ sub configureAnswer()
         end if
     end if
 
-    dataSourceLeftButton = [{ "title": "Menu", "itemComponent": "TextItemComponent" }, { "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    if not m.global.infoApp.modules.logo
+        dataSourceLeftButton = [{ "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    else
+        dataSourceLeftButton = [{ "title": "Menu", "itemComponent": "TextItemComponent" }, { "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    end if
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
     m.timeForHideView = m.top.dataAnswer.timeForHiding
     layoutViews()
@@ -97,6 +112,10 @@ sub configureAnswerDataSource(item = invalid)
     m.isShowAnswer = true
     m.hidingTimeInterpolator.key = [0,1]
     
+    if isValid(m.collectionViewLeftButton.dataSource) and m.collectionViewLeftButton.dataSource.count() > 1 and isInvalid(m.item)
+        m.collectionViewLeftButton.indexPathFocused = [0, 1]
+    end if
+
     m.scrollingArrowGroup.visible = false
 
     if isValid(m.top.dataSourceAnswer)
@@ -117,13 +136,13 @@ sub configureAnswerDataSource(item = invalid)
         m.previusFocusedNode = m.collectionView
     end if
 
-    if IsValid(m.top.dataSourceAnswer)
+    if IsValid(m.top.dataSourceAnswer) and m.item = invalid
         createPointsView(m.top.dataSourceAnswer)
         m.previusFocusedNode = m.collectionViewLeftButton
         m.hidingTimeInterpolator.fieldToInterp = m.levelsLabelView.id + ".opacity"
 
-        if isValid(m.top.dataSourceAnswer.closepostinteraction) and m.top.dataSourceAnswer.closepostinteraction and isInvalid(m.item)
-            m.timeForHideView = 6
+        if isValid(m.top.dataSourceAnswer.closepostinteraction) and IsValid(m.top.dataSourceAnswer.feedbacktime)
+            m.timeForHideView = m.top.dataSourceAnswer.feedbacktime
         else if isValid(m.top.dataSourceAnswer.closepostinteraction) and not m.top.dataSourceAnswer.closepostinteraction and isInvalid(m.item)
             m.timeForHideView = 10000000
         end if
@@ -145,6 +164,7 @@ sub configureAnswerDataSource(item = invalid)
         createPredictionSubmitView(m.item)
  
         if m.hidingInterpolator.isShow 
+            m.top.focusKey = 0
             m.hidingTimeInterpolator.fieldToInterp = ""
             m.hidingInterpolator.fieldToInterp = m.collectionView.id + ".opacity"
             hideCollectionView()
@@ -167,6 +187,7 @@ sub configureAnswerDataSource(item = invalid)
             configureWagerAnswer(m.top.dataSourceAnswer)
 
             if m.hidingInterpolator.isShow 
+                m.top.focusKey = 0
                 m.hidingTimeInterpolator.fieldToInterp = m.timeGroup.id + ".opacity"
                 hideCollectionView()
                 m.showCollectionTimer.control = "start"
@@ -183,8 +204,8 @@ sub configureAnswerDataSource(item = invalid)
 
     if isValid(m.top.dataSourceAnswer) and m.top.dataSourceAnswer.questionType = "injectQuiz"
         createQuizView(m.top.dataSourceAnswer.answers)
-
         if m.hidingInterpolator.isShow 
+            m.top.focusKey = 0
             m.hidingInterpolator.fieldToInterp = m.collectionView.id + ".opacity"
             m.hidingTimeInterpolator.fieldToInterp = m.timeGroup.id + ".opacity"
             hideCollectionView()
@@ -208,11 +229,42 @@ sub configureAnswerDataSource(item = invalid)
         return
     end if
 
+    if isInvalid(m.top.dataSourceAnswer) then return
     configureCollectionAnswerFor(m.top.dataSourceAnswer.questionType)
+
     m.collectionView.dataSource = m.top.dataSourceAnswer.answers
+    configureJumpToItem()
     layoutViewsAnswer(m.top.dataSourceAnswer.questionType)
     m.scrollingArrowGroup.visible = m.collectionView.sizeMask[0] < m.collectionView.boundingRect().width
     showCollectionView()
+end sub
+
+sub configureJumpToItem()
+    index = getIndexSelectedAnswer()
+    widthItems = 0
+    if isValid(m.collectionView.dataSource) and m.collectionView.dataSource.count() > 0
+        for each element in m.collectionView.elements
+            widthItems += element.width
+        end for
+    end if
+
+    if widthItems > m.collectionView.sizeMask[0]
+        m.collectionView.indexPathFocused = [0, index]
+    end if
+end sub
+
+sub getIndexSelectedAnswer() as object
+    count = 0
+    for each item in m.top.dataSourceAnswer.answers
+        if isValid(item.answerSending) and item.answerSending
+            return count
+        else 
+            return 0
+        end if
+        count++
+    end for
+
+    return count
 end sub
 
 sub showActivity()
@@ -285,6 +337,7 @@ sub showCollectionAfterTimer()
 end sub
 
 sub changeTime()
+    m.timeForHideView = convertStrToInt(m.timeForHideView)
     if isInvalid(m.timeForHideView) then m.timeForHideView = 10
     if m.timeForHideView > 0
         m.timeForHideView -= 1
@@ -335,7 +388,7 @@ end sub
 
 sub onChangeFocusedChild(event)
     if m.top.hasFocus()
-        if IsValid(m.previusFocusedNode) then m.previusFocusedNode.setFocus(true)
+
     end if
 end sub
 

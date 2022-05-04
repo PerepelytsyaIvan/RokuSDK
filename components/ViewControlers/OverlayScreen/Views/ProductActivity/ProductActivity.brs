@@ -28,10 +28,14 @@ sub configureDataSource()
     m.productImage.uri = getImageWithName(m.top.dataSource.image)
     m.collectionView.dataSource = [m.top.dataSource]
 
-    dataSourceLeftButton = [{ "title": "Menu", "itemComponent": "TextItemComponent" }, { "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    if not m.global.infoApp.modules.logo
+        dataSourceLeftButton = [{ "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    else
+        dataSourceLeftButton = [{ "title": "Menu", "itemComponent": "TextItemComponent" }, { "title": m.global.localization.personalAreaClosePersonalArea, "itemComponent": "TextItemComponent" }]
+    end if
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
     m.timeForHideView = m.top.dataSource.timeForHiding
-    configureLabel(m.timeForHideView)
+    configureLabel(convertStrToInt(m.timeForHideView))
     m.top.focusKey = 0
     m.previusFocusedNode = m.collectionView
     layoutViews()
@@ -66,6 +70,7 @@ sub showActifityAfterTimer()
 end sub
 
 sub changeTime()
+    m.timeForHideView = convertStrToInt(m.timeForHideView)
     if m.timeForHideView > 0
         m.timeForHideView -= 1
         configureLabel(m.timeForHideView)
@@ -86,8 +91,7 @@ sub didSelectButtonLeft(event)
 end sub
 
 sub didSelectButton()
-    ' number = RegRead("number")
-    number = ""
+    number = RegRead("number")
     numberPhone = number
 
     if isValid(number) and number <> ""

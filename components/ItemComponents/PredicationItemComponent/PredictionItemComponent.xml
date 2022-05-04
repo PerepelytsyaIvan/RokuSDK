@@ -1,6 +1,7 @@
 <component name="PredictionItemComponent" extends="Group">
     <script type="text/brightscript" uri="PredictionItemComponent.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../Helpers/utils/math.brs" />
 
     <interface>
         <field id="dataSource" type="assocarray" onChange="configureDataSource" />

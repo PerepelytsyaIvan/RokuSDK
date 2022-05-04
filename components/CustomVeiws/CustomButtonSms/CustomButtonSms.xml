@@ -1,0 +1,31 @@
+<component name="CustomButtonSms" extends="Group">
+    <script type="text/brightscript" uri="CustomButtonSms.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="icon" type="string" alias="iconButton.uri" />
+        <field id="selectButton" type="bool" alwaysNotify="true" />
+        <field id="isFocused" type="bool" onChange = "setFocusButton" />
+    </interface>
+
+    <children>
+        <Poster id="buttonBackground"
+                width="50" 
+                height="30" 
+                uri="pkg:/images/chatMask.9.png">
+            <Poster id="iconButton" 
+                    translation="[14, 7.5]" 
+                    width="22" 
+                    height="15"/>
+            <Poster id="focusButton" 
+                    width="50" 
+                    height="30" 
+                    uri="pkg:/images/focusChat.9.png"
+                    opacity = "0" />
+        </Poster>
+
+        <Animation id="animation" duration="0.2" repeat="false" easeFunction="linear">
+            <FloatFieldInterpolator id="interpolator" key="[0, 1]" keyValue = "[0, 1]" fieldToInterp="focusButton.opacity" />
+        </Animation>
+    </children>
+</component>

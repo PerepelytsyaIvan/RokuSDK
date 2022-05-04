@@ -1,0 +1,9 @@
+<component name="SocketManager" extends="Node">
+    <script type="text/brightscript" uri="SocketManager.brs"/>
+    <script type="text/brightscript" uri="../../Helpers/cache.brs"/>       
+    <script type="text/brightscript" uri="../../Helpers/util.brs"/>
+
+    <interface>
+            
+    </interface>
+</component>

@@ -1,7 +1,7 @@
 sub init()
     m.focusedInterpolator = m.top.findNode("focusedInterpolator")
     m.itemComponentGroup = m.top.findNode("itemComponentGroup")
-    m.focusPoster = m.top.findNode("focusPoster")
+    ' m.focusPoster = m.top.findNode("focusPoster")
     m.ratingLayout = m.top.findNode("ratingLayout")
 end sub
 
@@ -20,15 +20,15 @@ end sub
 
 sub onChangePercentFocus(event)
     percent = event.getData()
-    m.focusedInterpolator.fraction = percent
+    ' m.focusedInterpolator.fraction = percent
 end sub
 
 sub layoutSubviews()
     boundingRectLayout = m.ratingLayout.localBoundingRect()
-    m.focusPoster.width = boundingRectLayout.width + getSize(20)
+    ' m.focusPoster.width = boundingRectLayout.width + getSize(20)
     boundingRectLocal = m.itemComponentGroup.localBoundingRect()
-    m.top.width = boundingRectLocal.width
+    m.top.width = boundingRectLocal.width + getSize(20)
     m.top.height = getSize(60)
-    m.focusPoster.height = m.top.height
+    ' m.focusPoster.height = m.top.height
     m.ratingLayout.translation = [getSize(10) , (m.top.height - boundingRectLayout.height) / 2]
 end sub

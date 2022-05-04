@@ -16,6 +16,7 @@
         <field id="isOpenMenu" type="bool" alwaysNotify = "true"/>
         <field id="didDisselectedFocus" type="bool" alwaysNotify = "true"/>
         <field id="focusKey" type="int" onChange = "updateFocus" alwaysNotify = "true" value = "0"/>
+        <field id="showNotificationPoints" type = "assocarray"/>
     </interface>
 
     <children>
@@ -34,7 +35,7 @@
                        vertAlign = "center"
                        horizAlign = "left"
                        wrap = "true"
-                       maxLines = "2"
+                       maxLines = "0"
                        lineSpacing = "0"/>
 
                 <Poster id="separator" 
@@ -43,8 +44,10 @@
                         uri="pkg:/images/separatorGradient.png"/>
             </LayoutGroup>
 
-            <CustomMarkupGrid id="collectionView" 
-                                translation="[500, 0]"/>
+            <CustomMarkupGrid   id="collectionView" 
+                                translation="[500, 0]"
+                                sizeMask = "[800, 60]"
+                                widthLayoutView = "3000"/>
 
             <CollectionView id="collectionViewLeftButton" 
                             size="[700, 100]" 

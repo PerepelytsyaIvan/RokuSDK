@@ -12,10 +12,8 @@
 
     <children>
         <Poster id="background"
-                uri="pkg:/images/fieldMask.png" />
-
-        <Poster id="focusCell"
-                uri="pkg:/images/focusLeader.png" />
+                uri="pkg:/images/backgroundLeaderboard.png"
+                blendColor = "#252525ff" />
 
         <Label  id="numberLabel" 
                 vertAlign = "center"/>
@@ -27,5 +25,7 @@
         <Label  id="pointsLabel" 
                 vertAlign = "center"
                 horizAlign = "center"/>
+
+        <ColorFieldInterpolator id = "colorInterpolator" key="[0.0, 1.0]" keyValue="[#252525ff, #686868ff]" fieldToInterp="background.blendColor"/>
     </children>
 </component>

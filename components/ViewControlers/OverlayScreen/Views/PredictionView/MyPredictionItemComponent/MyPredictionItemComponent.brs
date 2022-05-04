@@ -1,6 +1,6 @@
 sub init()
     m.background = m.top.findNode("background")
-    m.focusCell = m.top.findNode("focusCell")
+    m.colorInterpolator = m.top.findNode("colorInterpolator")
     m.layoutGroup = m.top.findNode("layoutGroup")
 
     m.titleLabel = m.top.findNode("titleLabel")
@@ -55,22 +55,24 @@ sub configureDisign(correctedText)
 end sub
 
 sub itemFocused()
-    m.background.opacity = 1 - m.top.rowFocusPercent
-    if not m.top.rowListHasFocus then m.background.opacity = 1
+    m.colorInterpolator.fraction = m.top.rowFocusPercent
+    if not m.top.rowListHasFocus then m.colorInterpolator.fraction = 0
 end sub
 
 sub layoutSubviews()
-    m.layoutGroup.translation = [10, 10]
-    m.separator.width = m.top.width - 20
-    m.separator.height = 1
-    m.correctedPoster.width = 50
-    m.correctedPoster.height = 15
+    m.layoutGroup.translation = [getSize(10), getSize(10)]
+    m.separator.width = m.top.width - getSize(20)
+    m.separator.height = getSize(1)
+    m.correctedPoster.width = getSize(50)
+    m.correctedPoster.height = getSize(15)
     m.correctedLabel.width = m.correctedPoster.width 
     m.correctedLabel.height = m.correctedPoster.height 
     m.background.width = m.top.width
     m.background.height = m.top.height
     m.titleLabel.width = m.top.width
-    m.pointsLabel.width = 100
-    m.avaliablePointsLabel.width = 100
-    m.leftLabelsContainer.translation = [m.top.width - m.leftLabelsContainer.boundingRect().width - 10, m.top.height - m.leftLabelsContainer.boundingRect().height - 5]
+    m.pointsLabel.width = getSize(100)
+    m.avaliablePointsLabel.width = getSize(100)
+    m.pointsLabel.height = getSize(20)
+    m.avaliablePointsLabel.height = getSize(20)
+    m.leftLabelsContainer.translation = [m.top.width - m.leftLabelsContainer.boundingRect().width - getSize(10), m.top.height - m.leftLabelsContainer.boundingRect().height - getSize(5)]
 end sub

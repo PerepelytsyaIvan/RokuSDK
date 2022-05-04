@@ -1,0 +1,19 @@
+<component name="MessageView" extends="Group">
+    <script type="text/brightscript" uri="MessageView.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="node" onChange = "configureDataSource"/>
+        <field id="itemSpacing" type="int"/>
+        <field id="height" type="integer"/>
+    </interface>
+
+    <children>
+        <LayoutGroup id = "autoScrollGroup" itemSpacings = "[20]"/>
+
+        <Animation id="translationAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="iterpolator" key="[0.0, 1.0]" fieldToInterp="autoScrollGroup.translation" keyValue = "[[0,0], [0,0]]"/>
+            <FloatFieldInterpolator id="iterpolatorVisible" key="[0.0, 1.0]" fieldToInterp="" keyValue = "[0, 1]"/>
+        </Animation>
+    </children>
+</component>

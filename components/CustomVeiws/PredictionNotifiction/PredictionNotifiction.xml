@@ -1,0 +1,119 @@
+<component name="PredictionNotifiction" extends="Group">
+    <script type="text/brightscript" uri="PredictionNotifiction.brs" />
+    <script type="text/brightscript" uri="../../Helpers/util.brs" />
+
+    <interface>
+        <field id="dataSource" type="assocarray" onChange="configureDataSource" />
+        <field id="removeWikiView" type="node" />
+    </interface>
+
+    <children>
+        <Group id="containerView">
+            <Poster id="background"  
+                    uri = "pkg:/images/predictionWikiBackground.9.png" 
+                    width="275" 
+                    height="50"/>
+
+            <LayoutGroup id = "containerContent" translation = "[20, 20]" itemSpacings = "[10]">
+                <Label  id="questionLabel" 
+                        vertAlign="center" 
+                        horizAlign="left" 
+                        lineSpacing = "0"
+                        translation="[10, 0]"
+                        wrap = "true"
+                        maxLines = "3"/>
+
+                <Poster id = "separator" uri = "pkg:/images/notifySeparator.png"/>
+
+                <Label  id = "infoLabel"
+                        wrap = "true"
+                        maxLines = "2"
+                        vertAlign="center" 
+                        horizAlign="left" 
+                        lineSpacing = "0"/>
+
+                <LayoutGroup id="layoutGroupWrongAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+                    <Poster id = "imageCellWrongAnswer" 
+                            loadDisplayMode = "scaleToZoom"/>
+                
+                    <Label  id = "wrongAnswerLabel"
+                            vertALign = "center"  
+                            horizAlign = "center"/>
+                </LayoutGroup>
+
+                <LayoutGroup id="layoutGroupRightAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+                    <Poster id = "imageCellRightAnswer" 
+                            loadDisplayMode = "scaleToZoom"
+                            height = "0"/>
+
+                    <Label id = "rightAnswerLabel"
+                           vertALign = "center"  
+                           horizAlign = "center"
+                           height = "0"/>
+                </LayoutGroup>
+            </LayoutGroup>
+
+            <Rectangle  id="progress" 
+                        translation="[10, 49]" 
+                        width="253" 
+                        height="2" 
+                        color="#ffffff"/>
+
+            <LayoutGroup id = "wikiLayout" itemSpacings = "[20]" addItemSpacingAfterChild = "false">
+                        <Poster id = "wikiPoster"
+                                uri = "pkg:/images/wiki.png"/>
+            </LayoutGroup>
+            <!-- <Poster id="background" translation="[1920, 0]" uri = "pkg:/images/predictionWikiBackground.9.png" width="300" height="50">
+                <LayoutGroup id = "containerContent" itemSpacings = "[10]" addItemSpacingAfterChild = "false">
+                    <Label  id="questionLabel" 
+                            vertAlign="center" 
+                            horizAlign="right" 
+                            lineSpacing = "0"
+                            translation="[10, 0]"
+                            wrap = "true"
+                            numLines = "3"/>
+                    <Poster id = "separator" uri = "pkg:/images/separatorGradient.png"/>
+
+                    <Label  id = "infoLabel"
+                            wrap = "true"
+                            numLines = "3"
+                            lineSpacing = "0"/>
+
+                    <LayoutGroup id="layoutGroupWrongAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+                        <Poster id = "imageCellWrongAnswer" 
+                                loadDisplayMode = "scaleToZoom"/>
+            
+                        <Label id = "wrongAnswerLabel"
+                               vertALign = "center"  
+                               horizAlign = "center"/>
+                    </LayoutGroup>
+    
+                    <LayoutGroup id="layoutGroupRightAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
+                        <Poster id = "imageCellRightAnswer" 
+                                loadDisplayMode = "scaleToZoom"/>
+    
+                        <Label id = "rightAnswerLabel"
+                               vertALign = "center"  
+                               horizAlign = "center"/>
+                    </LayoutGroup>
+                </LayoutGroup>
+
+                    <Rectangle  id="progress" 
+                                translation="[10, 49]" 
+                                width="253" 
+                                height="2" 
+                                color="#ffffff"/>
+                
+                
+                <LayoutGroup id = "wikiLayout" itemSpacings = "[20]" addItemSpacingAfterChild = "false">
+                            <Poster id = "wikiPoster"
+                                    uri = "pkg:/images/wiki.png"/>
+                </LayoutGroup>
+            </Poster> -->
+        </Group>
+
+        <Animation id="translationAnimation" duration="0.3" repeat="false" easeFunction="linear">
+            <Vector2DFieldInterpolator id="iterpolator" key="[0.0, 1.0]" fieldToInterp="containerView.translation" />
+        </Animation>
+    </children>
+</component>

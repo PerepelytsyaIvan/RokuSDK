@@ -12,6 +12,8 @@
         <field id="leadersResponce" type="assocarray" />
         <field id="buyItem" type="assocarray" />
         <field id="productsResponce" type="array" />
+        <field id="responceCheers" type="assocarray" />
+        <field id="isUpdateUserInfo" type="bool" alwaysNotify = "true"/>
 
         <function name = "registerUser"/>
         <function name = "loginUser"/>
@@ -22,6 +24,9 @@
         <function name = "getLeaders"/>
         <function name = "getProducts"/> 
         <function name = "buyProduct"/> 
+        <function name = "getCheers"/> 
+        <function name = "sendSms"/> 
+        <function name = "sendUserUpdate"/> 
     </interface>
 
     <children>

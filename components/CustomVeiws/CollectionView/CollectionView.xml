@@ -15,6 +15,7 @@
         <field id="focusImage" type = "string" alias = "focus.uri"/>
         <field id="horizontalSpacing" type="float" value = "30"/>
         <field id="elements" type="array"/>
+        <field id = "indexPathFocused" type = "array" onChange = "jumpItem"/>
     </interface>
 
     <children>

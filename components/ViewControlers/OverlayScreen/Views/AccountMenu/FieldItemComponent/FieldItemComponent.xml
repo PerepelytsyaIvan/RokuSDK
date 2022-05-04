@@ -12,9 +12,9 @@
 
     <children>
         <Poster id = "background"
-                uri = "pkg:/images/fieldMask.png"/>
+                uri = "pkg:/images/fieldMask.9.png"/>
         <Poster id = "focusPoster"
-                uri = "pkg:/images/focusField.png"
+                uri = "pkg:/images/focusField.9.png"
                 opacity = "0"/>     
         <Label  id = "title"/>
         <Label  id = "textLabel"

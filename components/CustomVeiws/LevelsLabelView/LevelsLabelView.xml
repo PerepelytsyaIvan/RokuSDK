@@ -1,7 +1,7 @@
 <component name="LevelsLabelView" extends="Group">
     <script type="text/brightscript" uri="LevelsLabelView.brs" />
     <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
-
+    <script type="text/brightscript" uri="../../Helpers/utils/math.brs" />
     <interface>
         <field id="dataSource" type="assocarray" onChange = "configureDataSource" />
     </interface>

@@ -5,7 +5,7 @@ sub init()
     m.titleLabel = m.top.findNode("titleLabel")
     m.descriptionLabel = m.top.findNode("descriptionLabel")
     m.productGroup = m.top.findNode("productGroup")
-    m.focusCell = m.top.findNode("focusCell")
+    m.colorInterpolator = m.top.findNode("colorInterpolator")
 end sub
 
 sub configureDataSource()
@@ -25,15 +25,13 @@ sub configureDataSource()
 end sub
 
 sub itemFocused()
-    m.background.opacity = 1 - m.top.rowFocusPercent
-    if not m.top.rowListHasFocus then m.background.opacity = 1
+    m.colorInterpolator.fraction = m.top.rowFocusPercent
+    if not m.top.rowListHasFocus then m.colorInterpolator.fraction = 0
 end sub
 
 sub layoutSubview()
     m.background.width = m.top.width
     m.background.height = m.top.height
-    m.focusCell.width = m.top.width
-    m.focusCell.height = m.top.height
     m.maskGroup.maskSize = [getSize(100), m.top.height]
     m.productImage.width = m.top.height
     m.productImage.height = m.top.height

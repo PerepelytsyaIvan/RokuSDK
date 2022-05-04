@@ -1,9 +1,10 @@
 sub baseUrl() as string
-    return "https://itg-dev4.inthegame.io/"
+    return "https://itg-prod4.inthegame.io/"
+    ' return "https://itg-dev4.inthegame.io/"
 end sub
 
-sub getRegistrationUrl() as string
-    return baseUrl() + "userApi/user/register"
+sub getRegistrationUrl(userBroadcasterForeignId) as string
+    return baseUrl() + "userApi/user/register?userBroadcasterForeignId=" + userBroadcasterForeignId
 end sub
 
 sub getLoginizationUrl() as string
@@ -33,8 +34,7 @@ sub getAvatarsUrl() as string
 end sub
 
 sub getLeadersUrl() as string
-    ' return baseUrl() + "userApi/leaderboard/getLeaders"
-    return "https://itg-test4.inthegame.io/userApi/leaderboard/getLeaders"
+    return baseUrl() + "userApi/leaderboard/getLeaders"
 end sub
 
 sub getProductUrl() as string
@@ -44,3 +44,16 @@ end sub
 sub buyItemUrl() as string
     return baseUrl() + "userApi/shop/buyItem"
 end sub
+
+sub getCheersUrl() as string
+    return baseUrl() + "userApi/chat/getCheers"
+end sub
+
+sub sendSmsUrl() as string
+    return baseUrl() + "/userApi/chat/chatMessage"
+end sub
+
+sub sendUserUpdateUrl() as string
+    return baseUrl() + "userApi/user/update"
+end sub
+

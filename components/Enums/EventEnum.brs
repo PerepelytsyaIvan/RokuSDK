@@ -4,7 +4,7 @@ sub EventEnum() as object
         question: ["question", "name", "question"]
         closePostInteraction: "close_post_interaction"
         questionType: ["questionType", "messageType"]
-        answers: "answers"
+        answers: ["answers", "incorrectAnswers"]
         timeForHiding: "timeToStay"
         type: "type"
         averageRate: "averageRate"
@@ -23,6 +23,7 @@ sub EventEnum() as object
         userId: "user_id"
         content: "content"
         discount: "discount"
+        feedbackTime: "feedbackTime"
     }
 end sub
 

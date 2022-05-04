@@ -1,6 +1,8 @@
 sub init()
     m.networkLayerManager = CreateObject("roSGNode", "NetworkLayerManager")
-
+    m.loadingIndicator = m.top.findNode("loadingProgress")
+    m.hidingButtonAnimation = m.top.findNode("hidingButtonAnimation")
+    m.interpolator = m.top.findNode("interpolator")
     m.backgroundProfile = m.top.findNode("backgroundProfile")
     m.profileImage = m.top.findNode("profileImage")
     m.profileFocus = m.top.findNode("profileFocus")
@@ -19,6 +21,7 @@ sub init()
     m.hidingInterpolator = m.top.findNode("hidingInterpolator")
     m.saveButtonAvatar = m.top.findNode("saveButtonAvatar")
     m.avatarGroup = m.top.findNode("avatarGroup")
+    m.infoUpdateLabel = m.top.findNode("infoUpdateLabel")
 
     m.profileGroup = m.top.findNode("profileGroup")
     m.profileImage = m.top.findNode("profileImage")
@@ -26,43 +29,46 @@ sub init()
     m.saveButton.observeField("selectButton", "didSelectSaveButton")
     m.top.observeField("focusedChild", "onFocusedChild")
     m.networkLayerManager.observeField("avatarsResponce", "onResponseAvatar")
-    m.avatarsList.observeField("rowItemSelected", "didSelectAvatar")
+    m.networkLayerManager.observeField("isUpdateUserInfo", "onResponseUpdateUser")
+    m.avatarsList.observeField("itemSelected", "didSelectAvatar")
     m.saveButtonAvatar.observeField("selectButton", "didSelectSaveButtonAvatar")
-
-    configureDesign()
-    configureDataSource()
 
     m.userData = {
         name: ""
         email: ""
     }
+
+    configureDesign()
+
     m.hidingAnimation.addField("isShow", "bool", false)
 end sub
 
 sub didSelectAvatar(event)
-    indexPath = event.getData()
-    item = m.avatarsList.content.getChild(indexPath[0]).getChild(indexPath[1])
+    index = event.getData()
+    item = m.avatarsList.content.getChild(index)
     m.userAvatar = item.image
-    m.avatarsList.content.getChild(indexPath[0]).getChild(indexPath[1]).isSelectItem = true
-    if isValid(m.previusIndexPath)
-        if m.previusIndexPath[0] <> indexPath[0] or m.previusIndexPath[1] <> m.previusIndexPath[1]
-            m.avatarsList.content.getChild(m.previusIndexPath[0]).getChild(m.previusIndexPath[1]).isSelectItem = false
+    m.avatarsList.content.getChild(index).isSelectItem = true
+    if isValid(m.previusIndex)
+        if m.previusIndex <> index
+            m.avatarsList.content.getChild(m.previusIndex).isSelectItem = false
         end if
     end if
-    m.previusIndexPath = indexPath
+    m.previusIndex = index
 end sub
 
 sub configureDesign()
     m.subTitle.font = getMediumFont(30)
     m.title.font = getMediumFont(30)
+    m.infoUpdateLabel.font = getMediumFont(25)
     m.title.color =  m.global.design.questionTextColor
+    m.infoUpdateLabel.color = m.global.design.buttonBackgroundColor
     m.subTitle.color = m.global.design.buttonBackgroundColor
     m.background.color = "#000000"
 end sub
 
 sub configureDataSource()
     m.subTitle.text = UCase(m.global.localization.sideMenuMy)
-    m.title.text = UCase(m.global.localization.sideMenuAccount) 
+    m.title.text = UCase(m.global.localization.generalOverlayMenu) 
     savedImage = RegRead("userAvatar")
 
     if isValid(savedImage)
@@ -71,13 +77,25 @@ sub configureDataSource()
 
     contentNode = CreateObject("roSGNode", "ContentNode")
     titles = [m.global.localization.sideMenuUsername, m.global.localization.sideMenuEmail]
+
+    fieldsData = [m.global.userData.name, m.global.userData.email]
+    if m.global.userData.name <> ""
+        m.saveButton.activateButton = true
+    end if
+    m.userData.name = m.global.userData.name
+    m.userData.email = m.global.userData.email
+    count = 0
     for each title in titles
         row = contentNode.createChild("ContentNode")
         item = row.createChild("ContentNode")
         item.addField("itemSelected", "bool", false)
         item.addField("error", "string", false)
+        if fieldsData[count] <> ""
+            item.description = fieldsData[count]
+        end if
         item.title = title
         item.itemSelected = false
+        count++
     end for
 
     m.fieldsList.content = contentNode
@@ -103,11 +121,12 @@ sub createKeyboard(title)
     m.keyboarddialog = m.top.createChild("KeyboardDialog")
     m.keyboarddialog.backgroundUri = "pkg:/images/backgroundKeyboard.9.png"
     m.keyboarddialog.title = "Please enter " + title
-    m.keyboarddialog.text = m.fieldsList.content.getChild(m.fieldsList.itemFocused).getChild(0).description
+    m.keyboarddialog.text = m.fieldsList.content.getChild(m.fieldsList.itemSelected).getChild(0).description
+    m.keyboarddialog.keyboard.textEditBox.cursorPosition = m.fieldsList.content.getChild(m.fieldsList.itemSelected).getChild(0).description.len()
     m.keyboarddialog.focusButton = "pkg:/nil"
     m.keyboarddialog.buttons = ["OK", m.global.localization.personalAreaClosePersonalArea]
     m.keyboarddialog.observeField("buttonSelected", "didSelectKeyboardButton")
-    m.keyboarddialog.setFocus(true)
+    updateFocus(6)
 end sub
 
 sub didSelectKeyboardButton(event)
@@ -129,19 +148,64 @@ sub didSelectKeyboardButton(event)
     end if
 end sub
 
+sub validateEmail() as object
+    regexEmail1 = CreateObject("roRegex", "[@]", "i")
+    isMatchEmail1 = regexEmail1.isMatch(m.userData.email)
+
+    regexEmail2 = CreateObject("roRegex", "[.]", "i")
+    isMatchEmail2 = regexEmail2.isMatch(m.userData.email)
+
+    if m.userData.email.len() > 50 then return false
+    return isMatchEmail1 and isMatchEmail2
+end sub
+
+sub validateUsername() as object
+    regexUsername = CreateObject("roRegex", "[`!@#$%^&*()+\=\[\]{};:\\|,.<>\/?~]", "i")
+    isMatchUsername = regexUsername.isMatch(m.userData.name)
+
+    if m.userData.name.len() < 30 and m.userData.name.len() > 3 then isMatchUsername = true
+    return isMatchUsername
+end sub
+
 sub didSelectSaveButton()
     regex = CreateObject("roRegex", "[A-Z0-9._%+-]+@", "i")
-
-    if m.userData.name = ""
+    m.infoUpdateLabel.text = ""
+    isValidEmail = false
+    isValidUsername = false
+    if m.userData.name = "" or not validateUsername() 
+        isValidUsername = false
         m.fieldsList.content.getChild(0).getChild(0).error = m.global.localization.sideMenuUsernameValidation
     else
+        isValidUsername = true
         m.fieldsList.content.getChild(0).getChild(0).error = ""
     end if
 
-    if not regex.isMatch(m.userData.email)
+    if not validateEmail() and m.userData.email <> ""
+        isValidEmail = false
         m.fieldsList.content.getChild(1).getChild(0).error = m.global.localization.sideMenuEmailValidation
     else
         m.fieldsList.content.getChild(1).getChild(0).error = ""
+        isValidEmail = true
+    end if
+
+    if isValidUsername and isValidEmail
+        showLoadingIndicator(true)
+        animaetButton(false)
+        param = {}
+        m.userData.avatar = m.profileImage.uri.replace("https://media2.inthegame.io", "")
+        param.userData = m.userData
+        param.accountRoute = m.top.accountRoute
+        m.networkLayerManager.callFunc("sendUserUpdate", sendUserUpdateUrl(), param)
+    end if
+end sub
+
+sub onResponseUpdateUser(event)
+    isUpdate = event.getData()
+    showLoadingIndicator(false)
+    animaetButton(true)
+
+    if isUpdate
+        m.infoUpdateLabel.text = m.global.localization.sideMenuInfoSaved
     end if
 end sub
 
@@ -168,43 +232,57 @@ sub layoutSubviews()
     m.profileImage.width = getSize(60)
     m.profileImage.height = getSize(60)
     m.profileImage.translation = [(m.backgroundProfile.width - m.profileImage.width) / 2, (m.backgroundProfile.height - m.profileImage.height) / 2]
-    m.background.width = getSize(400)
+    m.background.width = getSize(405)
     m.background.height = getSize(1080)
     m.background.translation = [(getSize(1920) - getSize(400)), 0]
     m.avatarsList.translation = [getSize(35), 0]
-    m.saveButtonAvatar.translation = [(getSize(400) - m.saveButtonAvatar.boundingRect().width) / 2, getSize(850)]
-    m.labelsLayoutGroup.translation = [(getSize(1920) - getSize(400)) + ((400 - m.labelsLayoutGroup.boundingRect().width) / 2), getSize(30)]
+    m.saveButtonAvatar.translation = [(getSize(400) - m.saveButtonAvatar.boundingRect().width) / 2, getSize(750)]
+    m.labelsLayoutGroup.translation = [(getSize(1920) - getSize(400)) + ((getSize(400) - m.labelsLayoutGroup.boundingRect().width) / 2), getSize(30)]
     m.accountGroup.translation = [getSize(1920) - getSize(400), m.labelsLayoutGroup.boundingRect().height + getSize(30)]
     m.profileGroup.translation = [(getSize(400) - getSize(100)) / 2, getSize(20)]
+    m.fieldsList.itemSize = [getSize(320), getSize(120)]
+    m.fieldsList.rowItemSize = [[getSize(320), getSize(120)]]
     m.fieldsList.translation = [(getSize(400) - m.fieldsList.rowItemSize[0][0]) / 2, m.profileGroup.translation[1] + getSize(80) + getSize(40)]
     m.saveButton.translation = [(getSize(400) - m.saveButton.boundingRect().width) / 2, m.fieldsList.boundingRect().height + m.fieldsList.boundingRect().y + getSize(30)]
     m.avatarGroup.translation = [getSize(1920) - getSize(400), getSize(100)]
+    m.infoUpdateLabel.translation = [0, m.saveButton.translation[1] + 30 + m.saveButton.boundingRect().height]
+    m.infoUpdateLabel.width = m.background.width
 end sub
 
 sub onResponseAvatar(event)
     data = event.getData()
+
     contentNode = CreateObject("roSGNode", "ContentNode")
-    rowContent = contentNode.createChild("ContentNode")
     count = 0
-    for each item in data   
-        if count = 3
-            rowContent = contentNode.createChild("ContentNode")
-            count = 0
-        end if
-        itemContent = rowContent.createChild("ContentNode")
-        itemContent.addField("image", "string", false)
-        itemContent.addField("isSelectItem", "bool", false)
+    widthAndHeight = []
+    spacings = []
+
+    for each item in data
+        widthAndHeight.push(getSize(100))
+        spacings.push(getSize(15))
+        elementContent = contentNode.createChild("ContentNode")
+        elementContent.addField("image", "string", false)
+        elementContent.image = getImageWithName(item.thumbnail)
+        elementContent.addField("isSelectItem", "bool", false)
+
         savedImage = RegRead("userAvatar")
         if isValid(savedImage) and savedImage = getImageWithName(item.thumbnail)
-            itemContent.isSelectItem = true
-            m.previusIndexPath = [contentNode.getChildCount() - 1, rowContent.getChildCount() - 1]
+            elementContent.isSelectItem = true
+            m.previusIndex = contentNode.getChildCount() - 1
         else
-            itemContent.isSelectItem = false 
+            elementContent.isSelectItem = false 
         end if
-        itemContent.image = getImageWithName(item.thumbnail)
-        count++
+
+        elementContent.cheer = item
     end for
+    m.avatarsList.itemSize = [getSize(300), getSize(55)]
+    m.avatarsList.rowHeights = widthAndHeight
+    m.avatarsList.columnWidths = widthAndHeight
+    m.avatarsList.columnSpacings = spacings
+    m.avatarsList.rowSpacings = spacings
+    m.avatarsList.numRows = 6
     m.avatarsList.content = contentNode
+
     m.hidingInterpolator.fieldToInterp = m.accountGroup.id + ".opacity"
     m.hidingAnimation.isShow = true
     m.hidingAnimation.observeField("state", "changeStateAnimation")
@@ -220,9 +298,34 @@ sub didSelectSaveButtonAvatar()
     m.hidingAnimation.observeField("state", "changeStateAnimation")
     m.hidingInterpolator.fieldToInterp = m.avatarGroup.id + ".opacity"
     m.hidingAnimation.isShow = false
+    m.userData.avatar = m.userAvatar
     showGroups(false)
     updateFocus(0)
 end sub
+
+sub animaetButton(isShow)
+    if isShow
+        updateFocus(2)
+        m.interpolator.keyValue = [0,1]
+    else
+        m.top.setFocus(true)
+        m.interpolator.keyValue = [1,0]
+    end if
+    m.hidingButtonAnimation.control = "start"
+end sub
+
+function showLoadingIndicator(show)
+    m.loadingIndicator.translation = [getSize(762), getSize(-20)]
+    m.loadingIndicator.visible = show
+
+    if show
+        m.loadingIndicator.control = "start"
+    else
+        m.top.focusKey = m.top.focusKey
+        m.loadingIndicator.bEatKeyEvents = false
+        m.loadingIndicator.control = "stop"
+    end if
+end function
 
 sub updateFocus(key)
     m.previusKey = key
@@ -242,6 +345,8 @@ sub updateFocus(key)
     else if key = 5
         m.saveButtonAvatar.focusButton = true
         m.saveButtonAvatar.setFocus(true)
+    else if key = 6
+        m.keyboarddialog.setFocus(true)
     end if
 end sub
 

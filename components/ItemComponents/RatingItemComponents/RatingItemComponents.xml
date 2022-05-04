@@ -12,9 +12,9 @@
 
     <children>
         <Group id="itemComponentGroup">
-            <Poster id = "focusPoster"
+            <!-- <Poster id = "focusPoster"
                 uri = "pkg:/images/ratingFocus.9.png">
-            </Poster>
+            </Poster> -->
 
             <LayoutGroup id = "ratingLayout"
                 itemSpacings = "[5]"

@@ -1,0 +1,19 @@
+<component name="RefreshViewLeaderboard" extends="Group">
+    <script type="text/brightscript" uri="RefreshViewLeaderboard.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+    <script type="text/brightscript" uri="../../Helpers/utils/math.brs" />
+
+    <interface>
+        <field id="startRefresh" type="bool" alwaysNotify = "true"/>
+        <field id="endRefresh" type="bool" onChange="stopRefresh" alwaysNotify = "true"/>
+    </interface>
+
+    <children>
+        <RowList    id = "rowList"
+                    itemComponentName = "RefreshItemComponent"
+                    itemSize = "[430, 60]"
+                    rowItemSize = "[[430, 60]]"
+                    focusBitmapUri = "pkg:/nil"
+                    vertFocusAnimationStyle = "floatingFocus"/>
+    </children>
+</component>

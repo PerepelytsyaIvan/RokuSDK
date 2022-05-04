@@ -17,10 +17,29 @@ sub configureDataSource()
     m.pointLabel.color = m.global.design.questionTextColor
     m.titleLabel.color = m.global.design.questionTextColor
     m.titleLabel.text = m.top.dataSource.answer
-    m.pointLabel.text = m.top.dataSource.reward
+    
+    if m.top.dataSource.reward.len() > 4
+        points = roundInt(m.top.dataSource.reward.toInt()).toStr() + "K"
+        m.pointLabel.text = points
+    else
+        m.pointLabel.text = m.top.dataSource.reward
+    end if
+
     m.posterCell.uri = getImageWithName(m.top.dataSource.image)
     m.pointsImage.uri = "pkg:/images/predictionIcon.png"
     layoutSubviews()
+end sub
+
+sub roundInt(number) as object
+    numberToStr = number.toStr()
+    count = (numberToStr.len() \ 2)
+    firsPart = numberToStr.left(count)
+    secondPart = numberToStr.Right(numberToStr.len() - count)
+    arrayNumber = numberToStr.split(firsPart)
+    numberFloat = (firsPart + "." + secondPart).toFloat()
+    math = MathUtil()
+    round = math.round(numberFloat)
+    return round
 end sub
 
 sub onChangePercentFocus()

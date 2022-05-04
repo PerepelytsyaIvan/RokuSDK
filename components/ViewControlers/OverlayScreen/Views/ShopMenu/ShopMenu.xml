@@ -29,6 +29,6 @@
                     rowItemSpacing = "[[0, 10]]"
                     focusBitmapUri = "pkg:/nil"
                     vertFocusAnimationStyle = "floatingFocus"
-                    numRows = "10"/>
+                    numRows = "7"/>
     </children>
 </component>

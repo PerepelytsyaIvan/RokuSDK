@@ -12,19 +12,22 @@
 
     <children>
         <Poster id = "unfocusedPoster"
-                uri = "pkg:/images/focusMenu.png"/>
-        <Poster id = "focusedPoster"
-                uri = "pkg:/images/unfocusedMenu.png"/>
+                uri = "pkg:/images/focusMenu.png"
+                blendColor = "#00000052"/>
+
         <Poster id = "imageCell"/>   
 
-        <Group id = "titleGroup" opacity = "0">
-            <Poster id = "maskTitle" uri = "pkg:/images/menuTitleMask.9.png"/>
+        <Group id = "titleGroup">
+            <Poster id = "maskTitle" uri = "pkg:/images/menuTitleMask.9.png" blendColor = "#00000000"/>
             <Label  id = "title"
-                    color = "#000000"
+                    color = "#00000000"
                     vertALign = "center"
                     horizAlign = "center"/>
         </Group>
 
         <ColorFieldInterpolator id = "colorInterpolator" key="[0.0, 1.0]" keyValue="[#ffffffff, #000000ff]" fieldToInterp="imageCell.blendColor"/>
+        <ColorFieldInterpolator id = "colorInterpolatorFocus" key="[0.0, 1.0]" keyValue="[#00000052, #FFFFFF52]" fieldToInterp="unfocusedPoster.blendColor"/>
+        <ColorFieldInterpolator id = "colorInterpolatorMask" key="[0.0, 1.0]" keyValue="[#FFFFFF00, #FFFFFF99]" fieldToInterp="maskTitle.blendColor"/>
+        <ColorFieldInterpolator id = "colorInterpolatorTitle" key="[0.0, 1.0]" keyValue="[#00000000, #000000ff]" fieldToInterp="title.color"/>
     </children>
 </component>

@@ -5,15 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "BrightScript Debug: Launch",
             "type": "brightscript",
             "request": "launch",
-            "name": "BrightScript Debug: Launch",
-            "stopOnEntry": false,
             "host": "192.168.0.105",
             "password": "padev",
-            "rootDir": "${workspaceFolder}",
-            "enableDebuggerAutoRecovery": false,
-            "stopDebuggerOnAppExit": false
+            "rootDir": "${workspaceFolder}"
         }
     ]
 }

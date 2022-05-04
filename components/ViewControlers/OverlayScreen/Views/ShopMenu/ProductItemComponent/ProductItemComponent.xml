@@ -12,11 +12,9 @@
     </interface>
 
     <children>
-        <Poster id="background" 
-                uri="pkg:/images/bigBackground.png" />
-
-        <Poster id="focusCell"
-                uri="pkg:/images/bigFocus.png" />
+        <Poster id="background"
+                uri="pkg:/images/backgroundPrediction.png"
+                blendColor = "#252525ff" />
                 
         <LayoutGroup id = "productGroup" itemSpacings = "[10]" layoutDirection = "horiz">
             <MaskGroup id="maskGroup" maskUri="pkg:/images/productMask.png">
@@ -31,5 +29,6 @@
             </LayoutGroup>
         </LayoutGroup>
 
+        <ColorFieldInterpolator id = "colorInterpolator" key="[0.0, 1.0]" keyValue="[#252525ff, #686868ff]" fieldToInterp="background.blendColor"/>
     </children>
 </component>

@@ -13,6 +13,7 @@
         <field id="itemSpacing" type="float" value = "20.0"/>
         <field id="focusImage" type = "string" alias = "focus.uri"/>
         <field id="elements" type="array"/>
+        <field id = "indexPathFocused" type = "array" onChange = "jumpItem"/>
     </interface>
 
     <children>

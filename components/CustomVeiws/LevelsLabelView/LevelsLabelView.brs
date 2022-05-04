@@ -15,19 +15,18 @@ sub configureDataSource()
     labelsNumber = [m.countLevelLabel, m.countPointsLabel]
 
     for each label in labels
-        label.font = getMediumFont(25)
+        label.font = getMediumFont(getSize(25))
     end for
 
     for each label in labelsNumber
-        label.font = getBoldFont(30)
+        label.font = getBoldFont(getSize(30))
     end for
 
     m.levelLabel.text = m.global.localization.generalOverlayLevel
+    m.countLevelLabel.text = m.global.userLevel.toStr()
+    m.countPointsLabel.text = m.global.userPoints.toStr()
     m.pointsLabel.text = m.global.localization.generalOverlayPoint
-    if IsValid(dataSource.level) and IsValid(dataSource.level) 
-        m.countLevelLabel.text = dataSource.level.toStr()
-        m.countPointsLabel.text = dataSource.expoints.toStr()
-    end if
+  
     layoutSubviews()
 end sub
 

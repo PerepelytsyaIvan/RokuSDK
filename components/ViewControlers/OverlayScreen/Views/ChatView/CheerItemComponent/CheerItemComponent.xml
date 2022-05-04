@@ -1,0 +1,19 @@
+<component name="CheerItemComponent" extends="Group">
+    <script type="text/brightscript" uri="CheerItemComponent.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="itemContent" type="node" onChange="configureDataSource" />
+        <field id="focusPercent" type="float" onChange="itemFocused" />
+        <field id="width" type="float" onChange="layoutSubviews" />
+        <field id="height" type="float" onChange="layoutSubviews" />
+        <field id="gridHasFocus" type="bool" onChange="itemFocused" />
+    </interface>
+
+    <children>
+        <Poster id = "posterCell"/>
+        <Poster id = "focusPoster" 
+                uri = "pkg:/images/focusChat.9.png"
+                opacity = "0"/>
+    </children>
+</component>

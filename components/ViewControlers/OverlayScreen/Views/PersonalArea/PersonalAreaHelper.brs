@@ -126,6 +126,9 @@ sub configureCountryCodeContentNode(codeList = invalid)
         rowContent = contentNode.createChild("ContentNode")
         elementContent = rowContent.createChild("ContentNode")
         elementContent.addField("item", "assocarray", true)
+        country = item.country
+        arrayCountry = country.Split("(")
+        item.country = arrayCountry[0]
         elementContent.item = item
         rowSpacing.push(5)
     end for

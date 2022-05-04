@@ -9,6 +9,8 @@ function getDesignModel(data) as object
         "emptyStarIcon": data.designs.ratingEmptyIcon,
         "fullStarIcon": data.designs.ratingFullIcon,
         "halfStarIcon": data.designs.ratingHalfIcon,
+        "rightAnswerLogo": data.designs.rightAnswerLogo,
+        "wrongAnswerLogo": data.designs.wrongAnswerLogo
     }
     return designModel
 end function
@@ -26,41 +28,58 @@ function getLocaliztion(data) as object
 end function
 
 function getEventInfo(data) as object
-    trivia = getEventInfoTrivias(data)
-    poll = configureEventInfoPolls(data)
-    rating = getEventInfoRatings(data)
-    if IsValid(trivia.question)
-        return trivia
-    else if IsValid(rating.question)
-        return rating
-    else if isValid(poll.question)
-        return poll
-    else
+    activities = []
+    for each clock in data.clocks
+        trivia = getEventInfoTrivias(data, clock)
+        poll = configureEventInfoPolls(data, clock)
+        rating = getEventInfoRatings(data, clock)
+        wiki = configureEventInfoWiki(data, clock)
+        prediction = configureEventInfoPrediction(data, clock)
+        products = configureEventInfoProducts(data, clock)
+        predictionWager = configureEventInfoPredictionWager(data, clock)
 
-    end if
+        if IsValid(trivia.question)
+            trivia.isShowing = invalid
+            activities.push(trivia)
+        else if IsValid(rating.question)
+            rating.isShowing = invalid
+            activities.push(rating)
+        else if isValid(poll.question)
+            poll.isShowing = invalid
+            activities.push(poll)
+        else if IsValid(wiki.content)
+            wiki.isShowing = invalid
+            activities.push(wiki)
+        else if isValid(prediction.question)
+            prediction.isShowing = invalid
+            activities.push(prediction)
+        else if isValid(products.question)
+            products.isShowing = invalid
+            activities.push(products)
+        else if isValid(predictionWager.question)
+            predictionWager.isShowing = invalid
+            activities.push(predictionWager)
+        end if
+    end for
+
+    return activities
 end function
 
-sub configureEventInfoPolls(data) as object
-    clockData = data.clocks[0]
-
+sub configureEventInfoWiki(data, clockData) as object
     eventModel = {
         isShowView: false
     }
 
-    for each item in data.polls
-        if item.id = clockData.id
+    for each item in data.wikis
+        id = convertIntToStr(clockData.id)
+        if item.id = id
             storageModel = getStorageAnswer(item.id)
 
-            if isValid(storageModel) then return storageModel
-            eventModel.showAnswerView = false
-            eventModel.isShowView = true
-            eventModel.idEvent = item.id
-            eventModel.question = item.question
-            eventModel.questionType = item.questionType
-            eventModel.answers = item.answers
-            for each item in eventModel.answers
-                item.itemComponent = "ActivityButtonWithImage"
-            end for
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+            eventModel = getDataForModel(item, "injectWiki", false, true, "injectWiki")
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
         end if
@@ -69,26 +88,124 @@ sub configureEventInfoPolls(data) as object
     return eventModel
 end sub
 
-sub getEventInfoTrivias(data) as object
-    clockData = data.clocks[0]
+sub configureEventInfoPredictionWager(data, clockData) as object
+    eventModel = {
+        isShowView: false
+    }
+
+    for each item in data.products
+        id = convertIntToStr(clockData.id)
+        if item.id = id
+            storageModel = getStorageAnswer(item.id)
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+
+            eventModel = getDataForModel(item, "predictionWager", false, true, "predictionWager")
+
+            for each answer in eventModel.answers
+                answer.points = data.poll.expoints
+                answer.itemComponent = "ActivityButtonWithImage"
+            end for
+        end if
+    end for
+
+    return eventModel
+end sub
+
+sub configureEventInfoProducts(data, clockData) as object
+    eventModel = {
+        isShowView: false
+    }
+
+    for each item in data.products
+        id = convertIntToStr(clockData.id)
+        if item.id = id
+            storageModel = getStorageAnswer(item.id)
+
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+
+            eventModel = getDataForModel(item, "Products", false, true, "injectProduct")
+            eventModel.itemComponent = "ActivityButton"
+            eventModel.clockData = clockData
+            eventModel.timeForHiding = clockData.timeToStay
+        end if
+    end for
+
+    return eventModel
+end sub
+
+sub configureEventInfoPrediction(data, clockData) as object
+    eventModel = {
+        isShowView: false
+    }
+
+    for each item in data.predictions
+        id = convertIntToStr(clockData.id)
+        if item.id = id
+            storageModel = getStorageAnswer(item.id)
+
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+
+            eventModel = getDataForModel(item, "predictions", false, true)
+            eventModel.answers = getItemComponentName(eventModel.answers, "PredictionItemComponent")
+            eventModel.clockData = clockData
+            eventModel.timeForHiding = clockData.timeToStay
+        end if
+    end for
+
+    return eventModel
+end sub
+
+
+sub configureEventInfoPolls(data, clockData) as object
+    eventModel = {
+        isShowView: false
+    }
+
+    for each item in data.polls
+        id = convertIntToStr(clockData.id)
+        if item.id = id
+            storageModel = getStorageAnswer(item.id)
+
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+
+            eventModel = getDataForModel(item, "poll", false, true)
+            eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
+            eventModel.clockData = clockData
+            eventModel.timeForHiding = clockData.timeToStay
+        end if
+    end for
+
+    return eventModel
+end sub
+
+sub getEventInfoTrivias(data, clockData) as object
 
     eventModel = {
         isShowView: false
     }
 
     for each item in data.trivias
-        if item.id = clockData.id
+        id = convertIntToStr(clockData.id)
+        if item.id = id
             storageModel = getStorageAnswer(item.id)
-            if isValid(storageModel) then return storageModel
-            eventModel.showAnswerView = false
-            eventModel.isShowView = true
-            eventModel.idEvent = item.id
-            eventModel.question = item.question
-            eventModel.questionType = "injectQuiz"
-            eventModel.answers = getAnswerWithTrivias(item)
-            for each item in eventModel.answers
-                item.itemComponent = "ActivityButtonWithImage"
-            end for
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+            eventModel = getDataForModel(item, "injectQuiz", false, true, "injectQuiz")
+            eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
         end if
@@ -98,31 +215,27 @@ sub getEventInfoTrivias(data) as object
 end sub
 
 
-sub getEventInfoRatings(data) as object
-    clockData = data.clocks[0]
-
+sub getEventInfoRatings(data, clockData) as object
     eventModel = {
         isShowView: false
     }
 
     for each item in data.ratings
-        if item.id = clockData.id
+        id = convertIntToStr(clockData.id)
+        if item.id = id
             storageModel = getStorageAnswer(item.id)
-            if isValid(storageModel) then return storageModel
-            eventModel.showAnswerView = false
-            eventModel.isShowView = true
-            eventModel.idEvent = item.id
-            eventModel.question = item.name
-            eventModel.emptyIcon = ""
-            eventModel.halfIcon = ""
+            if isValid(storageModel)
+                storageModel.clockData = clockData
+                return storageModel
+            end if
+            eventModel = getDataForModel(item, "rating", false, true)
             answers = []
-            count = data.rating.optionsnumber.toInt()
+            if isValid(data.rating) then count = data.rating.optionsnumber.toInt()
+            if isValid(item.optionsnumber) then count = item.optionsnumber.toInt()
             for i = count to 1 step -1
                 answers.push({ title: i.toStr(), itemComponent: "RatingItemComponents" })
             end for
             eventModel.answers = answers
-            eventModel.averageRate = item.averageRate
-            eventModel.questionType = "injectRating"
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
         end if
@@ -170,6 +283,7 @@ function getEventInfoWithSocket(data, eventType = invalid, timeToStay = 30) as o
 
         if isValid(storageModel)
             storageModel.timeForHiding = data.timeToStay
+            if isValid(data.feedbackTime) then storageModel.feedbacktime = data.feedbackTime
             return storageModel
         end if
     end if
@@ -224,7 +338,7 @@ sub onLoadStatusLibraryChanged(event)
 end sub
 
 sub getStorageAnswer(id) as object
-    storageModel = RegRead(id)
+    storageModel = RegRead(id, "Activity")
     if isValid(storageModel)
         storageModel = ParseJson(storageModel)
         storageModel.showAnswerView = true
@@ -235,7 +349,7 @@ end sub
 
 function getAnswers(answer, eventModel, responceServer)
     if eventModel.questiontype = "injectQuiz"
-        eventModel.expointsGiven = responceServer.answer.expoints_given.toStr()
+        eventModel.expointsGiven = responceServer.answer.pointsGiven.toStr()
         eventModel.isCorrectAnswer = responceServer.answer.isCorrect
         eventModel.answerSending = true
         for each item in eventModel.answers
@@ -336,7 +450,7 @@ sub getDataForModel(data, keyEvent, isShowAnswer, isShowView, questionType = inv
 
     eventData["showAnswerView"] = isShowAnswer
     eventData["isShowView"] = isShowView
-
+    
     if IsValid(questionType) then eventData.questionType = questionType
 
     return eventData

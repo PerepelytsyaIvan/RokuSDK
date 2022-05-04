@@ -1,0 +1,21 @@
+<component name="SendSmileContainerView" extends="Group">
+    <script type="text/brightscript" uri="SendSmileContainerView.brs" />
+    <script type="text/brightscript" uri="pkg:/components/Helpers/util.brs" />
+
+    <interface>
+        <field id="smileUri" type="string" alias = "sendSmilePoster.uri" value = ""/>
+    </interface>
+
+    <children>
+        <Group id = "containerView">
+            <Poster id = "sendSmileMask"
+                    width  = "70"
+                    height  = "65"
+                    uri = "pkg:/images/chatMask.9.png"/>
+            <Poster id = "sendSmilePoster"
+                    translation = "[5,5]"
+                    width  = "60"
+                    height  = "55"/>
+        </Group>
+    </children>
+</component>

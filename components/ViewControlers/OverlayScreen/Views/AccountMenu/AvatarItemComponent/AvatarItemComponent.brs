@@ -13,7 +13,7 @@ end sub
 
 sub itemFocused()
     m.selectFocus.opacity = m.top.focusPercent
-    if not m.top.rowListHasFocus then m.selectFocus.opacity = 0
+    if not m.top.gridHasFocus then m.selectFocus.opacity = 0
 end sub
 
 sub layoutSubviews()

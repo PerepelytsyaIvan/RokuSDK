@@ -5,6 +5,7 @@
 
     <interface>
         <field id="accountRoute" type="assocarray" onChange = "configureDataSource"/>
+        <field id="focusKey" type="int" onChange = "updateFocus" alwaysNotify = "true" value = "0"/>
     </interface>
 
     <children>
@@ -32,6 +33,7 @@
 
             <Rectangle id = "vertSeparator"/>
 
+            <RefreshViewLeaderboard id = "refreshView"/>
             
             <Group id = "sectionGroup">
                 <Label id = "rankSectionLabel"/>
@@ -47,11 +49,12 @@
                         rowItemSpacing = "[[0, 20]]"
                         focusBitmapUri = "pkg:/nil"
                         vertFocusAnimationStyle = "floatingFocus"
-                        numRows = "8"/>
+                        numRows = "7"/>
         </Group>
 
         <LoadingIndicator 
                 id="loadingProgress"
+                translation = "[700, 0]"
                 visible="false"
                 imageUri="pkg:/images/loader.png"
                 backgroundColor="0x16181A00"

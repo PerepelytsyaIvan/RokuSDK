@@ -11,17 +11,18 @@
         <field id="isActiveMenu" type="bool" />
         <field id="isOpenMenu" type="bool" alwaysNotify = "true" onChange = "openMenu"/>
         <field id="focusedActivity" type="bool" alwaysNotify = "true"/>
+        <field id="isShowActivity" type="bool" onChange = "handleMenuWithActivity"/>
 
         <function name = "configureDataSource"/>
     </interface>
 
     <children>
-            <CustomMenuRowList id = "menuItems"
-                                translation="[-30, 0]"
+            <CustomMenuRowList  id = "menuItems"
+                                translation="[120, 0]"
                                 itemComponentName = "MenuItemComponent"
-                                itemSize = "[60, 110]"
-                                rowItemSize = "[[60, 110]]"
-                                rowItemSpacing = "[[20, 0]]"
+                                itemSize = "[80, 740]"
+                                rowItemSize = "[[80, 130]]"
+                                rowItemSpacing = "[[50, 0]]"
                                 focusBitmapUri = "pkg:/nil"/>
 
         <Animation id="animationMenu" duration="0.3" repeat="false" easeFunction="linear">
