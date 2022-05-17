@@ -63,53 +63,6 @@
                         <Poster id = "wikiPoster"
                                 uri = "pkg:/images/wiki.png"/>
             </LayoutGroup>
-            <!-- <Poster id="background" translation="[1920, 0]" uri = "pkg:/images/predictionWikiBackground.9.png" width="300" height="50">
-                <LayoutGroup id = "containerContent" itemSpacings = "[10]" addItemSpacingAfterChild = "false">
-                    <Label  id="questionLabel" 
-                            vertAlign="center" 
-                            horizAlign="right" 
-                            lineSpacing = "0"
-                            translation="[10, 0]"
-                            wrap = "true"
-                            numLines = "3"/>
-                    <Poster id = "separator" uri = "pkg:/images/separatorGradient.png"/>
-
-                    <Label  id = "infoLabel"
-                            wrap = "true"
-                            numLines = "3"
-                            lineSpacing = "0"/>
-
-                    <LayoutGroup id="layoutGroupWrongAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
-                        <Poster id = "imageCellWrongAnswer" 
-                                loadDisplayMode = "scaleToZoom"/>
-            
-                        <Label id = "wrongAnswerLabel"
-                               vertALign = "center"  
-                               horizAlign = "center"/>
-                    </LayoutGroup>
-    
-                    <LayoutGroup id="layoutGroupRightAnswer" vertAlignment = "center" layoutDirection = "horiz" itemSpacings = "[10]">
-                        <Poster id = "imageCellRightAnswer" 
-                                loadDisplayMode = "scaleToZoom"/>
-    
-                        <Label id = "rightAnswerLabel"
-                               vertALign = "center"  
-                               horizAlign = "center"/>
-                    </LayoutGroup>
-                </LayoutGroup>
-
-                    <Rectangle  id="progress" 
-                                translation="[10, 49]" 
-                                width="253" 
-                                height="2" 
-                                color="#ffffff"/>
-                
-                
-                <LayoutGroup id = "wikiLayout" itemSpacings = "[20]" addItemSpacingAfterChild = "false">
-                            <Poster id = "wikiPoster"
-                                    uri = "pkg:/images/wiki.png"/>
-                </LayoutGroup>
-            </Poster> -->
         </Group>
 
         <Animation id="translationAnimation" duration="0.3" repeat="false" easeFunction="linear">

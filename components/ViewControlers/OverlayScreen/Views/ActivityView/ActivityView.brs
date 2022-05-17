@@ -21,7 +21,10 @@ sub configureDataSource()
     end if
 
     if IsValid(m.levelsLabelView) then m.levelsLabelView.opacity = 0
-
+    if IsValid(m.predicationSubmitView)
+        m.activityContainerGroup.removeChild(m.predicationSubmitView)
+        m.predicationSubmitView = invalid
+    end if
     m.questionLabel.width = 0
     if m.top.dataSource.questiontype = "injectWiki"
         m.timeGroup.opacity = 0
@@ -74,6 +77,12 @@ sub configureAnswer()
     m.isShowAnswer = false
     m.hidingInterpolator.isShow = true
     m.isDataAnswer = true
+
+    if IsValid(m.predicationSubmitView)
+        m.activityContainerGroup.removeChild(m.predicationSubmitView)
+        m.predicationSubmitView = invalid
+    end if
+
     if m.translationInterpolator.isShow 
         hideActivity()
         m.showActivityTimer.control = "start"
@@ -101,6 +110,11 @@ sub configureAnswer()
     end if
     m.collectionViewLeftButton.dataSource = dataSourceLeftButton
     m.timeForHideView = m.top.dataAnswer.timeForHiding
+    if isValid(m.top.dataAnswer.closepostinteraction) and IsValid(m.top.dataAnswer.feedbacktime)
+        m.timeForHideView = m.top.dataAnswer.feedbacktime + 1
+    else if isValid(m.top.dataSourceAnswer.closepostinteraction) and not m.top.dataSourceAnswer.closepostinteraction and isInvalid(m.item)
+        m.timeForHideView = 10000000
+    end if
     layoutViews()
     layoutViewsAnswer(m.top.dataAnswer.questionType)
     showActivity()
@@ -114,6 +128,11 @@ sub configureAnswerDataSource(item = invalid)
     
     if isValid(m.collectionViewLeftButton.dataSource) and m.collectionViewLeftButton.dataSource.count() > 1 and isInvalid(m.item)
         m.collectionViewLeftButton.indexPathFocused = [0, 1]
+    end if
+
+    if IsValid(m.predicationSubmitView)
+        m.activityContainerGroup.removeChild(m.predicationSubmitView)
+        m.predicationSubmitView = invalid
     end if
 
     m.scrollingArrowGroup.visible = false
@@ -350,6 +369,9 @@ end sub
 
 sub didSelectButton(event)
     item = event.getData()
+    if not m.allowedSelectButton then return
+    m.allowedSelectButton = false
+    m.pressButtonTimer.control = "start"
     if m.isShowAnswer then return
     if m.top.dataSource.questionType = "predictionWager"
         m.item = item
@@ -396,6 +418,7 @@ sub updateFocus()
     if m.top.focusKey = 0
         m.collectionViewLeftButton.setFocus(true)
     else if m.top.focusKey = 1
+        if IsValid(m.top.dataSource) and m.top.dataSource.answers.count() = 0 then return
         m.collectionView.setFocus(true)
     else if m.top.focusKey = 2
         m.predicationSubmitView.setFocus(true)

@@ -20,10 +20,10 @@ sub init()
 end sub
 
 sub configureDesign()
-    m.questionLabel.font = getRegularFont(25)
-    m.infoLabel.font = getRegularFont(25)
-    m.wrongAnswerLabel.font = getBoldFont(25)
-    m.rightAnswerLabel.font = getBoldFont(25)
+    m.questionLabel.font = getRegularFont(getSize(25))
+    m.infoLabel.font = getRegularFont(getSize(25))
+    m.wrongAnswerLabel.font = getBoldFont(getSize(25))
+    m.rightAnswerLabel.font = getBoldFont(getSize(25))
     m.separator.blendColor = m.global.design.buttonBackgroundColor
     m.wrongAnswerLabel.color = m.global.design.wrongAnswerTextColor
     m.rightAnswerLabel.color = m.global.design.rightAnswerTextColor
@@ -65,7 +65,7 @@ sub configureDataSource()
         m.wrongAnswerLabel.text = wrongAnswer.answer
     end if
 
-    m.seconds = 30 
+    m.seconds = 30
 
     m.timer = configureTimer(0.1, true)
     m.timer.observeField("fire", "changeTimer")
@@ -76,9 +76,9 @@ end sub
 
 sub showNotification(asShow)
     if asShow
-        m.iterpolator.keyValue = [[getScreenWidth(), 50], [(getScreenWidth() - (m.background.width + 50)), 50]]
+        m.iterpolator.keyValue = [[getScreenWidth(), getSize(50)], [(getScreenWidth() - (m.background.width + getSize(90))), getSize(50)]]
     else
-        m.iterpolator.keyValue = [m.iterpolator.keyValue[1], [getScreenWidth(), 50]]
+        m.iterpolator.keyValue = [m.iterpolator.keyValue[1], [getScreenWidth(), getSize(50)]]
     end if
     m.translationAnimation.control = "start"
 end sub
@@ -91,13 +91,13 @@ sub changeTimer()
         showNotification(false)
         return
     end if
-    progressPercent = (m.seconds / 30) * 100
-    width = (progressPercent * (m.background.width - 25)) / 100
-    m.progress.width = width - 25
-    if m.questionLabel.height = 50
-        m.progress.translation = [m.background.width - width + 12.5, m.background.height - getSize(2)]
+    progressPercent = (m.seconds / getSize(30)) * 100
+    width = (progressPercent * (m.background.width - getSize(25))) / 100
+    m.progress.width = width - getSize(25)
+    if m.questionLabel.height = getSize(50)
+        m.progress.translation = [m.background.width - width + getSize(12.5), m.background.height - getSize(2)]
     else
-        m.progress.translation = [m.background.width - width + 12.5, m.background.height - getSize(2)]
+        m.progress.translation = [m.background.width - width + getSize(12.5), m.background.height - getSize(2)]
     end if
 end sub
 
@@ -111,22 +111,22 @@ sub changeStateAnimation(event)
 end sub
 
 sub layoutSabviews()
-    m.imageCellRightAnswer.width = 25
-    m.imageCellRightAnswer.height = 25
+    m.imageCellRightAnswer.width = getSize(25)
+    m.imageCellRightAnswer.height = getSize(25)
 
     if not m.isRightAnswer
-        m.wrongAnswerLabel.height = 25
-        m.imageCellWrongAnswer.height = 25
-        m.imageCellWrongAnswer.width = 25
+        m.wrongAnswerLabel.height = getSize(25)
+        m.imageCellWrongAnswer.height = getSize(25)
+        m.imageCellWrongAnswer.width = getSize(25)
     else
-        m.containerContent.itemSpacings = [10, 10, -10, -10]
+        m.containerContent.itemSpacings = [getSize(10), getSize(10), getSize(-10), getSize(-10)]
     end if
 
-    m.infoLabel.width = m.background.width - 40
-    m.questionLabel.width = m.background.width - 40
-    m.separator.height = 1
-    m.separator.width = m.background.width - 40
-    m.background.height = m.containerContent.boundingrect().height + 40
-    m.wikiLayout.translation = [m.background.width - 2, 0]
-    m.wikiLayout.itemSpacings = [(m.background.height * 20) / 100]
+    m.infoLabel.width = m.background.width - (40)
+    m.questionLabel.width = m.background.width - getSize(40)
+    m.separator.height = getSize(1)
+    m.separator.width = m.background.width - getSize(40)
+    m.background.height = m.containerContent.boundingrect().height + getSize(40)
+    m.wikiLayout.translation = [m.background.width - getSize(2), 0]
+    m.wikiLayout.itemSpacings = [(m.background.height * getSize(20)) / getSize(100)]
 end sub

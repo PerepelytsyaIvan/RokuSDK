@@ -2,6 +2,8 @@ sub init()
     m.top.setFocus(true)
     m.videoPlayer = m.top.findNode("videoPlayer")
     m.questionLabel = m.top.findNode("questionLabel")
+    m.animation = m.top.findNode("animation")
+    m.interpolator = m.top.findNode("interpolator")
 end sub
 
 sub configureVideoContentNode()
@@ -9,6 +11,8 @@ sub configureVideoContentNode()
     content = CreateObject("roSGNode", "ContentNode")
     content.url = m.top.videoUrl
     content.streamformat = "mp4"
+    m.videoPlayer.height = getSize(1080)
+    m.videoPlayer.width = getSize(1920)
     m.videoPlayer.content = content
     m.videoPlayer.control = "play"
     m.videoPlayer.setFocus(true)
@@ -44,7 +48,13 @@ end sub
 
 sub onShowingActivity(event)
     isShowing = event.getData()
-    
+    if isShowing
+        m.interpolator.keyValue = [m.videoPlayer.height, getSize(1080) - getSize(140)]
+        m.animation.control = "start"
+    else
+        m.interpolator.keyValue = [getSize(1080) - getSize(140), getSize(1080)]
+        m.animation.control = "start"
+    end if
 end sub
 
 sub onSetVideoFocus()

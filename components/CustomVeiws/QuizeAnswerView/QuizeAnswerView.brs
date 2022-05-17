@@ -37,7 +37,11 @@ sub configureDataSource()
                 m.layoutGroupAnswer.removeChild(m.layoutGroupWrongAnswer)
                 m.rightAnswerLabel.text = item.answer
                 m.imageCellRightAnswer.uri = getImageWithName(m.global.design.rightAnswerLogo)
-                text = (m.global.localization.triviaRightAnswerNoteOne + "\n" + "<DunamicColor>+" + m.top.dataSource.expointsgiven + " pts" + "</DunamicColor> " + m.global.localization.triviaRightAnswerNote3).Replace("\n", chr(10))
+                if dataSource.answers.count() > 1
+                    text = (m.global.localization.triviaRightAnswerNoteOne + "\n" + "<DunamicColor>+" + m.top.dataSource.expointsgiven + " pts" + "</DunamicColor> " + m.global.localization.triviaRightAnswerNote3).Replace("\n", chr(10))
+                else
+                    text = m.global.localization.triviaRightAnswerNoteOne
+                end if
                 m.infoLabel.text = text
             else if isValid(item.answersending) and isValid(item.isCorrectAnswer) and item.answersending and not item.isCorrectAnswer
                 m.layoutGroupAnswer.insertChild(m.layoutGroupWrongAnswer, 0)

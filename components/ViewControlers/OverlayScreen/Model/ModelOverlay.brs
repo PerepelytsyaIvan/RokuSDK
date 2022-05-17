@@ -82,6 +82,13 @@ sub configureEventInfoWiki(data, clockData) as object
             eventModel = getDataForModel(item, "injectWiki", false, true, "injectWiki")
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 
@@ -108,6 +115,13 @@ sub configureEventInfoPredictionWager(data, clockData) as object
                 answer.points = data.poll.expoints
                 answer.itemComponent = "ActivityButtonWithImage"
             end for
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 
@@ -133,6 +147,14 @@ sub configureEventInfoProducts(data, clockData) as object
             eventModel.itemComponent = "ActivityButton"
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
+
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 
@@ -158,6 +180,14 @@ sub configureEventInfoPrediction(data, clockData) as object
             eventModel.answers = getItemComponentName(eventModel.answers, "PredictionItemComponent")
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
+
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 
@@ -184,6 +214,14 @@ sub configureEventInfoPolls(data, clockData) as object
             eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
+
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 
@@ -208,6 +246,23 @@ sub getEventInfoTrivias(data, clockData) as object
             eventModel.answers = getItemComponentName(eventModel.answers, "ActivityButtonWithImage")
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
+            for each answer in eventModel.answers
+                if answer.answer = item.correctAnswer.answer
+                    answer.iscorrectanswer = true
+                end if
+            end for
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(item.correctAnswer)
+                item.correctAnswer.itemComponent = "ActivityButtonWithImage"
+                eventModel.answers.push(item.correctAnswer)
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 
@@ -238,6 +293,15 @@ sub getEventInfoRatings(data, clockData) as object
             eventModel.answers = answers
             eventModel.clockData = clockData
             eventModel.timeForHiding = clockData.timeToStay
+            eventModel.questionType = "injectRating"
+
+            if isValid(clockData.feedbackTime)
+                eventModel.feedbackTime = convertStrToInt(clockData.feedbackTime) 
+            end if
+
+            if isValid(clockData.close_post_interaction)
+                eventModel.closepostinteraction = clockData.close_post_interaction
+            end if
         end if
     end for
 

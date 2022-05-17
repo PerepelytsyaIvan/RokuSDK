@@ -17,12 +17,12 @@ sub configureDataSource()
     m.pointLabel.color = m.global.design.questionTextColor
     m.titleLabel.color = m.global.design.questionTextColor
     m.titleLabel.text = m.top.dataSource.answer
-    
-    if m.top.dataSource.reward.len() > 4
-        points = roundInt(m.top.dataSource.reward.toInt()).toStr() + "K"
+    reward = convertIntToStr(m.top.dataSource.reward)
+    if reward.len() > 4
+        points = roundInt(reward.toInt()).toStr() + "K"
         m.pointLabel.text = points
     else
-        m.pointLabel.text = m.top.dataSource.reward
+        m.pointLabel.text = reward
     end if
 
     m.posterCell.uri = getImageWithName(m.top.dataSource.image)

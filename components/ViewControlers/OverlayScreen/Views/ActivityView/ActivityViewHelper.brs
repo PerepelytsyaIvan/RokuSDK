@@ -3,11 +3,13 @@ sub initProperties()
     m.showActivityTimer = configureTimer(0.5, false)
     m.showCollectionTimer = configureTimer(0.4, false)
     m.showTimeGroupTimer = configureTimer(0.4, false)
+    m.pressButtonTimer = configureTimer(1, false)
     m.translationInterpolator.addField("isShow", "boolean", false)
     m.hidingInterpolator.addField("isShow", "boolean", false)
     m.timeForHideView = 0
     m.isShowCollection = false
     m.isDataAnswer = false
+    m.allowedSelectButton = true
 end sub
 
 sub initView()
@@ -51,6 +53,7 @@ sub configureObservers()
     m.collectionView.observeField("item", "didSelectButton")
     m.collectionViewLeftButton.observeField("item", "didSelectButtonLeft")
     m.translationAnimation.observeField("state", "changeStateAnimation")
+    m.pressButtonTimer.observeField("fire", "onChangePressButtonTimer")
     m.top.observeField("focusedChild", "onChangeFocusedChild")
 end sub
 
@@ -128,6 +131,7 @@ sub configureCollectionFor(eventType)
     m.collectionView.sizeMask = [maxWidth, getSize(80)]
 
     if eventType = "injectRating"
+        m.collectionView.focusImage = "pkg:/images/gradienFocusButton.9.png"
         m.collectionView.itemSpacing = getSize(40)
     else if eventType = "prediction"
         m.collectionView.itemSpacing = getSize(50)
@@ -157,20 +161,6 @@ sub configureDesign()
     m.timeLabel.font = getBoldFont(getSize(60))
     m.unitTime.font = getMediumFont(getSize(40))
     m.wagerSummitedLabel.font = getRegularFont(getSize(40))
-
-    ' m.questionLabel.drawingStyles = {
-    '     "b": {
-    '         "fontSize": getSize(30)
-    '         "fontUri": getBoldFont(getSize(30)).uri
-    '         "color": "#ffffff"
-    '     }
-
-    '     "default": {
-    '         "fontSize": getSize(30)
-    '         "fontUri": getBoldFont(getSize(30)).uri
-    '         "color": "#ffffff"
-    '     }
-    ' }
 end sub
 
 sub configureLabel(seconds)
@@ -185,6 +175,11 @@ sub configureLabel(seconds)
         m.unitTime.text = "sec"
     end if
     m.timeGroup.translation = [(getSize(1920) - getSize(260)) + ((getSize(260) - m.timeGroup.localboundingRect().width) / 2), (m.timeGroup.localboundingRect().height - getSize(30)) / 2]
+end sub
+
+sub onChangePressButtonTimer()
+    m.allowedSelectButton = true
+    m.pressButtonTimer.control = "stop"
 end sub
 
 sub createQuizView(answers)

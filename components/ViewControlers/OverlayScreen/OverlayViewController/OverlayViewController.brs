@@ -17,6 +17,7 @@ sub init()
     m.chatData = []
     saveInGlobal("chatData", m.chatData)
     configureObservers()
+    m.notificationGroup.translation = [getSize(1500), getSize(30)]
 end sub
 
 sub configureObservers()
@@ -148,11 +149,6 @@ sub on_message(event)
             if isValid(json.messageType) and json.messageType = "pollWin"
                 predictionNotifiction = m.notificationGroup.createChild("PredictionNotifiction")
                 predictionNotifiction.observeField("removeWikiView", "handleRemoveWikiView")
-                if m.arrayNotificationView.count() > 0
-                    oldNotifyView = m.arrayNotificationView[m.arrayNotificationView.count() - 1]
-                    bounding = oldNotifyView.boundingRect()
-                    predictionNotifiction.translation = [0, (oldNotifyView.translation[1] + bounding.height) + 10]
-                end if
                 predictionNotifiction.dataSource = json
                 m.arrayNotificationView.push(predictionNotifiction)
                 predictionNotifiction.id = (m.arrayNotificationView.count() - 1).toStr()
@@ -210,11 +206,6 @@ end sub
 sub configureWikiNotification(eventModel)
     wikiView = m.notificationGroup.createChild("WikiView")
     wikiView.observeField("removeWikiView", "handleRemoveWikiView")
-    if m.arrayNotificationView.count() > 0
-        oldNotifyView = m.arrayNotificationView[m.arrayNotificationView.count() - 1]
-        bounding = oldNotifyView.boundingRect()
-        wikiView.translation = [0, (oldNotifyView.translation[1] + bounding.height) + 10]
-    end if
     wikiView.dataSource = eventModel
     m.arrayNotificationView.push(wikiView)
     wikiView.id = (m.arrayNotificationView.count() - 1).toStr()
@@ -234,17 +225,9 @@ end sub
 sub configureAnimation()
     boundingRect = m.notificationGroup.boundingRect()
     if boundingRect.height > getSize(700)
-        m.animation = m.top.createChild("Animation")
-        m.animation.observeField("state", "changeStateAnimationNotify")
-        m.animation.duration = 0.2
-        m.animation.easeFunction = "linear"
-        for each wikiView in m.arrayNotificationView
-            translationY = wikiView.translation[1] - wikiView.boundingRect().height - 10
-            interpolator = getInterpolator(wikiView.id + ".translation", wikiView.translation, [wikiView.translation[0], translationY])
-            m.animation.appendChild(interpolator)
-            m.animation.delay = 0.01
-        end for
-        m.animation.control = "start"
+        translationY = getSize(700) - getSize(30) - boundingRect.height
+        m.iterpolator.keyValue = [m.notificationGroup.translation, [m.notificationGroup.translation[0], translationY]]
+        m.translationAnimation.control = "start"
     end if
 end sub
 
@@ -327,19 +310,22 @@ sub infoApplication(event)
 
     if infoApp.clocks.count() = 0 then return
     m.eventModelsWithGetInfo = m.modelOverlay.callFunc("getEventInfo", infoApp)
+    ? m.eventModelsWithGetInfo
 end sub
 
 sub onChangePositionVideo(event)
     position = event.getData()
-    ? "position---->" position
     if isInvalid(m.eventModelsWithGetInfo) then return
     for each eventModel in m.eventModelsWithGetInfo
         myPosition = position.toStr().toInt()
-        ? "myPosition---->" myPosition
 
         if eventModel.clockData.time = myPosition and IsInvalid(eventModel.isShowing) 
             eventModel.isShowing = true
-            showActivityWithGetInfo(eventModel)
+            if IsValid(eventModel.type) and eventModel.type = "notification"
+                configureWikiNotification(eventModel)
+            else
+                showActivityWithGetInfo(eventModel)
+            end if
             return
         end if
     end for
@@ -476,6 +462,11 @@ sub onShowActivity(event)
     isShow = event.getData()
     m.top.isShownActivity = isShow
     m.sideBarView.isShowActivity = isShow
+
+    if IsValid(m.eventModel) and isValid(m.eventModel.clockdata) and m.eventModel.clockdata.isPause
+        if isShow then m.top.videoPlayer.control = "pause"
+        if not isShow then m.top.videoPlayer.control = "resume"
+    end if
 end sub
 
 sub handleRemoveWikiView(event)
@@ -484,48 +475,14 @@ sub handleRemoveWikiView(event)
 end sub
 
 sub animationRemove(removedView)
-    boundingGroup = m.notificationGroup.boundingRect()
     m.notificationGroup.removeChild(removedView)
-
-    oldView = removedView
-
-    m.animation = m.top.createChild("Animation")
-    m.animation.duration = 0.2
-    m.animation.easeFunction = "linear"
-    m.animation.observeField("state", "changeStateAnimationNotify")
-
+    boundingGroup = m.notificationGroup.boundingRect()
     if boundingGroup.height > getSize(700)
-        for i = removedView.id.toInt() to 0 step -1
-            view = m.arrayNotificationView[i]
-            newTranslation = oldView.translation[1] + (oldView.boundingRect().height - view.boundingRect().height)
-            interpolator = getInterpolator(view.id + ".translation", view.translation, [view.translation[0], newTranslation])
-            m.animation.appendChild(interpolator)
-            oldView = view
-        end for
+        translationY = getSize(700) - getSize(30) - boundingGroup.height
+        m.notificationGroup.translation = [m.notificationGroup.translation[0], translationY]
     else
-        for each view in m.arrayNotificationView
-            if view.id.toInt() > removedView.id.toInt()
-                newTranslation = view.translation[1] - oldView.boundingRect().height - 10
-                interpolator = getInterpolator(view.id + ".translation", view.translation, [view.translation[0], newTranslation])
-                m.animation.appendChild(interpolator)
-                oldView = view
-            end if
-        end for
-    end if
-
-    m.arrayNotificationView.Delete(removedView.id.toInt())
-    m.animation.control = "start"
-end sub
-
-sub changeStateAnimationNotify(event)
-    state = event.getData()
-
-    if state = "stopped"
-        count = 0
-        for each item in m.arrayNotificationView
-            item.id = count.toStr()
-            count++
-        end for
+        m.iterpolator.keyValue = [m.notificationGroup.translation, [m.notificationGroup.translation[0], getSize(30)]]
+        m.translationAnimation.control = "start"
     end if
 end sub
 

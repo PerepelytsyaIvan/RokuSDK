@@ -9,6 +9,7 @@ sub init()
     m.iterpolatorWiki = m.top.findNode("iterpolatorWiki")
     m.wikiLayout = m.top.findNode("wikiLayout")
     m.posterWiki = m.top.findNode("posterWiki")
+    m.background.observeField("translation", "onChangeTranslation")
     m.seconds = 0
 end sub
 
@@ -19,6 +20,7 @@ sub configureDataSource()
         m.posterWiki.uri = getImageWithName(m.top.dataSource.icon)
         m.questionLabel.translation = [getSize(35), getSize(20)]
     end if
+    m.posterWiki.translation = [-getSize(25), -getSize(25)]
     setTextLayout()
     m.seconds = m.top.dataSource.timeforhiding + 1
     m.startSeconds = m.top.dataSource.timeforhiding + 1
@@ -53,13 +55,13 @@ sub setTextLayout()
 
     m.questionLabel.horizAlign = "left"
     if m.posterWiki.uri <> "" and m.posterWiki.uri <> getImageWithName("") 
-        m.questionLabel.width = m.questionLabel.width - getSize(10)
+        m.questionLabel.width = m.questionLabel.width - getSize(20)
     end if
     m.wikiPoster.width = getSize(19)
     m.wikiPoster.height = getSize(22)
     m.wikiLayout.translation = [m.background.width - getSize(2), 0]
     m.wikiLayout.itemSpacings = [(m.background.height * 20) / getSize(100)]
-    m.posterWiki.translation = [-getSize(25), -getSize(25)]
+    m.progress.translation = [0, m.background.height - getSize(2)]
 end sub
 
 sub changeTimer()
@@ -83,7 +85,7 @@ sub changeTimer()
 end sub
 
 sub showNotification(asShow)
-    if asShow
+    if asShow                             
         m.iterpolator.keyValue = [[getScreenWidth(), getSize(50)], [(getScreenWidth() - (m.background.width + getSize(50))), getSize(50)]]
     else
         m.iterpolator.keyValue = [m.iterpolator.keyValue[1], [getScreenWidth(), getSize(50)]]

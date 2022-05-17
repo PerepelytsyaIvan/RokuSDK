@@ -1,5 +1,6 @@
 <component name="VideoPlayer" extends="Group" initialFocus = "videoPlayer">
     <script type="text/brightscript" uri="./VideoPlayer.brs" />
+    <script type="text/brightscript" uri="../Helpers/util.brs" />
 
     <interface>
         <field id="accountRoute" type="assocarray" onChange = "configureVideoContentNode"/>
@@ -8,7 +9,10 @@
 
     <children>
         <Video id="videoPlayer" translation = "[0,0]"/>
-        <!-- <Poster translation = "[100,100]" id = "test" width = "500" height = "80" uri = "pkg:/images/wikiNotification.9.png"/> -->
         <OverlayViewController id="overlayViewController"/>
+
+        <Animation id="animation" duration="0.4" repeat="false">
+            <FloatFieldInterpolator id="interpolator" key="[0.0, 1.0]" fieldToInterp="videoPlayer.height" />
+        </Animation>
     </children>
 </component>
